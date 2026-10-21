@@ -113,7 +113,7 @@ The Rust core logs to stderr. Set `RUST_LOG=debug` for verbose output.
 | Variable | Effect |
 |---|---|
 | `MELYAR_DEV_URL` | Load the interface from a live dev server instead of `ui_web/dist/`. |
-| `MELYAR_LANG` | Force the interface language (`en` or `tr`), overriding browser detection. |
+| `MELYAR_LANG` | Force the interface language (`en`, `tr` or `sq`), overriding browser detection. |
 | `MELYAR_SCREENSHOT` | Write a PNG of the window to this path, then exit. |
 | `MELYAR_SCREENSHOT_DELAY` | How long to wait before the capture, in milliseconds. Default 6000. |
 | `MELYAR_EVAL_JS` | Run a script inside the interface once it has booted. A debugging aid. |

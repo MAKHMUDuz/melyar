@@ -11,6 +11,7 @@ import { uk } from "@/locales/uk";
 import { ja } from "@/locales/ja";
 import { zh } from "@/locales/zh";
 import { ko } from "@/locales/ko";
+import { sq } from "@/locales/sq";
 
 export type Locale =
   | "en"
@@ -24,6 +25,7 @@ export type Locale =
   | "uk"
   | "ja"
   | "zh"
+  | "sq"
   | "ko";
 
 export const LOCALES: { code: Locale; label: string }[] = [
@@ -39,6 +41,8 @@ export const LOCALES: { code: Locale; label: string }[] = [
   { code: "ja", label: "日本語" },
   { code: "zh", label: "简体中文" },
   { code: "ko", label: "한국어" },
+  { code: "sq", label: "Shqip" },
+
 ];
 
 const MESSAGES: Record<Locale, Record<string, string>> = {
@@ -54,6 +58,7 @@ const MESSAGES: Record<Locale, Record<string, string>> = {
   ja,
   zh,
   ko,
+  sq,
 };
 
 const STORAGE_KEY = "melyar.locale";
