@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import { Heart, Home, Library, ListMusic, SearchIcon, Clock3 } from "lucide-react";
+import { Heart, Home, Library, ListMusic, SearchIcon, Clock3, Plug } from "lucide-react";
 import { usePlayer } from "@/store";
+import { usePlugins } from "@/lib/plugins";
 import { GlassMorphIndicator } from "@/components/GlassComponents";
 import { cn } from "@/lib/cn";
 import { t, useLocale } from "@/lib/i18n";
@@ -41,6 +42,7 @@ export function Sidebar() {
   const navigate = usePlayer((s) => s.navigate);
   const setQueueOpen = usePlayer((s) => s.setQueueOpen);
   const queueOpen = usePlayer((s) => s.queueOpen);
+  const setPluginsOpen = usePlugins((s) => s.setOpen);
   const current = usePlayer((s) => s.view);
 
   const listenNavRef = useRef<HTMLDivElement>(null);
@@ -138,6 +140,17 @@ export function Sidebar() {
           >
             <ListMusic className="size-[17px]" />
             <span className="truncate">{t("nav.queue")}</span>
+          </button>
+        </nav>
+
+        {/* Where music comes from. It sits apart from the library links
+            because it changes what those links can return, not what they
+            hold — one click opens the panel rather than a view. */}
+        <p className="side-section">{t("nav.section.sources")}</p>
+        <nav className="flex flex-col gap-0.5" role="navigation" aria-label={t("nav.aria.sources")}>
+          <button className="text-btn relative z-10" onClick={() => setPluginsOpen(true)}>
+            <Plug className="size-[17px]" />
+            <span className="truncate">{t("nav.plugins")}</span>
           </button>
         </nav>
       </div>

@@ -1,6 +1,7 @@
 import { usePlayer } from "@/store";
 import { register } from "@/lib/registry";
 import { useSettings } from "@/lib/settings";
+import { usePlugins } from "@/lib/plugins";
 import { bindImportProgress } from "@/lib/import";
 import type { RepeatMode, TrackMeta } from "@/lib/types";
 
@@ -273,6 +274,11 @@ export function initBridge() {
       w.__openExpandedPlayer = () => usePlayer.getState().setExpandedPlayerOpen(true);
       w.__openLyrics = () => usePlayer.getState().setLyricsOpen(true);
       w.__openQueue = () => usePlayer.getState().setQueueOpen(true);
+      w.__openPlugins = () => usePlugins.getState().setOpen(true);
+      w.__pluginsState = () => {
+        const s = usePlugins.getState();
+        return { open: s.open, sources: s.sources, loading: s.loading, pending: s.pending };
+      };
       w.__testSetState = (partial: Record<string, unknown>) =>
         usePlayer.setState(partial as never);
       w.__openMenuOnFirstTrack = () => {

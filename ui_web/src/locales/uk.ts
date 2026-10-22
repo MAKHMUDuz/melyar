@@ -18,6 +18,19 @@ export const uk: Record<string, string> = {
   "nav.queue": "Черга",
   "nav.aria.library": "Навігація бібліотекою",
   "nav.aria.listen": "Навігація розділом «Слухати»",
+  "nav.section.sources": "ДЖЕРЕЛА",
+  "nav.plugins": "Плагіни",
+  "nav.aria.sources": "Навігація джерелами",
+
+  // Джерела музики
+  "plugins.title": "Плагіни",
+  "plugins.intro":
+    "Оберіть, звідки береться музика. YouTube вбудовано й завжди увімкнено; решта — на вибір і коштує чогось лише тоді, коли ви її вмикаєте.",
+  "plugins.default": "Типово",
+  "plugins.on": "Увімкнено",
+  "plugins.off": "Вимкнено",
+  "plugins.loading": "Завантаження джерел…",
+  "plugins.empty": "Доступних джерел немає.",
   "nav.search.placeholder": "Виконавці, треки, альбоми",
   "toolbar.seek": "Позиція відтворення",
   "toolbar.shuffle": "Випадковий порядок",

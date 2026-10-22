@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Header, PlayerBar } from "@/components/Toolbar";
 import { ContextMenu } from "@/components/ContextMenu";
 import { SettingsPanel } from "@/components/SettingsPanel";
+import { PluginsPanel } from "@/components/PluginsPanel";
 import { ImportOverlay } from "@/components/ImportOverlay";
 import { QueuePanel } from "@/components/QueuePanel";
 import { LyricsOverlay } from "@/components/LyricsOverlay";
@@ -198,6 +199,7 @@ export default function App() {
         {lyricsOpen && <LyricsOverlay />}
         <ContextMenu />
         <SettingsPanel />
+        <PluginsPanel />
         <ImportOverlay />
         <Toast />
       </OverlayPortal>

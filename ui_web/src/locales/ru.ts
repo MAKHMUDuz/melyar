@@ -18,6 +18,19 @@ export const ru: Record<string, string> = {
   "nav.queue": "Очередь",
   "nav.aria.library": "Навигация по библиотеке",
   "nav.aria.listen": "Навигация по разделу «Слушать»",
+  "nav.section.sources": "ИСТОЧНИКИ",
+  "nav.plugins": "Плагины",
+  "nav.aria.sources": "Навигация по источникам",
+
+  // Источники музыки
+  "plugins.title": "Плагины",
+  "plugins.intro":
+    "Выберите, откуда берётся музыка. YouTube встроен и всегда включён; остальное — по желанию и стоит чего-то только когда вы его включаете.",
+  "plugins.default": "По умолчанию",
+  "plugins.on": "Вкл",
+  "plugins.off": "Выкл",
+  "plugins.loading": "Загрузка источников…",
+  "plugins.empty": "Доступных источников нет.",
   "nav.search.placeholder": "Исполнители, треки, альбомы",
   "toolbar.seek": "Позиция воспроизведения",
   "toolbar.shuffle": "Перемешать",

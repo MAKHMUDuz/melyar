@@ -18,6 +18,18 @@ export const zh: Record<string, string> = {
   "nav.queue": "播放队列",
   "nav.aria.library": "音乐库导航",
   "nav.aria.listen": "收听导航",
+  "nav.section.sources": "来源",
+  "nav.plugins": "插件",
+  "nav.aria.sources": "来源导航",
+
+  // 音乐来源
+  "plugins.title": "插件",
+  "plugins.intro": "选择音乐的来源。YouTube 内置且始终开启；其余为可选，仅在你开启时才产生消耗。",
+  "plugins.default": "默认",
+  "plugins.on": "开启",
+  "plugins.off": "关闭",
+  "plugins.loading": "正在加载来源…",
+  "plugins.empty": "没有可用的来源。",
   "nav.search.placeholder": "搜索艺人、歌曲、专辑",
   "toolbar.seek": "播放位置",
   "toolbar.shuffle": "随机播放",

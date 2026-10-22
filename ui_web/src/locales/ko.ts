@@ -18,6 +18,19 @@ export const ko: Record<string, string> = {
   "nav.queue": "재생 대기열",
   "nav.aria.library": "라이브러리 내비게이션",
   "nav.aria.listen": "듣기 내비게이션",
+  "nav.section.sources": "소스",
+  "nav.plugins": "플러그인",
+  "nav.aria.sources": "소스 내비게이션",
+
+  // 음악 소스
+  "plugins.title": "플러그인",
+  "plugins.intro":
+    "음악을 가져올 곳을 선택하세요. YouTube는 기본 내장되어 항상 켜져 있습니다. 나머지는 선택 사항이며, 켤 때만 부담이 생깁니다.",
+  "plugins.default": "기본값",
+  "plugins.on": "켜짐",
+  "plugins.off": "꺼짐",
+  "plugins.loading": "소스 불러오는 중…",
+  "plugins.empty": "사용 가능한 소스가 없습니다.",
   "nav.search.placeholder": "아티스트, 노래, 앨범 검색",
   "toolbar.seek": "재생 위치",
   "toolbar.shuffle": "셔플",

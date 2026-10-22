@@ -18,6 +18,19 @@ export const ja: Record<string, string> = {
   "nav.queue": "キュー",
   "nav.aria.library": "ライブラリのナビゲーション",
   "nav.aria.listen": "リストナビゲーション",
+  "nav.section.sources": "ソース",
+  "nav.plugins": "プラグイン",
+  "nav.aria.sources": "ソースナビゲーション",
+
+  // 音楽ソース
+  "plugins.title": "プラグイン",
+  "plugins.intro":
+    "音楽の取得元を選べます。YouTube は内蔵で常に有効です。それ以外は任意で、有効にした場合のみ負担が発生します。",
+  "plugins.default": "デフォルト",
+  "plugins.on": "オン",
+  "plugins.off": "オフ",
+  "plugins.loading": "ソースを読み込み中…",
+  "plugins.empty": "利用できるソースがありません。",
   "nav.search.placeholder": "アーティスト、曲、アルバムを検索",
   "toolbar.seek": "再生位置",
   "toolbar.shuffle": "シャッフル",

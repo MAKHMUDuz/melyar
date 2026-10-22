@@ -19,6 +19,19 @@ export const tr: Record<string, string> = {
   "nav.queue": "Çalma Sırası",
   "nav.aria.library": "Kitaplık navigasyonu",
   "nav.aria.listen": "Dinleme navigasyonu",
+  "nav.section.sources": "KAYNAKLAR",
+  "nav.plugins": "Eklentiler",
+  "nav.aria.sources": "Kaynak navigasyonu",
+
+  // Müzik kaynakları
+  "plugins.title": "Eklentiler",
+  "plugins.intro":
+    "Metiğin nereden geldiğini seç. YouTube yerleşiktir ve daima açıktır; geri kalanı isteğe bağlıdır ve yalnızca açtığında bir bedel öder.",
+  "plugins.default": "Varsayılan",
+  "plugins.on": "Açık",
+  "plugins.off": "Kapalı",
+  "plugins.loading": "Kaynaklar yükleniyor…",
+  "plugins.empty": "Kullanılabilir kaynak yok.",
   "nav.search.placeholder": "Sanatçı, şarkı, albüm ara",
 
   // Araç çubuğu

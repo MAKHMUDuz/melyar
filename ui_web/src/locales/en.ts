@@ -19,6 +19,19 @@ export const en: Record<string, string> = {
   "nav.queue": "Queue",
   "nav.aria.library": "Library navigation",
   "nav.aria.listen": "Listen navigation",
+  "nav.section.sources": "SOURCES",
+  "nav.plugins": "Plugins",
+  "nav.aria.sources": "Sources navigation",
+
+  // Music sources
+  "plugins.title": "Plugins",
+  "plugins.intro":
+    "Choose where music comes from. YouTube is built in and always on; the rest are optional and only cost something when you turn them on.",
+  "plugins.default": "Default",
+  "plugins.on": "On",
+  "plugins.off": "Off",
+  "plugins.loading": "Loading sources…",
+  "plugins.empty": "No sources are available.",
   "nav.search.placeholder": "Search artists, songs, albums",
 
   // Toolbar

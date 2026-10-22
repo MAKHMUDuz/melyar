@@ -13,6 +13,19 @@ export const sq: Record<string, string> = {
   "nav.queue": "Radha",
   "nav.aria.library": "Navigimi i bibliotekës",
   "nav.aria.listen": "Navigimi i dëgjimit",
+  "nav.section.sources": "BURIMET",
+  "nav.plugins": "Shtesat",
+  "nav.aria.sources": "Navigimi i burimeve",
+
+  // Burimet e muzikës
+  "plugins.title": "Shtesat",
+  "plugins.intro":
+    "Zgjidhni nga vjen muzika. YouTube është i integruar dhe gjithmonë i aktivizuar; pjesa tjetër është opsionale dhe kushton diçka vetëm kur e aktivizoni.",
+  "plugins.default": "Parazgjedhje",
+  "plugins.on": "Aktiv",
+  "plugins.off": "Joaktiv",
+  "plugins.loading": "Duke ngarkuar burimet…",
+  "plugins.empty": "Nuk ka burime të disponueshme.",
   "nav.search.placeholder": "Kërko artistë, këngë, albume",
 
   // Toolbar

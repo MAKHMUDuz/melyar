@@ -18,6 +18,19 @@ export const it: Record<string, string> = {
   "nav.queue": "Coda",
   "nav.aria.library": "Navigazione della libreria",
   "nav.aria.listen": "Navigazione di ascolto",
+  "nav.section.sources": "SORGENTI",
+  "nav.plugins": "Estensioni",
+  "nav.aria.sources": "Navigazione delle sorgenti",
+
+  // Sorgenti musicali
+  "plugins.title": "Estensioni",
+  "plugins.intro":
+    "Scegli da dove arriva la musica. YouTube è integrato e sempre attivo; il resto è facoltativo e ha un costo solo quando lo attivi.",
+  "plugins.default": "Predefinito",
+  "plugins.on": "Attiva",
+  "plugins.off": "Disattiva",
+  "plugins.loading": "Caricamento sorgenti…",
+  "plugins.empty": "Nessuna sorgente disponibile.",
   "nav.search.placeholder": "Cerca artisti, brani, album",
   "toolbar.seek": "Posizione di riproduzione",
   "toolbar.shuffle": "Casuale",
