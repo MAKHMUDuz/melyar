@@ -25,19 +25,23 @@ Depends: ${shlibs:Depends},
          qt6-webengine,
          qt6-webchannel,
          mpv
-# The QML modules Main.qml imports. They are declared as Recommends rather
-# than Depends on purpose: apt installs Recommends by default, so a normal
-# install gets a working application, but a module whose package name moved
-# between Debian releases warns instead of making the package uninstallable.
-# Without them at all the shell reports "module QtQuick.Controls is not
-# installed" and shows nothing.
+# The QML modules the shell imports, matching the list the interface audit
+# installs on CI - the application is known to run with exactly these.
+# Declared as Recommends rather than Depends on purpose: apt installs those
+# by default, so a normal install gets a working application, while a module
+# whose package name moved between Debian releases warns instead of making
+# the package uninstallable, which is the failure mode that matters for a
+# package installed by hand off a release page. Without them at all the shell
+# reports "module QtQuick.Controls is not installed" over a black window.
 Recommends: qml6-module-qtquick,
             qml6-module-qtquick-controls,
             qml6-module-qtquick-dialogs,
+            qml6-module-qtquick-layouts,
+            qml6-module-qtquick-templates,
             qml6-module-qtquick-window,
+            qml6-module-qtqml-workerscript,
             qml6-module-qtwebchannel,
             qml6-module-qtwebengine,
-            qml6-module-qtwebengine-controlsdelegates,
             yt-dlp
 Description: native YouTube Music desktop client
  Melyar is a lightweight YouTube Music client for Linux. A Rust core handles
