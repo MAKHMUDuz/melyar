@@ -7,6 +7,7 @@ import { usePlayer } from "@/store";
 import { Artwork } from "@/components/Toolbar";
 import { PlayPauseMorph } from "@/components/GlassComponents";
 import { t, useLocale } from "@/lib/i18n";
+import { getMotionTokens } from "@/lib/motion";
 
 export function LyricsOverlay() {
   useLocale();
@@ -82,6 +83,7 @@ export function LyricsOverlay() {
   }, [open, setOpen]);
 
   if (!open) return null;
+  const motion = getMotionTokens();
   const ratio = duration > 0 ? Math.min(1, position / duration) : 0;
 
   // Karaoke fill progress for the active line
@@ -102,7 +104,7 @@ export function LyricsOverlay() {
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[70] flex flex-col bg-black",
+        "lyrics-overlay fixed inset-0 z-[70] flex flex-col bg-black",
         !showControls ? "pointer-events-none" : "",
       )}
       role="dialog"
@@ -160,13 +162,14 @@ export function LyricsOverlay() {
                   key={`${line.time}-${i}`}
                   data-active={isActive}
                   className={cn(
-                    "lyric-line relative text-center px-4 transition-all duration-300 ease-out",
+                    "lyric-line relative text-center px-4",
                     isActive ? "font-bold" : "",
                   )}
                   style={{
                     fontSize: isActive ? "34px" : "24px",
                     transform: isActive ? "scale(1.05)" : "scale(1)",
                     opacity: isActive ? 1 : isPast ? 0.45 : 0.75,
+                    transition: motion.transition.overlay,
                   }}
                   onClick={() => seekSec(line.time)}
                 >
@@ -217,7 +220,10 @@ export function LyricsOverlay() {
       </div>
 
       {/* Bottom controls */}
-      <div className={cn("relative z-20 flex items-center justify-center gap-6 px-5 py-6", showControls ? "opacity-100 transition-opacity duration-300" : "opacity-0 pointer-events-none transition-opacity duration-300")}>
+      <div
+        className={cn("relative z-20 flex items-center justify-center gap-6 px-5 py-6", showControls ? "opacity-100" : "opacity-0 pointer-events-none")}
+        style={{ transition: motion.transition.overlay }}
+      >
         <button
           className="btn-glass text-white/90 hover:bg-white/10 hover:text-white"
           aria-label={t("lyrics.prev")}

@@ -2195,6 +2195,15 @@
 
 /* ---- Reduced Motion Override ---- */
 @media (prefers-reduced-motion: reduce) {
+  .lyrics-overlay,
+  .lyrics-overlay *,
+  .lyrics-overlay *::before,
+  .lyrics-overlay *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
   /* The blanket suppression is at the end of this file, once. What is here
      are the components that want the movement gone, not merely shortened. */
   .glass-morph-indicator,
