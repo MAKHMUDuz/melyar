@@ -19,12 +19,13 @@ import {
   LikedView,
   SongsView,
 } from "@/components/views/LibraryViews";
-import { usePlayer } from "@/store";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
 import { useSettings } from "@/lib/settings";
 import { cn } from "@/lib/cn";
 
 function Stage() {
-  const view = usePlayer((s) => s.view);
+  const view = useUIStore((s) => s.view);
   switch (view.name) {
     case "home":
       return <HomeView />;
@@ -50,8 +51,8 @@ function Stage() {
 }
 
 function Toast() {
-  const toast = usePlayer((s) => s.toast);
-  const action = usePlayer((s) => s.toastAction);
+  const toast = useUIStore((s) => s.toast);
+  const action = useUIStore((s) => s.toastAction);
   if (!toast) return null;
   return (
     <div className="toast" role="status">
@@ -98,10 +99,10 @@ const OWNED_KEYS = [
 ].join(", ");
 
 export default function App() {
-  const view = usePlayer((s) => s.view);
-  const queueOpen = usePlayer((s) => s.queueOpen);
-  const lyricsOpen = usePlayer((s) => s.lyricsOpen);
-  const expandedPlayerOpen = usePlayer((s) => s.expandedPlayerOpen);
+  const view = useUIStore((s) => s.view);
+  const queueOpen = useUIStore((s) => s.queueOpen);
+  const lyricsOpen = useUIStore((s) => s.lyricsOpen);
+  const expandedPlayerOpen = useUIStore((s) => s.expandedPlayerOpen);
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -118,51 +119,52 @@ export default function App() {
       // there, instead of seeking the song and changing the volume underneath.
       // Escape is still let through, so a dialog closes from within.
       if (target?.closest?.(OWNED_KEYS) && e.key !== "Escape") return;
-      const st = usePlayer.getState();
+      const ui = useUIStore.getState();
+      const playback = usePlaybackStore.getState();
       switch (e.key) {
         case " ":
           e.preventDefault();
-          st.toggle();
+          playback.toggle();
           break;
         case "ArrowRight":
-          if (e.ctrlKey || e.metaKey) st.next();
-          else st.seekSec(st.position + 5);
+          if (e.ctrlKey || e.metaKey) playback.next();
+          else playback.seekSec(playback.position + 5);
           break;
         case "ArrowLeft":
-          if (e.ctrlKey || e.metaKey) st.prev();
-          else st.seekSec(st.position - 5);
+          if (e.ctrlKey || e.metaKey) playback.prev();
+          else playback.seekSec(playback.position - 5);
           break;
         case "ArrowUp":
           e.preventDefault();
-          st.setVolume(Math.min(1, st.volume + 0.05));
+          playback.setVolume(Math.min(1, playback.volume + 0.05));
           break;
         case "ArrowDown":
           e.preventDefault();
-          st.setVolume(Math.max(0, st.volume - 0.05));
+          playback.setVolume(Math.max(0, playback.volume - 0.05));
           break;
         case "l":
         case "L":
-          st.setLyricsOpen(!st.lyricsOpen);
+          ui.setLyricsOpen(!ui.lyricsOpen);
           break;
         case "q":
         case "Q":
-          st.setQueueOpen(!st.queueOpen);
+          ui.setQueueOpen(!ui.queueOpen);
           break;
         case "/":
           e.preventDefault();
           document.getElementById("melyar-search")?.focus();
           break;
         case "Escape":
-          st.closeMenu();
+          ui.closeMenu();
           if (useSettings.getState().open) useSettings.getState().setOpen(false);
-          else if (st.expandedPlayerOpen) st.setExpandedPlayerOpen(false);
-          else if (st.lyricsOpen) st.setLyricsOpen(false);
-          else if (st.queueOpen) st.setQueueOpen(false);
+          else if (ui.expandedPlayerOpen) ui.setExpandedPlayerOpen(false);
+          else if (ui.lyricsOpen) ui.setLyricsOpen(false);
+          else if (ui.queueOpen) ui.setQueueOpen(false);
           break;
       }
     };
     const onPointer = () => {
-      if (usePlayer.getState().menu) usePlayer.getState().closeMenu();
+      if (useUIStore.getState().menu) useUIStore.getState().closeMenu();
     };
     window.addEventListener("keydown", onKey);
     window.addEventListener("pointerdown", onPointer);

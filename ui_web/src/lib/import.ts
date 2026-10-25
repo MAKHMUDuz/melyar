@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { getBridge } from "@/lib/client";
-import { usePlayer } from "@/store";
+import { useUIStore } from "@/store";
 import { t, tCount } from "@/lib/i18n";
 
 export type ImportProgress = {
@@ -106,8 +106,7 @@ export function bindImportProgress() {
       // The core holds the imported tracks, so the library has to be reloaded.
       if (typeof b.loadFavorites === "function") b.loadFavorites();
 
-      const st = usePlayer.getState();
-      st.toastNote(
+      useUIStore.getState().toastNote(
         tCount("import.finished", progress.matched, {
           matched: progress.matched,
           skipped: progress.skipped,

@@ -1,8 +1,21 @@
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
 @import "tailwindcss";
+
+/* Variable font - single file replaces 8 font files */
+@font-face {
+  font-family: 'InterVariable';
+  src: url('./fonts/InterVariable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InterVariable';
+  src: url('./fonts/InterVariable-Italic.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
 
 /* ============================================================
    MELYAR — ULTRA PREMIUM LIQUID GLASS DESIGN SYSTEM
@@ -230,7 +243,7 @@
    TAILWIND THEME MAP
    ============================================================ */
 @theme inline {
-  --font-sans: "Inter", -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "InterVariable", -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
   --color-bg-content: var(--bg-content);

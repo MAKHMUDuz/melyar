@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { useLibraryImport } from "@/lib/import";
 import { t, tCount, useLocale } from "@/lib/i18n";
-import { usePlayer } from "@/store";
+import { useLibraryStore } from "@/store";
 
 /**
  * The overlay that shows while a library import is running. It reports how
@@ -13,7 +13,7 @@ export function ImportOverlay() {
   const running = useLibraryImport((s) => s.running);
   const progress = useLibraryImport((s) => s.progress);
   const cancel = useLibraryImport((s) => s.cancel);
-  const reloadFavorites = usePlayer((s) => s.loadFavorites);
+  const reloadFavorites = useLibraryStore((s) => s.loadFavorites);
 
   if (!running) return null;
 

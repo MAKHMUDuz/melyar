@@ -1,5 +1,7 @@
 import { Clock3, Download, Heart, Library, Music2 } from "lucide-react";
-import { usePlayer } from "@/store";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
+import { useLibraryStore } from "@/store";
 import { useLibraryImport } from "@/lib/import";
 import { allKnown, findAlbum, findArtist, groupAlbums, groupArtists, libraryTracks } from "@/lib/registry";
 import { TrackTable } from "@/components/TrackTable";
@@ -42,8 +44,8 @@ function LibraryHeader({
 
 export function SongsView() {
   useLocale();
-  const liked = usePlayer((s) => s.liked);
-  const history = usePlayer((s) => s.history);
+  const liked = useLibraryStore((s) => s.liked);
+  const history = useLibraryStore((s) => s.history);
   const library = libraryTracks(liked, history);
   const totalSecs = library.reduce((acc, t) => acc + (t.duration || 0), 0);
   return (
@@ -62,8 +64,8 @@ export function SongsView() {
 
 export function LikedView() {
   useLocale();
-  const liked = usePlayer((s) => s.liked);
-  const playTrack = usePlayer((s) => s.playTrack);
+  const liked = useLibraryStore((s) => s.liked);
+  const playTrack = usePlaybackStore((s) => s.playTrack);
   const startImport = useLibraryImport((s) => s.start);
   const totalSecs = liked.reduce((acc, t) => acc + (t.duration || 0), 0);
   return (
@@ -104,8 +106,8 @@ export function LikedView() {
 
 export function HistoryView() {
   useLocale();
-  const history = usePlayer((s) => s.history);
-  const playTrack = usePlayer((s) => s.playTrack);
+  const history = useLibraryStore((s) => s.history);
+  const playTrack = usePlaybackStore((s) => s.playTrack);
   return (
     <div className="px-6 pb-10 pt-6 lg:px-9">
       <LibraryHeader
@@ -134,10 +136,10 @@ export function HistoryView() {
 
 export function AlbumsView() {
   useLocale();
-  const liked = usePlayer((s) => s.liked);
-  const history = usePlayer((s) => s.history);
-  const navigate = usePlayer((s) => s.navigate);
-  const playTrack = usePlayer((s) => s.playTrack);
+  const liked = useLibraryStore((s) => s.liked);
+  const history = useLibraryStore((s) => s.history);
+  const navigate = useUIStore((s) => s.navigate);
+  const playTrack = usePlaybackStore((s) => s.playTrack);
   // Personal albums first, then anything else discovered via search
   const albums = [...groupAlbums(libraryTracks(liked, history)), ...groupAlbums(allKnown())].filter(
     (a, i, arr) => arr.findIndex((x) => x.key === a.key) === i,
@@ -193,9 +195,9 @@ export function AlbumsView() {
 
 export function ArtistsView() {
   useLocale();
-  const liked = usePlayer((s) => s.liked);
-  const history = usePlayer((s) => s.history);
-  const navigate = usePlayer((s) => s.navigate);
+  const liked = useLibraryStore((s) => s.liked);
+  const history = useLibraryStore((s) => s.history);
+  const navigate = useUIStore((s) => s.navigate);
   const artists = [...groupArtists(libraryTracks(liked, history)), ...groupArtists(allKnown())].filter(
     (a, i, arr) => arr.findIndex((x) => x.key === a.key) === i,
   );
@@ -226,8 +228,8 @@ export function AlbumDetailView({ albumKey }: { albumKey: string }) {
   // Subscribe. Without it the headings stay in the previous language after a
   // switch, because this view was the one that read t() without listening.
   useLocale();
-  const playTrack = usePlayer((s) => s.playTrack);
-  const navigate = usePlayer((s) => s.navigate);
+  const playTrack = usePlaybackStore((s) => s.playTrack);
+  const navigate = useUIStore((s) => s.navigate);
   const album = findAlbum(allKnown(), albumKey);
 
   if (!album) {
@@ -263,8 +265,8 @@ export function AlbumDetailView({ albumKey }: { albumKey: string }) {
 export function ArtistDetailView({ artistKey }: { artistKey: string }) {
   // Subscribe, as in AlbumDetailView: this view read t() without listening.
   useLocale();
-  const playTrack = usePlayer((s) => s.playTrack);
-  const navigate = usePlayer((s) => s.navigate);
+  const playTrack = usePlaybackStore((s) => s.playTrack);
+  const navigate = useUIStore((s) => s.navigate);
   const artist = findArtist(allKnown(), artistKey);
 
   if (!artist) {

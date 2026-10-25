@@ -16,4 +16,17 @@ export default defineConfig({
     host: "0.0.0.0",
   },
   clearScreen: false,
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "zustand"],
+          ui: ["lucide-react", "clsx"],
+        },
+      },
+    },
+    cssCodeSplit: true,
+    minify: "esbuild",
+    target: "es2020",
+  },
 });

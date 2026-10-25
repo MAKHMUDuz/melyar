@@ -3,19 +3,21 @@ import { X, MoreHorizontal, ChevronUp, ListMusic } from "lucide-react";
 import type { TrackMeta } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { formatTime } from "@/lib/lyrics";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
+import { useLibraryStore } from "@/store";
 import { usePlayer } from "@/store";
 import { Artwork } from "@/components/Toolbar";
 import { t, tCount, useLocale } from "@/lib/i18n";
 
 export function QueuePanel() {
   useLocale();
-  const open = usePlayer((s) => s.queueOpen);
-  const setOpen = usePlayer((s) => s.setQueueOpen);
-  const queue = usePlayer((s) => s.queue);
-  const current = usePlayer((s) => s.current);
-  const playQueueIndex = usePlayer((s) => s.playQueueIndex);
-  const clearQueue = usePlayer((s) => s.clearQueue);
-  const openMenu = usePlayer((s) => s.openMenu);
+  const open = useUIStore((s) => s.queueOpen);
+  const setOpen = useUIStore((s) => s.setQueueOpen);
+  const queue = useLibraryStore((s) => s.queue);
+  const current = usePlaybackStore((s) => s.current);
+  const { playQueueIndex, clearQueue } = usePlayer();
+  const openMenu = useUIStore((s) => s.openMenu);
 
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);

@@ -311,6 +311,16 @@ impl MelyarAudioEngine {
         self.is_playing.load(Ordering::Relaxed)
     }
 
+    /// Correct the flag when playback ended by itself, with no command to send.
+    ///
+    /// mpv runs the last file out, goes idle, and never touches `pause` again -
+    /// so nothing observes the change and this flag stays `true` while nothing
+    /// is audible. `toggle_play` computes its answer from it, which makes the
+    /// first press after an empty queue report the opposite of what it did.
+    pub fn mark_stopped(&self) {
+        self.is_playing.store(false, Ordering::Relaxed);
+    }
+
     fn command_string(&self, cmd: &str) -> Result<()> {
         let c_cmd = CString::new(cmd)?;
         let res = unsafe { mpv_sys::mpv_command_string(self.mpv.raw, c_cmd.as_ptr()) };

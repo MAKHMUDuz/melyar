@@ -1,5 +1,7 @@
 import { Heart, Clock3 } from "lucide-react";
-import { usePlayer } from "@/store";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
+import { useLibraryStore } from "@/store";
 import { libraryTracks } from "@/lib/registry";
 import { Artwork } from "@/components/Toolbar";
 import { TrackTable } from "@/components/TrackTable";
@@ -60,11 +62,11 @@ function CardTile({
 
 export function HomeView() {
   useLocale();
-  const history = usePlayer((s) => s.history);
-  const liked = usePlayer((s) => s.liked);
-  const playTrack = usePlayer((s) => s.playTrack);
-  const navigate = usePlayer((s) => s.navigate);
-  const setQuery = usePlayer((s) => s.setQuery);
+  const history = useLibraryStore((s) => s.history);
+  const liked = useLibraryStore((s) => s.liked);
+  const playTrack = usePlaybackStore((s) => s.playTrack);
+  const navigate = useUIStore((s) => s.navigate);
+  const setQuery = useUIStore((s) => s.setQuery);
 
   const library = libraryTracks(liked, history);
   const featured = history[0];

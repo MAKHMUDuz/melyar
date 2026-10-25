@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { usePlayer } from "@/store";
+import { useUIStore } from "@/store";
 
 /**
  * Keeps the active lyric line centred while the user is not scrolling it
@@ -35,9 +35,9 @@ function prefersReducedMotion(): boolean {
 }
 
 export function useLyricsScroll(enabled: boolean, active: number) {
-  const autoFollow = usePlayer((s) => s.lyricsAutoFollow);
-  const setAutoFollow = usePlayer((s) => s.setLyricsAutoFollow);
-  const setUserScrolling = usePlayer((s) => s.setLyricsUserScrolling);
+  const autoFollow = useUIStore((s) => s.lyricsAutoFollow);
+  const setAutoFollow = useUIStore((s) => s.setLyricsAutoFollow);
+  const setUserScrolling = useUIStore((s) => s.setLyricsUserScrolling);
 
   const scrollerRef = useRef<HTMLDivElement>(null);
   const userScrollingRef = useRef(false);

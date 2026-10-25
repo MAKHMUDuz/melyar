@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Heart, Home, Library, ListMusic, SearchIcon, Clock3, Plug } from "lucide-react";
-import { usePlayer } from "@/store";
+import { useUIStore } from "@/store";
 import { usePlugins } from "@/lib/plugins";
 import { GlassMorphIndicator } from "@/components/GlassComponents";
 import { cn } from "@/lib/cn";
@@ -18,8 +18,8 @@ function SideItem({
   view: View;
   ref?: React.Ref<HTMLButtonElement>;
 }) {
-  const current = usePlayer((s) => s.view);
-  const navigate = usePlayer((s) => s.navigate);
+  const current = useUIStore((s) => s.view);
+  const navigate = useUIStore((s) => s.navigate);
   const keyOf = (v: View) => (v.name === "album" || v.name === "artist" ? `${v.name}:${v.key}` : v.name);
   const active = keyOf(current) === keyOf(view);
   return (
@@ -37,13 +37,13 @@ function SideItem({
 
 export function Sidebar() {
   useLocale();
-  const query = usePlayer((s) => s.query);
-  const setQuery = usePlayer((s) => s.setQuery);
-  const navigate = usePlayer((s) => s.navigate);
-  const setQueueOpen = usePlayer((s) => s.setQueueOpen);
-  const queueOpen = usePlayer((s) => s.queueOpen);
+  const query = useUIStore((s) => s.query);
+  const setQuery = useUIStore((s) => s.setQuery);
+  const navigate = useUIStore((s) => s.navigate);
+  const setQueueOpen = useUIStore((s) => s.setQueueOpen);
+  const queueOpen = useUIStore((s) => s.queueOpen);
   const setPluginsOpen = usePlugins((s) => s.setOpen);
-  const current = usePlayer((s) => s.view);
+  const current = useUIStore((s) => s.view);
 
   const listenNavRef = useRef<HTMLDivElement>(null);
   const libraryNavRef = useRef<HTMLDivElement>(null);

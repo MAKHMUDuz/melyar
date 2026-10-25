@@ -183,6 +183,13 @@ impl AudioEventHandler for EngineEvents {
             .unwrap_or(false);
 
         let Some(next) = self.queue.next_track() else {
+            // The queue is empty. mpv ran the last file out and goes idle
+            // without ever changing `pause`, so nothing corrects the engine's
+            // own flag - it keeps saying `true` while nothing is audible, and
+            // `toggle_play` answers the next press from that stale value.
+            if let Some(audio) = audio_opt.as_ref() {
+                audio.mark_stopped();
+            }
             ffi::on_state_changed(false);
             return;
         };
@@ -198,6 +205,15 @@ impl AudioEventHandler for EngineEvents {
             if already_started {
                 started = true;
             } else {
+                // The old file has run out, but mpv never reports a `pause`
+                // change for running dry - so this flag is the only thing that
+                // still believes something is playing. Dropping it before the
+                // resolve means every failure below leaves the desktop on
+                // "stopped" instead of claiming a track that never started,
+                // and `play_url` raises it again on the one path that works.
+                if let Some(audio) = &audio_opt {
+                    audio.mark_stopped();
+                }
                 // The next track carries its own id prefix, so a SoundCloud or
                 // Audius track keeps being itself across a track boundary
                 // instead of being reinterpreted as a YouTube video id.
