@@ -1,6 +1,5 @@
 # Maintainer: mahmud <mahmudjonmurodov@mail.ru>
 pkgname=melyar
-pkgver=0.0.3.2a
 pkgrel=1
 pkgdesc="Ultra-lightweight native YouTube Music desktop client in C++20 and Rust"
 arch=('x86_64')
@@ -9,9 +8,21 @@ license=('MIT' 'Apache')
 depends=('qt6-base' 'qt6-declarative' 'qt6-webengine' 'qt6-webchannel' 'mpv')
 makedepends=('cmake' 'rust' 'cargo' 'pkgconf' 'nodejs' 'pnpm')
 optdepends=('yt-dlp: resolves metadata for tracks missing from InnerTube results')
+source=("git+https://github.com/MAKHMUDuz/melyar.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$pkgname"
+    git describe --tags --abbrev=0 2>/dev/null || git rev-list --count HEAD
+}
 
 build() {
-    cd "$srcdir/.."
+    cd "$srcdir/$pkgname"
+
+    # Clean previous build artifacts completely
+    rm -rf build-release
+    rm -rf core_rs/target
+    rm -rf ui_web/node_modules
 
     # Build the web UI (React + TypeScript)
     if command -v pnpm >/dev/null 2>&1; then
@@ -29,7 +40,7 @@ build() {
 }
 
 package() {
-    cd "$srcdir/.."
+    cd "$srcdir/$pkgname"
     DESTDIR="$pkgdir" cmake --install build-release
 
     # Install the web UI bundle next to the binary
