@@ -1,3 +1,13 @@
+melyar (0.0.3.2a-1) unstable; urgency=medium
+
+  * Local music import feature: .m3u, .pls, .json, .csv format support added
+  * Import button added to bottom toolbar with file dialog
+  * Enhanced ImportOverlay with format type descriptions
+  * GitHub: feat/plugins branch with all import functionality
+  * TypeScript and Rust compilation verified
+
+ -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Sun, 25 Oct 2026 19:18:00 +0300
+
 melyar (0.0.3-1) unstable; urgency=medium
 
   * Third release: the InnerTube configuration is read from the web client at

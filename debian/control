@@ -14,6 +14,7 @@ Build-Depends: debhelper-compat (= 13),
                cargo
 Standards-Version: 4.6.2
 Homepage: https://github.com/MAKHMUDuz/melyar
+Version: 0.0.3.2a
 Rules-Requires-Root: no
 
 Package: melyar
