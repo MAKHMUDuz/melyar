@@ -353,7 +353,12 @@ export const tr: Record<string, string> = {
   "import.finished.one": "{matched} parça içe aktarıldı, {skipped} bulunamadı",
   "import.finished.many": "{matched} parça içe aktarıldı, {skipped} bulunamadı",
 
+
+  "import.localMusic": "Yerel Müzik İçe Aktar",
+  "import.localMusicBtn": "Dosya Seç",
   "import.finished.few": "{matched} parça içe aktarıldı, {skipped} bulunamadı",
+  "import.source": "Kaynak",
+  "import.default": "Öntanımlı",
   "common.close": "Kapat",
   "common.clear": "Temizle",
   "common.search": "Ara...",

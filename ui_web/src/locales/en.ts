@@ -345,7 +345,12 @@ export const en: Record<string, string> = {
   "import.finished": "Imported {matched} tracks, {skipped} were not found",
   "import.finished.one": "Imported {matched} track, {skipped} were not found",
   "import.finished.many": "Imported {matched} tracks, {skipped} were not found",
+
+  "import.localMusic": "Import Local Music",
+  "import.localMusicBtn": "Select File",
   "import.finished.few": "Imported {matched} tracks, {skipped} were not found",
+  "import.source": "Source",
+  "import.default": "Default",
   "common.close": "Close",
   "common.clear": "Clear",
   "common.search": "Search...",

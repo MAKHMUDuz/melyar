@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  FolderPlus,
   ChevronLeft,
   ChevronRight,
   Heart,
@@ -24,6 +25,7 @@ import { useUIStore } from "@/store";
 import { useLibraryStore } from "@/store";
 import { PlayPauseMorph, GlassSlider } from "@/components/GlassComponents";
 import { handleUri } from "@/lib/client";
+import { useLibraryImport } from "@/lib/import";
 import type { TrackMeta } from "@/lib/types";
 import { t, useLocale, setLocale, LOCALES } from "@/lib/i18n";
 
@@ -294,9 +296,13 @@ export function Header() {
       <h1 className="hb-title">{title}</h1>
       <div className="hb-right">
         <LanguageMenu />
-        <button className="pb-icon" aria-label={t("settings.title")} onClick={() => void handleUri("melyar://settings")}>
+                <button className="pb-icon" aria-label={t("import.title")} onClick={() => useLibraryImport.getState().start()}>
+          <FolderPlus className="size-[18px]" />
+        </button>
+<button className="pb-icon" aria-label={t("settings.title")} onClick={() => void handleUri("melyar://settings")}>
           <Settings className="size-[18px]" />
         </button>
+      
       </div>
     </header>
   );

@@ -3,6 +3,31 @@ import { useLibraryImport } from "@/lib/import";
 import { t, tCount, useLocale } from "@/lib/i18n";
 import { useLibraryStore } from "@/store";
 
+export type ImportFormat = "spotify" | "json" | "csv" | "m3u" | "pls";
+
+const FORMAT_INFO: Record<ImportFormat, { label: string; description: string }> = {
+  spotify: {
+    label: "Spotify JSON Export",
+    description: "Export from Spotify account (YourLibrary.json)",
+  },
+  json: {
+    label: "JSON Array",
+    description: "JSON array of tracks with title, artist, album fields",
+  },
+  csv: {
+    label: "CSV File",
+    description: "CSV file with header row (title, artist, album columns)",
+  },
+  m3u: {
+    label: "M3U Playlist",
+    description: ".m3u playlist file with #EXTINF entries",
+  },
+  pls: {
+    label: "PLS Playlist",
+    description: ".pls playlist file with INI-style entries",
+  },
+};
+
 /**
  * The overlay that shows while a library import is running. It reports how
  * many tracks were matched so far and how many could not be found.
