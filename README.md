@@ -17,26 +17,23 @@
 ---
 
 Melyar brings music discovery, playback, lyrics, queues, and a personal listening
-library into one desktop application. It is built around a **Rust core**, a
-**Qt/C++ desktop bridge**, and a **React + TypeScript interface**.
+library into one desktop application: a **Rust core**, a **Qt/C++ desktop
+bridge**, and a **React + TypeScript interface**. Playback is powered by
+`libmpv`, and stream/metadata resolution goes through the YouTube `InnerTube`
+API. The client version is read from the live web client at runtime and several
+client identities are tried in turn, so one of them being refused does not stop
+playback. `yt-dlp` is used when it is installed, but it is not required.
 
-Playback is powered by `libmpv`, and stream/metadata resolution goes through
-the YouTube `InnerTube` API. The client version is read from the live web
-client at runtime, and several client identities are tried in turn, so one
-of them being refused does not stop playback. `yt-dlp` is used when it is
-installed, but it is not required.
-
-> **Project status: Work in progress.** Melyar is actively developed. Some UI
-> interactions and provider integrations are still being refined, so expect
-> changes and occasional bugs.
+> **Project status: Work in progress.** Some UI interactions and provider
+> integrations are still being refined, so expect changes and occasional bugs.
 > **[Looking to help? Read the contributing guide.](CONTRIBUTING.md)**
 
 ---
 
 ## Why Melyar
 
-There are other YouTube Music clients. Two of them are good. Melyar exists to
-be the best one **on Linux**, not the most portable one.
+There are other YouTube Music clients. Melyar exists to be the best one **on
+Linux**, not the most portable one.
 
 | | Melyar | Spotube | BloomeeTunes |
 |---|---|---|---|
@@ -47,142 +44,79 @@ be the best one **on Linux**, not the most portable one.
 | Waybar / Polybar IPC | Built in | No | No |
 | License | **MIT OR Apache-2.0** | BSD-4 | GPL-2.0 |
 
-Three bets:
-
-1. **Native beats emulated.** A Rust core with a Qt shell starts fast, keeps a
-   small memory footprint, and answers key presses and IPC without a framework
-   in between.
-2. **Desktop integration is the product.** MPRIS, a Waybar socket with
-   sub-millisecond latency, global media keys, and a real `.desktop`
-   integration are the difference between an application and a native citizen.
-3. **Permissive licensing.** MIT or Apache-2.0 lets distributors embed it.
-
-Where the competitors are still stronger - cross-platform reach and provider
-breadth - is stated plainly in the [roadmap](ROADMAP.md).
+Three bets: **native beats emulated** (a Rust core with a Qt shell starts fast
+and stays small), **desktop integration is the product** (MPRIS, a Waybar
+socket, media keys, a real `.desktop` entry), and **permissive licensing**, so
+distributors can embed it. Where the competitors are still stronger - platform
+reach and provider breadth - is stated plainly in the [roadmap](ROADMAP.md).
 
 ---
 
 ## Highlights
 
-**A ten band graphic equaliser**
-31 Hz to 16 kHz, built on mpv's filter chain, with the bands stored with the
-rest of the settings. The one feature the other clients still do not have.
-
-**A lighter application**
-The graphics stack is turned off, because a music player draws no video. That
-alone is 59 MB less resident memory, and the interface is ready in about
-650 ms.
-
-**An interface that is checked**
-Every push drives the application through every view and every overlay and
-fails the build when something is wrong with it.
-
-- Music playback powered by **mpv**, with stream resolution through the
-  YouTube Music API. Several client identities are tried in turn, and the
-  client version is read from the live web client, so the client keeps
-  working when YouTube changes something.
-- Search and discovery for music available through the currently implemented provider.
-- Playback controls including play/pause, previous/next, seeking, volume, shuffle,
-  and repeat where supported by the current build.
-- **Synchronized LRC lyrics** with timestamped highlighting and plain-text fallback.
-- Queue management for upcoming tracks, with gapless prefetch.
-- Personal library views for liked tracks, listening history, songs, albums, and artists.
-- **Library import** - bring your library over from another service. Melyar reads
-  a Spotify account export, a JSON list, or a CSV file, matches every track
-  against YouTube Music and adds the ones it recognises.
-- **Liquid Glass-inspired UI** with translucent surfaces, artwork-focused layouts,
-  and animated controls.
+- **A ten band graphic equaliser**, 31 Hz to 16 kHz, built on mpv's filter
+  chain - the one feature the other clients still do not have.
+- **A lighter application:** the graphics stack is off, because a music player
+  draws no video. That alone is 59 MB less resident memory; the interface is
+  ready in about 650 ms.
+- **An interface that is checked.** Every push drives the application through
+  every view and every overlay and fails when something is wrong.
+- **Playback** via mpv with stream resolution through the YouTube Music API.
+  Several client identities are tried in turn, so the client keeps working when
+  YouTube changes something.
+- **Synchronized LRC lyrics** with timestamped highlighting and plain-text
+  fallback, and queue management with gapless prefetch.
+- **Library import** - bring a Spotify account export, a JSON list or a CSV
+  file over from another service; Melyar matches every track against YouTube
+  Music and adds what it recognises.
+- **Personal library** views for liked tracks, history, songs, albums and
+  artists, kept in a local database.
 - **Thirteen languages** - English, Turkish, Spanish, German, French, Italian,
-  Portuguese, Russian, Ukrainian, Japanese, Chinese, Korean and Albanian. The
-  language follows the system by default and can be changed at runtime.
-- **A settings panel** that remembers: theme, accent colour, language, compact
-  mode, animations and the playback preferences all survive a restart.
-- Desktop integration built around native playback controls, **Linux MPRIS**
-  (D-Bus) and a **zero-latency Unix socket IPC** for Waybar / Polybar / i3status.
-- **Local-first direction:** Melyar does not require a Melyar account or a
-  Melyar-hosted cloud service to launch.
+  Portuguese, Russian, Ukrainian, Japanese, Chinese, Korean and Albanian - and
+  settings that survive a restart.
+- **Desktop integration:** Linux MPRIS (D-Bus) and a zero-latency Unix socket
+  IPC for Waybar / Polybar / i3status.
+- **Local-first:** no Melyar account and no Melyar-hosted cloud service to
+  launch.
 
-Availability can vary by provider, track, operating system, and external service
-behavior. See [Roadmap](#roadmap) for integrations that are not yet complete.
+Availability can vary by provider, track, operating system, and external
+service behavior. See the [roadmap](ROADMAP.md) for integrations that are not
+yet complete.
 
 ---
 
 ## Screenshots
 
-Melyar in English:
-
 ![Melyar home view](docs/screenshots/home-en.png)
-
-The interface is available in thirteen languages and can be switched at runtime
-from the sidebar or the settings panel:
 
 ![Melyar home view in Turkish](docs/screenshots/home-tr.png)
 
-> The screenshots were taken against a seeded sample library, so no personal
-> listening data is shown. Use `MELYAR_SCREENSHOT=/path/to.png ./build/melyar`
-> to capture the window yourself - see the
-> [contributing guide](CONTRIBUTING.md#capturing-a-screenshot).
+> The screenshots were taken against a seeded sample library. Use
+> `MELYAR_SCREENSHOT=/path/to.png ./build/melyar` to capture the window
+> yourself - see the [contributing guide](CONTRIBUTING.md#capturing-a-screenshot).
 
 ---
 
 ## Architecture
 
-Melyar separates its interface, desktop integration, and playback logic:
-
 ```
-React + TypeScript UI
-        │
-        │ QWebChannel
-        ▼
-Qt / C++ bridge
-        │
-        ▼
-Rust core ───── Provider and metadata logic
-        │
-        ▼
-mpv audio playback
+React + TypeScript UI ──QWebChannel──▶ Qt / C++ bridge ──▶ Rust core ──▶ mpv
+                                                            │
+                                        provider & metadata logic
 ```
 
-The C++ ↔ Rust boundary is implemented with the [`cxx`](https://cxx.rs) bridge.
-The Rust side runs on a `tokio` runtime; audio is driven synchronously by `libmpv`.
-
-### Main areas
+The C++ ↔ Rust boundary is the [`cxx`](https://cxx.rs) bridge. The Rust side
+runs on a `tokio` runtime; audio is driven synchronously by `libmpv`.
 
 | Directory | Purpose |
 |---|---|
-| `core_rs/` | Rust core, playback coordination, track models, lyrics, provider logic, and local application data handling. |
+| `core_rs/` | Rust core: playback coordination, track models, lyrics, provider logic, local application data. |
 | `ui_cpp/` | Qt/C++ integration and the bridge between the web interface and the core. |
-| `ui_web/` | React + TypeScript interface, views, components, and Liquid Glass styling. |
-
-The exact directory structure may change during development. Check the repository
-before relying on internal APIs.
-
----
-
-## Current functionality
-
-The current codebase includes the following areas, although some interactions are
-still being polished:
-
-- Search and browse available tracks.
-- Start playback and control playback state.
-- View and manage the playback queue.
-- Display synchronized LRC lyrics when timestamped lyrics are available, with
-  plain-text fallback.
-- Browse songs, liked tracks, history, albums, and artists.
-- Use an artwork-focused player and a larger Now Playing view.
-- Control playback through the application UI, the desktop's own media keys
-  and tray applet over MPRIS, or any MPRIS client.
-
-External streaming sources can change their APIs, availability, and access
-requirements. Melyar cannot guarantee that every track or provider will always
-be available.
+| `ui_web/` | React + TypeScript interface, views, components, Liquid Glass styling. |
 
 ---
 
 ## Requirements
-
-The current Linux-oriented build requirements:
 
 | Component | Version |
 |---|---|
@@ -190,14 +124,10 @@ The current Linux-oriented build requirements:
 | CMake | ≥ 3.25 |
 | C/C++ build toolchain | C++20 support |
 | Qt 6 | Core, Gui, Quick, Qml, WebEngineQuick, WebChannel |
-| Node.js | ≥ 20 |
-| pnpm | ≥ 9 |
+| Node.js / pnpm | ≥ 20 / ≥ 9 |
 | mpv | ≥ 2.x (`libmpv` development files) |
 | pkg-config | — |
 | yt-dlp | optional, used when it is installed |
-
-Install the Qt development packages appropriate for your distribution, including
-the Qt WebEngine and WebChannel components required by the project.
 
 <details>
 <summary>Distribution examples (Arch / Manjaro, Debian / Ubuntu)</summary>
@@ -219,24 +149,9 @@ sudo apt install build-essential cmake pkg-config rustc cargo \
 
 </details>
 
-### Dependency checks
-
-Verify that the required tools are available:
-
-```bash
-rustc --version
-cargo --version
-cmake --version
-node --version
-pnpm --version
-mpv --version
-yt-dlp --version
-```
-
-The application resolves streams without `yt-dlp`, but when it is installed
-it is used as well, because it handles some of the harder parts of the
-protocol. If a stream will not resolve, confirm that `yt-dlp` is installed,
-executable, and available in the environment used to launch Melyar.
+`yt-dlp` is optional: streams resolve without it, but it handles some of the
+harder parts of the protocol, so if a stream will not resolve, confirm it is
+installed, executable, and available in the environment used to launch Melyar.
 
 ---
 
@@ -245,56 +160,53 @@ executable, and available in the environment used to launch Melyar.
 ```bash
 git clone https://github.com/MAKHMUDuz/melyar.git
 cd melyar
-```
 
-### 1. Build the web UI
+# The compiled web bundle is committed under ui_web/dist/, so this step is
+# only required when the interface sources change.
+cd ui_web && pnpm install && pnpm build && cd ..
 
-```bash
-cd ui_web
-pnpm install
-pnpm build
-cd ..
-```
-
-The compiled bundle is committed under `ui_web/dist/`, so this step is only
-required when the interface sources change.
-
-### 2. Build the desktop application
-
-```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j"$(nproc)"
-```
-
-### 3. Run
-
-```bash
 ./build/melyar
 ```
-
-If the executable is produced at a different path in your branch, use the output
-path reported by CMake.
 
 ---
 
 ## Installation
 
-### Release tarball
+### Prebuilt packages
 
-Prebuilt packages are attached to the
-[releases](https://github.com/MAKHMUDuz/melyar/releases/latest). No build
-toolchain is needed:
+Packages for Arch and Debian/Ubuntu, plus a binary tarball, are attached to
+the [releases](https://github.com/MAKHMUDuz/melyar/releases/latest). No build
+toolchain is needed.
+
+**Debian / Ubuntu** (Ubuntu 24.04 or newer):
 
 ```bash
-tar xf melyar-v0.0.3-linux-x86_64.tar.gz
-cd melyar-0.0.3
-sudo cp bin/melyar /usr/local/bin/
+sudo apt install ./melyar_0.0.4-1_amd64.deb
+```
+
+**Arch** (the package and its dependencies come from the official repos):
+
+```bash
+sudo pacman -U melyar-0.0.4-1-x86_64.pkg.tar.zst
+```
+
+**Any distro** - unpack the tarball and install the files by hand:
+
+```bash
+tar xf melyar-0.0.4-linux-x86_64.tar.gz
+sudo cp -r bin/melyar /usr/local/bin/
 sudo cp -r share/melyar /usr/local/share/
 sudo cp share/applications/melyar.desktop /usr/local/share/applications/
-sudo cp share/icons/hicolor/scalable/apps/melyar.svg \
-  /usr/local/share/icons/hicolor/scalable/apps/
+sudo cp -r share/icons/hicolor /usr/local/share/icons/
 melyar
 ```
+
+The binary links against your distribution's Qt 6 and glibc, which is why the
+`.deb` is built on Ubuntu and the `.pkg.tar.zst` on Arch. If a package refuses
+to install because of the glibc version, build from source instead - it is a
+five minute build with the dependencies above.
 
 ### From source
 
@@ -302,82 +214,39 @@ melyar
 sudo cmake --install build
 ```
 
-CMake's default install prefix is `/usr/local`:
-
-| File | Path |
-|---|---|
-| Binary | `/usr/local/bin/melyar` |
-| Web UI | `/usr/local/share/melyar/web/` |
-| Desktop entry | `/usr/local/share/applications/melyar.desktop` |
-| Icon | `/usr/local/share/icons/hicolor/scalable/apps/melyar.svg` |
-
-To install into the system directory instead:
-
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-sudo cmake --install build
-```
+CMake's default install prefix is `/usr/local` (`bin/melyar`,
+`share/melyar/web/`, `share/applications/melyar.desktop`,
+`share/icons/.../melyar.svg`). To install into the system directory instead,
+configure with `-DCMAKE_INSTALL_PREFIX=/usr` before installing.
 
 The application resolves the web UI in this order: current working directory →
 next to the binary → `/usr/share/melyar/web/` → `/usr/local/share/melyar/web/`.
 To point it at a live Vite dev server, set `MELYAR_DEV_URL`.
 
-### Arch / AUR
-
-A `PKGBUILD` is included in the repository:
-
-```bash
-makepkg -si
-```
-
-### Debian / Ubuntu
-
-A `debian/` recipe is included, so the package can be built with the usual
-tools:
-
-```bash
-dpkg-buildpackage -us -uc -b
-sudo dpkg -i ../melyar_*.deb
-```
-
-The continuous integration builds the package on every push, so the recipe is
-checked against a real Debian system.
+A `PKGBUILD` (`makepkg -si`) and a `debian/` recipe
+(`dpkg-buildpackage -us -uc -b`) are both included, and continuous integration
+builds the Debian package on every push.
 
 ---
 
 ## Desktop integration
 
-### MPRIS
-
-Melyar answers on the session bus as `org.mpris.MediaPlayer2.melyar`, which is
-how a Linux desktop finds out what is playing. The tray applet, the media keys,
-the lock-screen widget, the volume OSD and the keyboard's play button all speak
-it and nothing else, so the title, artist, cover, position and playback state
-appear in KDE Plasma and GNOME without any configuration.
-
-It works in both directions: play, pause, next, previous, seeking and the
-desktop's own volume slider all move Melyar, and repeat and shuffle are
-reported as `LoopStatus` and `Shuffle`. A seek aimed at a track that has
-already been replaced is ignored rather than moving the new one.
-
-The service is part of the application — no extra dependency and no setting to
-turn on. It registers only when a session bus is present, so a build, a sandbox
-or a CI run without one starts normally.
-
-To check that it is working:
+**MPRIS.** Melyar answers on the session bus as
+`org.mpris.MediaPlayer2.melyar`, so the tray applet, media keys, lock-screen
+widget and volume OSD all drive it, and the title, artist, cover, position and
+playback state appear in KDE Plasma and GNOME with no configuration. It works
+in both directions: play, pause, next, previous, seeking and the desktop's
+volume slider move Melyar, and repeat and shuffle are reported. The service is
+part of the application - no extra dependency, no setting to turn on.
 
 ```bash
 busctl --user get-property org.mpris.MediaPlayer2.melyar \
     /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player Metadata
 ```
 
-### Waybar / status bar
-
-For status bars that do not speak D-Bus, Melyar runs a zero-latency Unix Domain
-Socket IPC server at `$XDG_RUNTIME_DIR/melyar.sock`, for use with Waybar,
-Polybar, Hyprland and i3status.
-
-`~/.config/waybar/config.jsonc`:
+**Waybar / status bars.** For bars that do not speak D-Bus, Melyar runs a
+zero-latency Unix socket IPC server at `$XDG_RUNTIME_DIR/melyar.sock`
+(commands: `toggle`, `next`, `prev`, `stop`):
 
 ```jsonc
 "custom/melyar": {
@@ -385,15 +254,11 @@ Polybar, Hyprland and i3status.
     "return-type": "json",
     "exec": "socat -u UNIX-CONNECT:${XDG_RUNTIME_DIR:-/tmp}/melyar.sock -",
     "on-click": "echo toggle | nc -U ${XDG_RUNTIME_DIR:-/tmp}/melyar.sock",
-    "on-click-right": "echo next | nc -U ${XDG_RUNTIME_DIR:-/tmp}/melyar.sock",
-    "on-click-middle": "echo prev | nc -U ${XDG_RUNTIME_DIR:-/tmp}/melyar.sock",
     "interval": 1
 }
 ```
 
-Supported commands: `toggle`, `next`, `prev`, `stop`.
-
-Full setup instructions, CSS, and Hyprland/Sway keybinding examples are in
+Full setup, CSS and Hyprland/Sway keybinding examples:
 [`docs/WAYBAR.md`](docs/WAYBAR.md).
 
 ---
@@ -409,149 +274,79 @@ Full setup instructions, CSS, and Hyprland/Sway keybinding examples are in
 
 ## Roadmap
 
-The full plan lives in **[ROADMAP.md](ROADMAP.md)**, including the honest list
-of where Melyar still lags the alternatives and the milestones that close the
-gap. The next steps:
+The full plan, including the honest list of where Melyar still lags the
+alternatives, lives in **[ROADMAP.md](ROADMAP.md)**: a solid Linux citizen
+(settings, accessibility, crash-safe writes), a library that works
+(import/export, local folders, playlists), provider breadth where it is
+permitted, and cross-platform only if it earns its place.
 
-- **M1 - Solid Linux citizen:** persistent settings, keyboard-first navigation,
-  an accessibility pass, crash-safe database writes.
-- **M2 - Library that works:** portable import/export, local music folders,
-  smart playlists, playlist editing.
-- **M3 - Provider breadth:** Spotify and Apple Music library import where
-  permitted, and a documented provider plugin interface.
-- **M4 - Cross-platform, if it earns its place:** an honest evaluation of
-  extending the shell beyond Linux.
-
-Third-party services may require their own accounts, subscriptions, authorization,
-or API access. Melyar does not make paid features of another service free, and
-integrations must respect that service's terms and technical restrictions.
+Third-party services may require their own accounts, subscriptions, or API
+access. Melyar does not make paid features of another service free.
 
 ---
 
 ## Development
 
-After changing the Rust core, run the checks supported by the current workspace:
-
 ```bash
 cargo fmt --all
 cargo clippy --manifest-path core_rs/Cargo.toml --all-targets
 cargo test --manifest-path core_rs/Cargo.toml
+cd ui_web && pnpm build   # then rebuild the desktop app if Qt assets changed
 ```
 
-For UI changes:
-
-```bash
-cd ui_web
-pnpm build
-```
-
-Then rebuild the desktop application if the change affects Qt integration or
-packaged UI assets:
-
-```bash
-cd ..
-cmake --build build -j"$(nproc)"
-```
-
-Every push to `master` runs the same checks automatically via
-[GitHub Actions](.github/workflows/ci.yml): Rust format/lint/build, TypeScript
-typecheck, web bundle build, and a full Qt6 CMake build.
-
-Before submitting a change, test the affected feature in the actual desktop
-application — not only in a browser preview. In particular, verify playback,
-seeking, lyrics synchronization, queue behavior, panel open/close behavior, and
-window resizing when those areas are touched.
-
----
-
-## Privacy and accounts
-
-- Melyar itself does not require a Melyar user account to launch.
-- The project is designed to keep the desktop experience local-first and avoid
-  requiring a Melyar-hosted cloud backend.
-- External providers may perform network requests and may have their own
-  authentication, privacy policy, subscription, and usage requirements.
-- Never commit credentials, access tokens, personal listening data, or local
-  configuration files to the repository.
-- Do not claim that an external integration is anonymous or account-free unless
-  its actual implementation and provider requirements have been verified.
-
-Local persistence details may evolve during development. Consult the current
-implementation before making claims about a specific storage format or
-database-free operation.
+Every push runs these checks plus a full Qt6 build, an interface audit at
+three window sizes in both themes, and a memory budget check via
+[GitHub Actions](.github/workflows/ci.yml). Before submitting a change, test
+the affected feature in the actual desktop application - not only in a browser
+preview.
 
 ---
 
 ## Contributing
 
-Contributions, bug reports, and focused pull requests are welcome. **New
-contributors are actively wanted** - see the
-[good first issues](ROADMAP.md#good-first-issues) for scoped starting points.
-
-The full guide is in **[CONTRIBUTING.md](CONTRIBUTING.md)**: build setup, the
-commit and branch conventions, the pull request process, and how the three
-layers of the codebase fit together. The system design is documented in
+Contributions, bug reports and focused pull requests are welcome - **new
+contributors are actively wanted**, see the
+[good first issues](ROADMAP.md#good-first-issues). The full guide is in
+**[CONTRIBUTING.md](CONTRIBUTING.md)**, and the system design in
 **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
-Before submitting a change:
-
-1. Explain the problem and the intended behavior.
-2. Keep changes focused and avoid unrelated rewrites.
-3. Preserve working playback and bridge behavior.
-4. Include tests or reproducible verification steps where practical.
-5. Do not add dependencies without a clear technical reason.
-6. Do not commit build output, credentials, personal data, or machine-specific paths.
-
-For UI changes, include screenshots or a short recording when useful. For
-playback or lyrics fixes, provide reproducible steps and relevant logs with
-secrets removed.
+Keep changes focused, preserve working playback and bridge behavior, and do
+not commit build output, credentials or personal data. For UI changes include
+screenshots; for playback or lyrics fixes, include reproducible steps and logs
+with secrets removed.
 
 ---
 
 ## Bug reports
 
-Use the **bug report template** - it asks for the version, the desktop
-environment, the expected and actual behavior, and reproducible steps, which
-saves a round trip.
-
-For layout issues, include the window size and whether the queue or expanded
-player was open. For lyrics issues, include the track, playback position, and
-whether the lyrics are timestamped or plain text.
+Use the **bug report template** - version, desktop environment, expected and
+actual behavior, reproducible steps. For layout issues include the window size
+and whether the queue or expanded player was open; for lyrics issues, the
+track, playback position and whether the lyrics are timestamped.
 
 **Security problems** are not public issues - see
-[.github/SECURITY.md](.github/SECURITY.md).
-
-Participation is governed by the
+[.github/SECURITY.md](.github/SECURITY.md). Participation is governed by the
 [Code of Conduct](.github/CODE_OF_CONDUCT.md).
 
 ---
 
 ## License
 
-Melyar is dual-licensed. You may use it under the terms of either:
-
-- **MIT** — [`LICENSE-MIT`](LICENSE-MIT)
-- **Apache License 2.0** — [`LICENSE-APACHE`](LICENSE-APACHE)
-
+Melyar is dual-licensed under **MIT** ([`LICENSE-MIT`](LICENSE-MIT)) and
+**Apache License 2.0** ([`LICENSE-APACHE`](LICENSE-APACHE)).
 `SPDX-License-Identifier: MIT OR Apache-2.0`
-
----
-
-## Acknowledgements
-
-Melyar builds on open-source software and is inspired by modern desktop
-music-player design and Liquid Glass visual concepts. All third-party projects
-remain the property of their respective authors and are subject to their own
-licenses.
 
 ---
 
 ## Notes
 
-- Melyar is an unofficial client. It is not affiliated with, endorsed by, or
-  sponsored by YouTube, Google, Spotify, or any other provider.
-- Content licenses, account terms, and the laws of your jurisdiction apply to
-  you as the end user.
+- Melyar builds on open-source software and is inspired by modern desktop
+  music-player design and Liquid Glass visual concepts. Third-party projects
+  remain the property of their respective authors under their own licenses.
+- Melyar is an unofficial client, not affiliated with, endorsed by or
+  sponsored by YouTube, Google, Spotify or any other provider. Content
+  licenses, account terms and the laws of your jurisdiction apply to you as
+  the end user.
 
 ---
 
