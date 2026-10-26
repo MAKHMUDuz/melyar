@@ -27,8 +27,11 @@ debian/*.debhelper.log
 
 # makepkg / packaging artifacts (a package is built in a clean tree, never
 # committed next to the sources)
-pkg/
-src/
+# makepkg artefacts: anchored to the repository root, because a bare "src/"
+# would also hide ui_web/src/ from git and from Tailwind's content scan,
+# which silently changes the built CSS bundle.
+/pkg/
+/src/
 *.pkg.tar.zst
 *.deb
 *.spec
