@@ -30,11 +30,17 @@ pub struct AudiusSource {
     http: reqwest::Client,
 }
 
-impl AudiusSource {
-    pub fn new() -> Self {
+impl Default for AudiusSource {
+    fn default() -> Self {
         Self {
             http: reqwest::Client::new(),
         }
+    }
+}
+
+impl AudiusSource {
+    pub fn new() -> Self {
+        Self::default()
     }
 
     fn search_url(query: &str) -> String {
@@ -65,7 +71,11 @@ impl AudiusSource {
         let duration = item
             .get("duration")
             .and_then(|d| d.as_f64())
-            .or_else(|| item.get("duration").and_then(|d| d.as_i64()).map(|i| i as f64))
+            .or_else(|| {
+                item.get("duration")
+                    .and_then(|d| d.as_i64())
+                    .map(|i| i as f64)
+            })
             .unwrap_or(0.0);
 
         let thumbnail = item
@@ -174,10 +184,8 @@ mod tests {
     /// An entry without a duration must still play rather than be dropped.
     #[test]
     fn entry_without_duration_still_maps() {
-        let item: Value = serde_json::from_str(
-            r#"{"id": "abc", "title": "T", "user": {"name": "A"}}"#,
-        )
-        .unwrap();
+        let item: Value =
+            serde_json::from_str(r#"{"id": "abc", "title": "T", "user": {"name": "A"}}"#).unwrap();
         let meta = AudiusSource::to_meta(&item).expect("should map");
         assert_eq!(meta.duration_secs, 0.0);
     }

@@ -83,7 +83,10 @@ impl SourceRegistry {
     ///
     /// YouTube gets the live client rather than building its own, so the default
     /// path shares the connection pool the app already warmed up.
-    pub fn new(innertube: std::sync::Arc<crate::innertube::client::InnerTubeClient>, saved: &str) -> Self {
+    pub fn new(
+        innertube: std::sync::Arc<crate::innertube::client::InnerTubeClient>,
+        saved: &str,
+    ) -> Self {
         let youtube: Arc<dyn Source> = Arc::new(youtube::YouTubeSource::new(innertube));
         let soundcloud: Arc<dyn Source> = Arc::new(soundcloud::SoundCloudSource::new());
         let audius: Arc<dyn Source> = Arc::new(audius::AudiusSource::new());
@@ -159,11 +162,11 @@ impl SourceRegistry {
         let futures = wanted.iter().map(|s| s.search(query));
         let results = futures::future::join_all(futures).await;
 
+        // A source that failed simply contributes nothing: one provider being
+        // down must not take the results of the others down with it.
         let mut merged = Vec::new();
-        for res in results {
-            if let Ok(mut tracks) = res {
-                merged.append(&mut tracks);
-            }
+        for tracks in results.into_iter().flatten() {
+            merged.extend(tracks);
         }
         merged
     }

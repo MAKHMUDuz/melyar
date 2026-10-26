@@ -39,19 +39,22 @@ fn find_yt_dlp() -> Option<PathBuf> {
         }
     }
     let home = std::env::var("HOME").ok()?;
-    for candidate in [
+    [
         PathBuf::from(&home).join(".local/bin/yt-dlp"),
         PathBuf::from("/usr/bin/yt-dlp"),
         PathBuf::from("/usr/local/bin/yt-dlp"),
-    ] {
-        if candidate.exists() {
-            return Some(candidate);
-        }
-    }
-    None
+    ]
+    .into_iter()
+    .find(|candidate| candidate.exists())
 }
 
 pub struct SoundCloudSource;
+
+impl Default for SoundCloudSource {
+    fn default() -> Self {
+        Self
+    }
+}
 
 impl SoundCloudSource {
     pub fn new() -> Self {
@@ -216,7 +219,10 @@ mod tests {
         assert!(url.starts_with("http"), "not a URL: {url}");
         // The page-path guess (soundcloud.com/tracks/<id>) is a 404; the fix
         // must keep pointing at the API or the player gets nothing to open.
-        assert!(!url.contains("soundcloud.com/tracks/"), "page path leaked: {url}");
+        assert!(
+            !url.contains("soundcloud.com/tracks/"),
+            "page path leaked: {url}"
+        );
         eprintln!("resolved: {url}");
     }
 }
