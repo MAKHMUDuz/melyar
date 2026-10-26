@@ -31,10 +31,10 @@ corrosion_import_crate(
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick Qml WebEngineQuick WebChannel)
 
 # -----------------------------------------------------------------------------
-# Libmpv
+# Libmpv (resolved per-project, not by changing the host linker defaults)
 # -----------------------------------------------------------------------------
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(MPV REQUIRED mpv)
+pkg_check_modules(MPV REQUIRED IMPORTED_TARGET mpv)
 
 # -----------------------------------------------------------------------------
 # Melyar Executable Target
@@ -67,10 +67,19 @@ qt6_add_resources(melyar "melyar_qml"
     FILES ${MELYAR_QML_FILES} ${MELYAR_RESOURCE_FILES}
 )
 
+# Web bundle is required at runtime. If it is missing, fail early with an
+# actionable message instead of letting the app die later with a blank/failed UI.
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ui_web/dist/index.html")
+    message(WARNING
+        "ui_web/dist/index.html not found. Build the web UI first with:\n"
+        "  cd ui_web && pnpm install && pnpm build\n"
+        "Then rerun cmake --build ."
+    )
+endif()
+
 target_include_directories(melyar PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/core_rs/include
     ${CMAKE_CURRENT_SOURCE_DIR}/ui_cpp/bridge
-    ${MPV_INCLUDE_DIRS}
 )
 
 target_link_libraries(melyar PRIVATE
@@ -81,16 +90,17 @@ target_link_libraries(melyar PRIVATE
     Qt6::Qml
     Qt6::WebEngineQuick
     Qt6::WebChannel
-    ${MPV_LIBRARIES}
+    PkgConfig::MPV
 )
 
-# CMake emits `-lmpv` *before* libmelyar_core.a, because the Rust core
-# declares libmpv as an interface dependency. Distributions that link with
-# `--as-needed` by default (Ubuntu/Debian) then drop libmpv from the link
-# line, since no mpv_* symbol is undefined yet at that point, which breaks
-# the final link with "undefined reference to mpv_create".
-# Disabling --as-needed for this target keeps libmpv on the link line.
-target_link_options(melyar PRIVATE "LINKER:--no-as-needed")
+# The Rust side may pull in libmpv as an interface dependency. Some distros 
+# (notably Debian/Ubuntu with --as-needed) can drop it from the final link line,
+# leaving the app with "undefined reference to mpv_create". This keeps the
+# project-local fix contained to the binary we build and does not modify the
+# system linker defaults globally.
+if(UNIX AND NOT APPLE)
+    target_link_options(melyar PRIVATE "LINKER:--no-as-needed")
+endif()
 
 set_target_properties(melyar PROPERTIES
     CXX_STANDARD 20
