@@ -318,12 +318,12 @@ function GlassDropdown({
    ============================================================ */
 
 const ACCENT_PRESETS = [
-  { value: "#fa233b", label: "Melyar Red" },
-  { value: "#1db954", label: "Spotify Green" },
-  { value: "#ff8a00", label: "Amber" },
-  { value: "#7c5cff", label: "Violet" },
-  { value: "#00a6c8", label: "Cyan" },
-  { value: "#e0218a", label: "Magenta" },
+  { value: "#fa233b", labelKey: "settings.accentPreset.melyarRed" },
+  { value: "#1db954", labelKey: "settings.accentPreset.spotifyGreen" },
+  { value: "#ff8a00", labelKey: "settings.accentPreset.amber" },
+  { value: "#7c5cff", labelKey: "settings.accentPreset.violet" },
+  { value: "#00a6c8", labelKey: "settings.accentPreset.cyan" },
+  { value: "#e0218a", labelKey: "settings.accentPreset.magenta" },
 ];
 
 function AccentColorPicker({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -337,7 +337,7 @@ function AccentColorPicker({ value, onChange }: { value: string; onChange: (valu
             type="button"
             role="radio"
             aria-checked={active}
-            aria-label={preset.label}
+            aria-label={t(preset.labelKey)}
             onClick={() => onChange(preset.value)}
             className={cn(
               "relative size-10 rounded-full border-2 transition-all",
