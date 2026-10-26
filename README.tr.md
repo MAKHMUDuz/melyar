@@ -66,37 +66,25 @@ Qt/WebChannel üzerinden kurulur.
 
 ## Kurulum
 
-Arch ve Debian/Ubuntu paketleri ile binary tarball,
-[sürüm sayfasına](https://github.com/MAKHMUDuz/melyar/releases/latest)
-eklidir. Derleme aracı gerekmez:
+Arch ve Debian/Ubuntu paketleri
+[sürüm sayfasında](https://github.com/MAKHMUDuz/melyar/releases/latest)
+bulunur. Derleme aracı gerekmez:
 
 **Debian / Ubuntu** (Ubuntu 24.04 veya yenisi):
 
 ```bash
-sudo apt install ./melyar_0.0.4-1_amd64.deb
+sudo apt install ./melyar_*_amd64.deb
 ```
 
 **Arch** (bağımlılıklar resmi depolardan gelir):
 
 ```bash
-sudo pacman -U melyar-0.0.4-1-x86_64.pkg.tar.zst
+sudo pacman -U melyar-*.pkg.tar.zst
 ```
 
-**Diğer distrolar** — tarball'ı açıp dosyaları elle yerleştirin:
-
-```bash
-tar xf melyar-0.0.4-linux-x86_64.tar.gz
-sudo cp bin/melyar /usr/local/bin/
-sudo cp -r share/melyar /usr/local/share/
-sudo cp share/applications/melyar.desktop /usr/local/share/applications/
-sudo cp -r share/icons/hicolor /usr/local/share/icons/
-melyar
-```
-
-Her binary kendi dağıtımının Qt 6 ve glibc sürümüne bağlıdır — `.deb`
-Ubuntu'da, `.pkg.tar.zst` Arch'ta derlenir; başka bir sürüm için üretilmiş
-paket kurulmayı reddedebilir. Öyle olursa aşağıdaki gibi kaynaktan derleyin;
-bağımlılıklarla yaklaşık beş dakika sürer.
+Paketler kendi dağıtımlarının Qt 6 ve glibc sürümlerine bağlıdır. Diğer
+dağıtımlarda binary'nin o sistemdeki Qt ve sistem kütüphanelerine bağlanması
+için aşağıdaki kaynak derlemesini kullanın.
 
 Kaynaktan derledikten sonra şöyle de kurabilirsiniz:
 
@@ -109,13 +97,14 @@ CMake varsayılan olarak `/usr/local`'a kurar (`bin/melyar`,
 `share/icons/.../melyar.svg`). Sistem dizinine kurmak için derlemeden önce
 `-DCMAKE_INSTALL_PREFIX=/usr` verin. Depoda bir `PKGBUILD`
 (`makepkg -si`) ve bir `debian/` tarifi (`dpkg-buildpackage -us -uc -b`)
-vardır; CI Debian paketini her push'da derler.
+vardır. CI her push'ta iki paketi oluşturup doğrular; sürüm etiketleriyle
+doğrulanmış paketleri GitHub Releases'a yayımlar.
 
 ## Kaynaktan derleme
 
 ### Gereksinimler
 
-- Rust ≥ 1.75
+- Rust ≥ 1.88 (rustup ile kurun; Ubuntu 24.04'ün paketindeki Rust eski)
 - CMake ≥ 3.25
 - Qt 6 (`Core`, `Gui`, `Quick`, `Qml`, `WebEngineQuick`, `WebChannel`)
 - Node.js ≥ 20
@@ -131,18 +120,24 @@ vardır; CI Debian paketini her push'da derler.
 
 ```bash
 sudo pacman -S base-devel cmake rust pkgconf \
-    qt6-base qt6-declarative qt6-webengine qt6-webchannel mpv
+    qt6-base qt6-declarative qt6-webengine qt6-webchannel qt6-svg mpv
 ```
 
 **Debian / Ubuntu**
 
 ```bash
-sudo apt install build-essential cmake pkg-config rustc cargo \
+sudo apt install build-essential cmake pkg-config \
     qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
-    libmpv-dev yt-dlp
+    qml6-module-qtquick qml6-module-qtquick-controls \
+    qml6-module-qtquick-dialogs qml6-module-qtquick-layouts \
+    qml6-module-qtquick-templates qml6-module-qtquick-window \
+    qml6-module-qtqml-workerscript qml6-module-qtwebchannel \
+    qml6-module-qtwebengine libqt6svg6 libmpv-dev yt-dlp
 ```
 
 </details>
+
+Derlemeden önce [rustup](https://rustup.rs/) ile Rust 1.88 veya yenisini kurun.
 
 ### Derle ve çalıştır
 

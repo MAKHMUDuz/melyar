@@ -1296,7 +1296,7 @@ dependencies = [
 
 [[package]]
 name = "melyar_core"
-version = "0.0.3"
+version = "0.0.2"
 dependencies = [
  "anyhow",
  "async-trait",

@@ -1,3 +1,9 @@
+melyar (0.0.2-2) unstable; urgency=medium
+
+  * Rebuild the 0.0.2 source with the supported Rust toolchain requirement.
+
+ -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Tue, 27 Oct 2026 01:46:38 +0300
+
 melyar (0.0.4-1) unstable; urgency=medium
 
   * Local music import: .m3u, .pls, .json and .csv can be brought into the

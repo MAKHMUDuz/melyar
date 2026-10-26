@@ -47,7 +47,7 @@ This document is the contract for how changes land. It is deliberately short.
 
 | Tool | Version |
 |---|---|
-| Rust | ≥ 1.75 |
+| Rust | ≥ 1.88 (use rustup on Ubuntu 24.04) |
 | CMake | ≥ 3.25 |
 | C++ compiler | C++20 support |
 | Qt 6 | Core, Gui, Quick, Qml, WebEngineQuick, WebChannel |
@@ -67,10 +67,16 @@ sudo pacman -S base-devel cmake rust pkgconf \
 **Debian / Ubuntu**
 
 ```bash
-sudo apt install build-essential cmake pkg-config rustc cargo \
+sudo apt install build-essential cmake pkg-config \
     qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
-    libmpv-dev yt-dlp
+    qml6-module-qtquick qml6-module-qtquick-controls \
+    qml6-module-qtquick-dialogs qml6-module-qtquick-layouts \
+    qml6-module-qtquick-templates qml6-module-qtquick-window \
+    qml6-module-qtqml-workerscript qml6-module-qtwebchannel \
+    qml6-module-qtwebengine libqt6svg6 libmpv-dev yt-dlp
 ```
+
+Install Rust 1.88 or newer with [rustup](https://rustup.rs/) before building.
 
 ### Build
 

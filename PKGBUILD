@@ -1,17 +1,22 @@
 # Maintainer: mahmud <mahmudjonmurodov@mail.ru>
 pkgname=melyar
-pkgrel=1
+pkgrel=2
 pkgdesc="Ultra-lightweight native YouTube Music desktop client in C++20 and Rust"
 arch=('x86_64')
 url="https://github.com/MAKHMUDuz/melyar"
 license=('MIT' 'Apache')
 # Initial value: pkgver() below replaces it once the checkout exists, but the
 # PKGBUILD lint runs before any VCS function and rejects an unset variable.
-pkgver=0.0.4
-depends=('qt6-base' 'qt6-declarative' 'qt6-webengine' 'qt6-webchannel' 'mpv')
+pkgver=0.0.2
+depends=('qt6-base' 'qt6-declarative' 'qt6-webengine' 'qt6-webchannel' 'qt6-svg' 'mpv')
 makedepends=('cmake' 'rust' 'cargo' 'pkgconf' 'nodejs' 'pnpm')
 optdepends=('yt-dlp: resolves metadata for tracks missing from InnerTube results')
-source=("git+https://github.com/MAKHMUDuz/melyar.git")
+_git_url="${MELYAR_GIT_URL:-https://github.com/MAKHMUDuz/melyar.git}"
+if [ -n "${MELYAR_GIT_COMMIT:-}" ]; then
+    source=("git+${_git_url}#commit=${MELYAR_GIT_COMMIT}")
+else
+    source=("git+${_git_url}")
+fi
 sha256sums=('SKIP')
 
 pkgver() {

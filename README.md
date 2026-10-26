@@ -62,37 +62,25 @@ The C++ ↔ Rust boundary is connected via the `cxx` bridge, while the UI commun
 
 ## Install
 
-Packages for Arch and Debian/Ubuntu, plus a binary tarball, are attached to
-the [latest release](https://github.com/MAKHMUDuz/melyar/releases/latest).
-No build toolchain is needed:
+Arch and Debian/Ubuntu packages are attached to the
+[latest release](https://github.com/MAKHMUDuz/melyar/releases/latest). No
+build toolchain is needed:
 
 **Debian / Ubuntu** (Ubuntu 24.04 or newer):
 
 ```bash
-sudo apt install ./melyar_0.0.4-1_amd64.deb
+sudo apt install ./melyar_*_amd64.deb
 ```
 
 **Arch** (dependencies come from the official repos):
 
 ```bash
-sudo pacman -U melyar-0.0.4-1-x86_64.pkg.tar.zst
+sudo pacman -U melyar-*.pkg.tar.zst
 ```
 
-**Any other distro** — unpack the tarball and copy the files into place:
-
-```bash
-tar xf melyar-0.0.4-linux-x86_64.tar.gz
-sudo cp bin/melyar /usr/local/bin/
-sudo cp -r share/melyar /usr/local/share/
-sudo cp share/applications/melyar.desktop /usr/local/share/applications/
-sudo cp -r share/icons/hicolor /usr/local/share/icons/
-melyar
-```
-
-Each binary links against its own distribution's Qt 6 and glibc — the `.deb`
-is built on Ubuntu and the `.pkg.tar.zst` on Arch, which is why a package
-built for another release may refuse to install. If that happens, build from
-source below; it takes about five minutes with the dependencies listed.
+The packages use their distribution's Qt 6 and glibc. For other distributions,
+build from source below so the binary links against the Qt and system libraries
+available on that machine.
 
 You can also install from source once it is built:
 
@@ -105,13 +93,14 @@ CMake installs to `/usr/local` by default (`bin/melyar`,
 `share/icons/.../melyar.svg`). Configure with `-DCMAKE_INSTALL_PREFIX=/usr`
 to install into the system directory instead. A `PKGBUILD` (`makepkg -si`)
 and a `debian/` recipe (`dpkg-buildpackage -us -uc -b`) are included in the
-repository, and CI builds the Debian package on every push.
+repository. CI builds and validates both packages on every push; version tags
+publish the validated packages to GitHub Releases.
 
 ## Build from source
 
 ### Requirements
 
-- Rust ≥ 1.75
+- Rust ≥ 1.88 (install with rustup; Ubuntu 24.04's packaged Rust is too old)
 - CMake ≥ 3.25
 - Qt 6 (`Core`, `Gui`, `Quick`, `Qml`, `WebEngineQuick`, `WebChannel`)
 - Node.js ≥ 20
@@ -127,18 +116,24 @@ repository, and CI builds the Debian package on every push.
 
 ```bash
 sudo pacman -S base-devel cmake rust pkgconf \
-    qt6-base qt6-declarative qt6-webengine qt6-webchannel mpv
+    qt6-base qt6-declarative qt6-webengine qt6-webchannel qt6-svg mpv
 ```
 
 **Debian / Ubuntu**
 
 ```bash
-sudo apt install build-essential cmake pkg-config rustc cargo \
+sudo apt install build-essential cmake pkg-config \
     qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
-    libmpv-dev yt-dlp
+    qml6-module-qtquick qml6-module-qtquick-controls \
+    qml6-module-qtquick-dialogs qml6-module-qtquick-layouts \
+    qml6-module-qtquick-templates qml6-module-qtquick-window \
+    qml6-module-qtqml-workerscript qml6-module-qtwebchannel \
+    qml6-module-qtwebengine libqt6svg6 libmpv-dev yt-dlp
 ```
 
 </details>
+
+Install Rust 1.88 or newer with [rustup](https://rustup.rs/) before building.
 
 ### Build and run
 
