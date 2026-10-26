@@ -467,35 +467,68 @@
   view("artists", true);
   view("search", false);
 
+  // The panel shows one category at a time behind a tablist, so the audit
+  // cannot expect every section to be on screen at once — it selects each
+  // tab in turn and checks the section that category is supposed to render.
+  // The category ids are the panel's own ids (tab-<id>, panel-<id>), and the
+  // expected heading comes from the dictionary in whichever language is
+  // active, for the same reason as everywhere else in this file.
+  const SETTINGS_CATEGORIES = [
+    "general", "appearance", "playback", "audio", "library",
+    "lyrics", "providers", "advanced", "about",
+  ];
+
   steps.push([
     "settings",
     function () {
-      // The equaliser bands are only shown once the equaliser is on, so it
-      // has to be turned on before the panel is checked.
       window.__testSetSetting("equalizerEnabled", "true");
       window.bridge.openUri("melyar://settings");
     },
     function () {
       const panel = document.querySelector(".settings-panel");
       if (!panel) { note("no-panel", "settings: the panel did not open"); return; }
-      const labels = Array.prototype.slice
-        .call(panel.querySelectorAll("h3"))
-        .map((e) => (e.textContent || "").trim());
-      // The sections are translated, so the audit asks the dictionary what
-      // they are called in the language that is selected rather than
-      // expecting English — otherwise every non-English run reports four
-      // sections missing that are on screen, under their own names.
-      const dict = window.__melyarDict || {};
-      ["appearance", "playback", "interface", "advanced"].forEach((name) => {
-        const want = dict["settings.section." + name] || name;
-        if (labels.indexOf(want) === -1) {
-          note("missing-section", "settings: no '" + want + "' section, found: " + labels.join(", "));
-        }
-      });
-      const sliders = panel.querySelectorAll("input[type=range]").length;
-      if (sliders < 10) note("missing-equalizer", "settings: the equaliser bands are missing (" + sliders + ")");
+      const missing = SETTINGS_CATEGORIES.filter(
+        (id) => !document.getElementById("tab-" + id),
+      );
+      if (missing.length) {
+        note("missing-tab", "settings: no tab for " + missing.join(", "));
+      }
     },
   ]);
+
+  SETTINGS_CATEGORIES.forEach((category) => {
+    steps.push([
+      "settings:" + category,
+      function () {
+        const tab = document.getElementById("tab-" + category);
+        if (tab) tab.click();
+      },
+      function () {
+        const panel = document.querySelector(".settings-panel");
+        if (!panel) { note("no-panel", "settings:" + category + ": the panel closed"); return; }
+        const content = document.getElementById("panel-" + category);
+        if (!content) { note("no-category", "settings:" + category + ": its content did not render"); return; }
+        if (content.textContent.trim().length < 10) {
+          note("empty-category", "settings:" + category + ": nothing rendered");
+        }
+        const dict = window.__melyarDict || {};
+        const want = dict["settings.section." + category] || category;
+        const labels = Array.prototype.slice
+          .call(content.querySelectorAll("h3"))
+          .map((e) => (e.textContent || "").trim());
+        if (labels.indexOf(want) === -1) {
+          note("missing-section", "settings:" + category + ": no '" + want + "' section, found: " + labels.join(", "));
+        }
+        if (category === "advanced") {
+          // The bands live under the advanced tab now, and the cache size
+          // slider sits above them, so ten range inputs means the bands are
+          // actually on screen rather than merely configured.
+          const sliders = panel.querySelectorAll("input[type=range]").length;
+          if (sliders < 10) note("missing-equalizer", "settings: the equaliser bands are missing (" + sliders + ")");
+        }
+      },
+    ]);
+  });
 
   steps.push([
     "context-menu",
