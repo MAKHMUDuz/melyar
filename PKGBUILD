@@ -45,6 +45,14 @@ pkgver() {
 build() {
     cd "$srcdir/$pkgname"
 
+    # The Rust static library contains the CXX bridge object code. Arch's
+    # default LTO flags cause GCC's final link to drop those bridge symbols,
+    # leaving the Qt executable with unresolved rust::cxxbridge1 references.
+    # Keep LTO disabled across both the CXX bridge build and final link.
+    export CFLAGS="${CFLAGS:-} -fno-lto"
+    export CXXFLAGS="${CXXFLAGS:-} -fno-lto"
+    export LDFLAGS="${LDFLAGS:-} -fno-lto"
+
     # Clean previous build artifacts completely
     rm -rf build-release
     rm -rf core_rs/target
