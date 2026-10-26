@@ -12,11 +12,18 @@ env:
 jobs:
   rust-core:
     name: Rust core
-    runs-on: ubuntu-latest
+    # ubuntu-24.04, like every other job that runs apt: ubuntu-latest's
+    # apt-get has hung three runs in a row here, while the 24.04 jobs
+    # install their packages without a problem.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
+        # Bounded: a mirror that stalls must fail the job rather than hold
+        # the runner until the workflow-level timeout.
+        timeout-minutes: 10
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config libmpv-dev libssl-dev
