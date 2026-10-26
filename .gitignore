@@ -25,6 +25,18 @@ debian/melyar.debhelper.log
 debian/melyar.substvars
 debian/*.debhelper.log
 
+# makepkg / packaging artifacts (a package is built in a clean tree, never
+# committed next to the sources)
+pkg/
+src/
+*.pkg.tar.zst
+*.deb
+*.spec
+.SRCINFO
+data.tar.gz
+arch_pkg/
+debian_pkg/
+
 # Node / web UI
 ui_web/node_modules/
 

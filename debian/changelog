@@ -1,3 +1,17 @@
+melyar (0.0.4-1) unstable; urgency=medium
+
+  * Local music import: .m3u, .pls, .json and .csv can be brought into the
+    library from the button in the bottom toolbar.
+  * All thirteen locales are back in step with the English dictionary. The
+    settings refactor had left eleven of them 106 keys behind, which showed
+    up as untranslated accessible labels in the settings panel.
+  * The accent colour names are translated strings now rather than hardcoded
+    English.
+  * The package version follows the changelog again; the stray Version field
+    that pinned the binary package to 0.0.3.2a is gone.
+
+ -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Sun, 26 Oct 2026 23:05:00 +0300
+
 melyar (0.0.3.2a-1) unstable; urgency=medium
 
   * Local music import feature: .m3u, .pls, .json, .csv format support added

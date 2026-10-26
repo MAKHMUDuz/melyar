@@ -3,7 +3,7 @@ resolver = "2"
 members = ["core_rs"]
 
 [workspace.package]
-version = "0.0.3"
+version = "0.0.4"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/MAKHMUDuz/melyar"
 homepage = "https://github.com/MAKHMUDuz/melyar"

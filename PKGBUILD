@@ -5,6 +5,9 @@ pkgdesc="Ultra-lightweight native YouTube Music desktop client in C++20 and Rust
 arch=('x86_64')
 url="https://github.com/MAKHMUDuz/melyar"
 license=('MIT' 'Apache')
+# Initial value: pkgver() below replaces it once the checkout exists, but the
+# PKGBUILD lint runs before any VCS function and rejects an unset variable.
+pkgver=0.0.4
 depends=('qt6-base' 'qt6-declarative' 'qt6-webengine' 'qt6-webchannel' 'mpv')
 makedepends=('cmake' 'rust' 'cargo' 'pkgconf' 'nodejs' 'pnpm')
 optdepends=('yt-dlp: resolves metadata for tracks missing from InnerTube results')
@@ -12,8 +15,26 @@ source=("git+https://github.com/MAKHMUDuz/melyar.git")
 sha256sums=('SKIP')
 
 pkgver() {
-    cd "$srcdir/$pkgname"
-    git describe --tags --abbrev=0 2>/dev/null || git rev-list --count HEAD
+    # `makepkg --printsrcinfo` calls this before the source tree exists, so a
+    # failed checkout falls back to the current directory; only a real build
+    # runs it from $srcdir/$pkgname.
+    cd "$srcdir/$pkgname" 2>/dev/null || true
+    # The tags are pushed both with and without the v prefix, and git
+    # describe returns whichever it finds, so the prefix is stripped here
+    # or makepkg ends up with a version string that sorts before the tag
+    # it came from.
+    local tag
+    tag=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
+    # The pipeline above always exits 0 (sed does), so an empty result - a
+    # directory that is not a checkout - is caught here instead.
+    [ -n "$tag" ] || tag=0.0.0
+    local commits
+    commits=$(git rev-list --count "${tag}"..HEAD 2>/dev/null || echo 0)
+    if [ "$commits" -gt 0 ]; then
+        printf '%s.r%s.g%s' "$tag" "$commits" "$(git rev-parse --short HEAD)"
+    else
+        printf '%s' "$tag"
+    fi
 }
 
 build() {
