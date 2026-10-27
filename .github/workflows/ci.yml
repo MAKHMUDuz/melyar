@@ -133,15 +133,30 @@ jobs:
       MELYAR_GIT_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - name: Install Git for checkout
-        run: pacman -Syu --noconfirm --needed git
+        run: |
+          for attempt in 1 2 3; do
+            if pacman -Syu --noconfirm --needed git; then
+              exit 0
+            fi
+            echo "Arch mirror attempt ${attempt} failed; retrying in 10 seconds."
+            sleep 10
+          done
+          exit 1
 
       - uses: actions/checkout@v4
 
       - name: Install build and runtime dependencies
         run: |
-          pacman -Syu --noconfirm --needed \
-            base-devel cmake qt6-base qt6-declarative qt6-webengine \
-            qt6-webchannel qt6-svg mpv pkgconf rust cargo nodejs pnpm
+          for attempt in 1 2 3; do
+            if pacman -Syu --noconfirm --needed \
+              base-devel cmake qt6-base qt6-declarative qt6-webengine \
+              qt6-webchannel qt6-svg mpv pkgconf rust cargo nodejs pnpm; then
+              exit 0
+            fi
+            echo "Arch mirror attempt ${attempt} failed; retrying in 10 seconds."
+            sleep 10
+          done
+          exit 1
 
       - name: Build and validate package
         run: |
