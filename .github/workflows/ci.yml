@@ -154,12 +154,12 @@ jobs:
             MELYAR_GIT_COMMIT="$MELYAR_GIT_COMMIT" \
             bash -c 'cd "$GITHUB_WORKSPACE" && makepkg --nodeps --noconfirm'
 
-          package=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -name 'melyar-*.pkg.tar.zst' -print -quit)
+          package=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -name 'melyar-[0-9]*.pkg.tar.zst' -print -quit)
           test -n "$package"
           pacman -Qip "$package"
-          tar --zstd -tf "$package" | grep -Fx './.PKGINFO'
-          tar --zstd -tf "$package" | grep -Fx './usr/bin/melyar'
-          tar --zstd -tf "$package" | grep -Fx './usr/share/melyar/web/index.html'
+          tar --zstd -tf "$package" | sed 's#^\./##' | grep -Fx '.PKGINFO'
+          tar --zstd -tf "$package" | sed 's#^\./##' | grep -Fx 'usr/bin/melyar'
+          tar --zstd -tf "$package" | sed 's#^\./##' | grep -Fx 'usr/share/melyar/web/index.html'
 
       - uses: actions/upload-artifact@v4
         with:
