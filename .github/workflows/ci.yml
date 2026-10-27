@@ -164,7 +164,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: release-arch
-          path: melyar-*.pkg.tar.zst
+          path: melyar-[0-9]*.pkg.tar.zst
           if-no-files-found: error
 
   desktop-app:
@@ -401,12 +401,14 @@ jobs:
           cd release-assets
           expected_version="${RELEASE_TAG#v}"
           deb_version=$(dpkg-deb -f ./*.deb Version | sed 's/-[^-]*$//')
-          arch_version=$(tar --zstd -xOf ./*.pkg.tar.zst ./.PKGINFO | sed -n 's/^pkgver = //p')
+          arch_package=$(find . -maxdepth 1 -name 'melyar-[0-9]*.pkg.tar.zst' -print -quit)
+          test -n "$arch_package"
+          arch_version=$(tar --zstd -xOf "$arch_package" .PKGINFO | sed -n 's/^pkgver = //p')
           test "$deb_version" = "$expected_version"
           test "$arch_version" = "$expected_version"
-          sha256sum ./*.deb ./*.pkg.tar.zst > SHA256SUMS
+          sha256sum ./*.deb "$arch_package" > SHA256SUMS
           gh release create "$RELEASE_TAG" \
             --verify-tag \
             --title "Melyar $RELEASE_TAG" \
             --generate-notes \
-            ./*.deb ./*.pkg.tar.zst SHA256SUMS
+            ./*.deb "$arch_package" SHA256SUMS
