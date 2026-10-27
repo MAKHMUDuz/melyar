@@ -195,13 +195,14 @@ jobs:
   ui-audit:
     name: Interface audit
     runs-on: ubuntu-24.04
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          timeout 10m sudo apt-get update -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60
+          timeout 15m sudo apt-get install -y -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 \
             cmake pkg-config xvfb \
             qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
             libmpv-dev \
