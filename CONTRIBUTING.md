@@ -54,7 +54,7 @@ This document is the contract for how changes land. It is deliberately short.
 | mpv | ≥ 2.x with `libmpv` headers |
 | pkg-config | — |
 | Node.js | ≥ 20 |
-| pnpm | ≥ 9 (10+ required for the `allowBuilds` setting) |
+| pnpm | ≥ 10 |
 | yt-dlp | on `PATH` |
 
 **Arch / Manjaro**

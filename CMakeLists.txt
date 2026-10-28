@@ -5,6 +5,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Web bundle is required at runtime. Check before dependency discovery so a
+# missing bundle produces an actionable error without fetching or configuring
+# the Rust and Qt build dependencies first.
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ui_web/dist/index.html")
+    message(FATAL_ERROR
+        "ui_web/dist/index.html not found. Build the web UI first with:\n"
+        "  cd ui_web && pnpm install && pnpm build\n"
+        "Then rerun CMake configuration."
+    )
+endif()
+
 # -----------------------------------------------------------------------------
 # Corrosion (Rust integration for CMake)
 # -----------------------------------------------------------------------------
@@ -67,16 +78,6 @@ qt6_add_resources(melyar "melyar_qml"
     FILES ${MELYAR_QML_FILES} ${MELYAR_RESOURCE_FILES}
 )
 
-# Web bundle is required at runtime. If it is missing, fail early with an
-# actionable message instead of letting the app die later with a blank/failed UI.
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ui_web/dist/index.html")
-    message(WARNING
-        "ui_web/dist/index.html not found. Build the web UI first with:\n"
-        "  cd ui_web && pnpm install && pnpm build\n"
-        "Then rerun cmake --build ."
-    )
-endif()
-
 target_include_directories(melyar PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/core_rs/include
     ${CMAKE_CURRENT_SOURCE_DIR}/ui_cpp/bridge
@@ -115,16 +116,14 @@ install(FILES resources/melyar.desktop DESTINATION share/applications)
 install(FILES resources/melyar.svg DESTINATION share/icons/hicolor/scalable/apps)
 
 # -----------------------------------------------------------------------------
-# Web UI bundle (ui_web/dist) - built separately with `pnpm build`
+# Web UI bundle (ui_web/dist) - committed and refreshed with `pnpm build`
 # -----------------------------------------------------------------------------
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ui_web/dist/index.html")
-    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ui_web/dist/"
-            DESTINATION share/melyar/web
-            FILES_MATCHING
-            PATTERN "*.html"
-            PATTERN "*.js"
-            PATTERN "*.css"
-            PATTERN "*.svg"
-            PATTERN "*.woff"
-            PATTERN "*.woff2")
-endif()
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ui_web/dist/"
+        DESTINATION share/melyar/web
+        FILES_MATCHING
+        PATTERN "*.html"
+        PATTERN "*.js"
+        PATTERN "*.css"
+        PATTERN "*.svg"
+        PATTERN "*.woff"
+        PATTERN "*.woff2")

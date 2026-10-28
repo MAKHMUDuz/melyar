@@ -108,7 +108,7 @@ doğrulanmış paketleri GitHub Releases'a yayımlar.
 - CMake ≥ 3.25
 - Qt 6 (`Core`, `Gui`, `Quick`, `Qml`, `WebEngineQuick`, `WebChannel`)
 - Node.js ≥ 20
-- pnpm ≥ 9
+- pnpm ≥ 10
 - mpv ≥ 2.x (development dosyalarıyla)
 - `pkg-config`
 - `yt-dlp` (isteğe bağlı, kuruluysa kullanılır)
