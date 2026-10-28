@@ -4,6 +4,5 @@ build
 build-release
 target
 ui_web/node_modules
-ui_web/dist
 third_party
 docs/screenshots

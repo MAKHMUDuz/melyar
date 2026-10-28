@@ -455,6 +455,14 @@ bool MelyarBridge::removeSetting(const QString &key) {
     return melyar::delete_setting(rust::String(key.toStdString()));
 }
 
+QString MelyarBridge::listSources() const {
+    return QString::fromStdString(std::string(melyar::list_sources_json()));
+}
+
+bool MelyarBridge::setSourceEnabled(const QString &sourceId, bool enabled) {
+    return melyar::set_source_enabled(rust::String(sourceId.toStdString()), enabled);
+}
+
 void MelyarBridge::openUri(const QString &uri) {
     if (uri.trimmed().isEmpty()) return;
     m_pendingUri = uri;

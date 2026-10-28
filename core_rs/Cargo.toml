@@ -2,6 +2,7 @@
 name = "melyar_core"
 version.workspace = true
 edition = "2021"
+rust-version = "1.88"
 description = "Melyar ultra-lightweight music client core engine"
 license.workspace = true
 repository.workspace = true
@@ -40,6 +41,7 @@ hex = { workspace = true }
 parking_lot = "0.12"
 dashmap = "5.5"
 futures = "0.3"
+async-trait = "0.1"
 bytes = "1.5"
 tokio-stream = { version = "0.1", features = ["sync"] }
 dirs = "5.0"

@@ -1,7 +1,9 @@
 import { Heart, MoreHorizontal, Play } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { formatTime } from "@/lib/lyrics";
-import { usePlayer } from "@/store";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
+import { useLibraryStore } from "@/store";
 import { Artwork } from "@/components/Toolbar";
 import type { TrackMeta } from "@/lib/types";
 import { t, useLocale } from "@/lib/i18n";
@@ -18,14 +20,14 @@ function Row({
   showAlbum?: boolean;
 }) {
   useLocale();
-  const current = usePlayer((s) => s.current);
-  const playing = usePlayer((s) => s.playing);
-  const likedIds = usePlayer((s) => s.liked);
-  const menu = usePlayer((s) => s.menu);
-  const playTrack = usePlayer((s) => s.playTrack);
-  const toggleLike = usePlayer((s) => s.toggleLike);
-  const openMenu = usePlayer((s) => s.openMenu);
-  const navigate = usePlayer((s) => s.navigate);
+  const current = usePlaybackStore((s) => s.current);
+  const playing = usePlaybackStore((s) => s.playing);
+  const likedIds = useLibraryStore((s) => s.liked);
+  const menu = useUIStore((s) => s.menu);
+  const playTrack = usePlaybackStore((s) => s.playTrack);
+  const toggleLike = useLibraryStore((s) => s.toggleLike);
+  const openMenu = useUIStore((s) => s.openMenu);
+  const navigate = useUIStore((s) => s.navigate);
 
   const isCurrent = current?.id === track.id;
   const isLiked = likedIds.some((t) => t.id === track.id);
@@ -41,7 +43,7 @@ function Row({
       <button
         className="grid size-7 shrink-0 place-items-center text-[12px] tabular-nums text-text-tertiary"
         aria-label={isCurrent && playing ? t("track.pause") : t("track.play")}
-        onClick={() => (isCurrent ? usePlayer.getState().toggle() : playTrack(track, context))}
+        onClick={() => (isCurrent ? usePlaybackStore.getState().toggle() : playTrack(track, context))}
       >
         {isCurrent && playing ? (
           <span className="eq-bars" aria-hidden>
@@ -57,7 +59,7 @@ function Row({
         )}
       </button>
 
-      <button className="group flex min-w-0 items-center gap-3 text-left" onClick={() => (isCurrent ? usePlayer.getState().toggle() : playTrack(track, context))}>
+      <button className="group flex min-w-0 items-center gap-3 text-left" onClick={() => (isCurrent ? usePlaybackStore.getState().toggle() : playTrack(track, context))}>
         <Artwork src={track.thumbnail} label={track.title} className="size-10" />
         <span className="min-w-0">
           <span className={cn("track-title block truncate text-[13.5px] font-medium", isCurrent && "text-accent-text")}>

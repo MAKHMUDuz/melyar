@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [master, main]
+    tags: ["v*"]
   pull_request:
     branches: [master, main]
 
@@ -12,11 +13,18 @@ env:
 jobs:
   rust-core:
     name: Rust core
-    runs-on: ubuntu-latest
+    # ubuntu-24.04, like every other job that runs apt: ubuntu-latest's
+    # apt-get has hung three runs in a row here, while the 24.04 jobs
+    # install their packages without a problem.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
+        # Bounded: a mirror that stalls must fail the job rather than hold
+        # the runner until the workflow-level timeout.
+        timeout-minutes: 10
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config libmpv-dev libssl-dev
@@ -64,6 +72,13 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Validate installed font paths
+        run: |
+          test -f dist/fonts/InterVariable.woff2
+          test -f dist/fonts/InterVariable-Italic.woff2
+          grep -Fq 'url(../fonts/InterVariable.woff2)' dist/assets/*.css
+          grep -Fq 'url(../fonts/InterVariable-Italic.woff2)' dist/assets/*.css
+
       - name: Check the committed bundle is up to date
         # The bundle is committed so that a plain cmake build produces a
         # runnable binary. A contributor who rebuilds it from a checkout that
@@ -108,16 +123,76 @@ jobs:
             console.log("every locale matches en.ts");
           '
 
+  arch-package:
+    name: Arch package
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+    env:
+      MELYAR_GIT_URL: ${{ github.event.pull_request.head.repo.clone_url || 'https://github.com/MAKHMUDuz/melyar.git' }}
+      MELYAR_GIT_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Install Git for checkout
+        run: |
+          for attempt in 1 2 3; do
+            if pacman -Syu --noconfirm --needed git; then
+              exit 0
+            fi
+            echo "Arch mirror attempt ${attempt} failed; retrying in 10 seconds."
+            sleep 10
+          done
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      - name: Install build and runtime dependencies
+        run: |
+          for attempt in 1 2 3; do
+            if pacman -Syu --noconfirm --needed \
+              base-devel cmake qt6-base qt6-declarative qt6-webengine \
+              qt6-webchannel qt6-svg mpv pkgconf rust cargo nodejs pnpm; then
+              exit 0
+            fi
+            echo "Arch mirror attempt ${attempt} failed; retrying in 10 seconds."
+            sleep 10
+          done
+          exit 1
+
+      - name: Build and validate package
+        run: |
+          set -euo pipefail
+          useradd --create-home builder
+          chown -R builder:builder "$GITHUB_WORKSPACE"
+          runuser -u builder -- env \
+            GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
+            MELYAR_GIT_URL="$MELYAR_GIT_URL" \
+            MELYAR_GIT_COMMIT="$MELYAR_GIT_COMMIT" \
+            bash -c 'cd "$GITHUB_WORKSPACE" && makepkg --nodeps --noconfirm'
+
+          package=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -name 'melyar-[0-9]*.pkg.tar.zst' -print -quit)
+          test -n "$package"
+          pacman -Qip "$package"
+          tar --zstd -tf "$package" | sed 's#^\./##' | grep -Fx '.PKGINFO'
+          tar --zstd -tf "$package" | sed 's#^\./##' | grep -Fx 'usr/bin/melyar'
+          tar --zstd -tf "$package" | sed 's#^\./##' | grep -Fx 'usr/share/melyar/web/index.html'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-arch
+          path: melyar-[0-9]*.pkg.tar.zst
+          if-no-files-found: error
+
   desktop-app:
     name: Desktop app (Qt6)
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          timeout 10m sudo apt-get update -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60
+          timeout 30m sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 \
             cmake pkg-config ninja-build \
             qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
             libmpv-dev
@@ -135,13 +210,14 @@ jobs:
   ui-audit:
     name: Interface audit
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          timeout 10m sudo apt-get update -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60
+          timeout 30m sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 \
             cmake pkg-config xvfb \
             qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
             libmpv-dev \
@@ -248,13 +324,14 @@ jobs:
   debian-package:
     name: Debian package
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          timeout 10m sudo apt-get update -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60
+          timeout 30m sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60 \
             dpkg-dev debhelper fakeroot build-essential \
             cmake pkg-config \
             qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
@@ -279,6 +356,11 @@ jobs:
           dpkg-deb --info "$DEB"
           # sed instead of head: head closes the pipe and makes tar fail.
           dpkg-deb --contents "$DEB" | sed -n '1,20p'
+
+      - name: Resolve install dependencies
+        run: |
+          DEB=$(ls ../melyar_*_amd64.deb)
+          sudo apt-get install --simulate "$DEB"
 
       - name: Free the disk
         # The Rust build tree is several gigabytes and the runner does not
@@ -308,6 +390,41 @@ jobs:
       - name: Upload the package
         uses: actions/upload-artifact@v4
         with:
-          name: deb
+          name: release-deb
           path: melyar_*.deb
           if-no-files-found: error
+
+  publish-release:
+    name: Publish Linux packages
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [rust-core, web-ui, desktop-app, ui-audit, debian-package, arch-package]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Create release with validated packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          cd release-assets
+          expected_version="${RELEASE_TAG#v}"
+          deb_version=$(dpkg-deb -f ./*.deb Version | sed 's/-[^-]*$//')
+          arch_package=$(find . -maxdepth 1 -name 'melyar-[0-9]*.pkg.tar.zst' -print -quit)
+          test -n "$arch_package"
+          arch_version=$(tar --zstd -xOf "$arch_package" .PKGINFO | sed -n 's/^pkgver = //p')
+          test "$deb_version" = "$expected_version"
+          test "$arch_version" = "$expected_version"
+          sha256sum ./*.deb "$arch_package" > SHA256SUMS
+          gh release create "$RELEASE_TAG" \
+            --verify-tag \
+            --title "Melyar $RELEASE_TAG" \
+            --generate-notes \
+            ./*.deb "$arch_package" SHA256SUMS

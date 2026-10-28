@@ -2,343 +2,209 @@
 
 # Melyar
 
-**Ultra-lightweight native YouTube Music desktop client in C++20 and Rust**
-
-[English](README.md) · Türkçe
+**YouTube Music için ultra hafif yerel masaüstü istemcisi**
 
 [![CI](https://github.com/MAKHMUDuz/melyar/actions/workflows/ci.yml/badge.svg)](https://github.com/MAKHMUDuz/melyar/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/MAKHMUDuz/melyar.svg)](https://github.com/MAKHMUDuz/melyar/releases/latest)
 [![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE-APACHE)
-[![Contributors](https://img.shields.io/github/contributors/MAKHMUDuz/melyar.svg)](https://github.com/MAKHMUDuz/melyar/graphs/contributors)
 [![Discussions](https://img.shields.io/github/discussions/MAKHMUDuz/melyar?label=discussions&logo=github)](https://github.com/MAKHMUDuz/melyar/discussions)
 
 </div>
 
----
-
-Melyar, YouTube Music'i masaüstünde çalıştıran hafif bir yerel müzik istemcisidir.
-Rust çekirdek (InnerTube istemcisi, mpv ses motoru, MPRIS, Waybar IPC) ile Qt6/QML
-kabuğu ve React tabanlı web arayüzünden oluşur.
-
-Proje **C++20 + Rust + Qt6 + React/TypeScript** yığınıyla yazılmıştır. Çalma motoru
-olarak `libmpv`, ağ katmanı olarak YouTube'un resmi `InnerTube` API'si kullanılır.
-
-> **Proje durumu: geliştirme aşamasında.** Melyar aktif olarak geliştirilmektedir.
-> Bazı arayüz etkileşimleri ve sağlayıcı entegrasyonları hâlâ olgunlaşma aşamasında.
-> **[Katkıda bulunmak isterseniz: katkı rehberi](CONTRIBUTING.md)**
-
----
-
-## Neden Melyar
-
-Başka YouTube Music istemcileri var ve ikisi de iyi. Melyar'ın amacı en taşınabilir
-istemci olmak değil, **Linux'ta en iyi** istemci olmak.
-
-| | Melyar | Spotube | BloomeeTunes |
-|---|---|---|---|
-| Yığın | **Rust + Qt6/QML + React** | Flutter/Dart | Flutter/Dart |
-| Platformlar | Linux | Win, macOS, mobil, web | Win, macOS, mobil, web |
-| Çalışma zamanı | Küçük - Flutter motoru/Electron ağacı yok | Büyük | Büyük |
-| MPRIS (GNOME, KDE, i3) | Tam | Kısmi | Kısmi |
-| Waybar / Polybar IPC | Yerleşik | Yok | Yok |
-| Lisans | **MIT OR Apache-2.0** | BSD-4 | GPL-2.0 |
-
-Rakiplerin hâlâ daha güçlü olduğu alanlar - çok platformluluk ve sağlayıcı çeşitliliği -
-[roadmap](ROADMAP.md) içinde açıkça yazılıdır.
-
----
-
-## Ekran görüntüleri
-
-Melyar (İngilizce):
+Melyar, YouTube Music için Linux öncelikli, yerel öncelikli bir masaüstü müzik
+istemcisidir. Hızlı bir Rust çekirdeği, yerel Qt/C++ kabuğu ve şık bir React +
+TypeScript arayüzünü bir araya getirir; ağır masaüstü çatılarının yükü olmadan
+temiz, duyarlı bir dinleme deneyimi sunar.
 
 ![Melyar ana sayfa](docs/screenshots/home-en.png)
 
-Arayüz on iki dilde sunuluyor: İngilizce, Türkçe, İspanyolca, Almanca, Fransızca,
-İtalyanca, Portekizce, Rusça, Ukraynaca, Japonca, Çince ve Korece. Dil kenar
-çubuğundaki seçiciden ya da ayarlar panelinden değiştirilebilir:
+## Neden Melyar
+
+Melyar, Linux'ta yerel hissettiren bir müzik oynatıcı isteyenler için:
+
+- Küçük çalışma zamanı ayak izi
+- Hızlı başlangıç ve duyarlı kontroller
+- MPRIS ve Waybar ile derin masaüstü entegrasyonu
+- Uygulamayı başlatmak için hesap gerekmez
+- Kişisel kütüphane verisi diskte tutulur, yerel öncelikli davranış
+
+## Öne çıkanlar
+
+- YouTube Music içeriğinde arama, gezinme ve çalma
+- `libmpv` ile çalma ve gapless akış davranışı
+- Kuyruk yönetimi, karıştırma, tekrarlama, ses ve seek kontrolleri
+- Senkronize LRC şarkı sözleri ve düz metin yedeği
+- Beğeniler, geçmiş, albümler, sanatçılar ve kütüphane görünümleri
+- Spotify dışa aktarımı, JSON veya CSV'den kütüphane içe aktarma
+- On bantlı grafik ekolayzer (31 Hz - 16 kHz)
+- Liquid Glass ilhamlı arayüz, açık/koyu tema
+- Anlık değiştirilebilen on üç arayüz dili
+- MPRIS ve Unix soketi IPC ile yerel Linux medya entegrasyonu
+
+## Ekran görüntüleri
 
 ![Melyar ana sayfa (Türkçe)](docs/screenshots/home-tr.png)
 
-> Ekran görüntüleri örnek bir kütüphaneye karşı alınmıştır, kişisel dinleme
-> verisi görünmez. Kendi görüntünüzü almak için:
-> `MELYAR_SCREENSHOT=/tmp/melyar.png ./build/melyar`
-
----
-
-## Özellikler
-
-**Çalma**
-- YouTube Music arama, şarkı / albüm / sanatçı / oynatma listesi sayfaları
-- `libmpv` üzerinden streaming çalma, gapless ön-yükleme (prefetch)
-- Kuyruk yönetimi, karıştır (shuffle) ve tekrarlama (repeat) modları
-- Ses seviyesi, seek, ekolayzer ayarı
-- Senkronize şarkı sözleri (LRC) — `lrclib` kaynağından, önbellekli
-
-**Kütüphane**
-- Favoriler, dinleme geçmişi ve arama geçmişi (SQLite, `~/.local/share/melyar/melyar.db`)
-- Albüm / sanatçı / oynatma listesi kütüphane görünümleri
-
-**Linux entegrasyonu**
-- **MPRIS** D-Bus arayüzü (`org.mpris.MediaPlayer2.melyar`) — GNOME, KDE, i3, sway ile uyum
-- **Waybar / Polybar / i3status** için Unix Domain Socket IPC (`$XDG_RUNTIME_DIR/melyar.sock`)
-- Global medya kısayolları (XF86AudioPlay / Next / Prev)
-- `.desktop` girdisi ve uygulama ikonu (SVG)
-
-**Arayüz**
-- Liquid-glass / cam efektli arayüz, hareket (motion) token sistemi
-- Light/dark tema, tamamen responsive düzen
-- Gelişmiş oynatıcı, kuyruk paneli, söz görünümü, arama sonuçları
-
----
-
 ## Mimari
 
+```text
+React + TypeScript UI
+        │
+        │ QWebChannel
+        ▼
+Qt / C++ köprü
+        │
+        ▼
+Rust çekirdek ── çalma, kütüphane, sağlayıcı mantığı, IPC
+        │
+        ▼
+mpv ses oynatma
 ```
-┌──────────────────────────────────────────────────────────┐
-│  ui_web/            React 19 + TypeScript + Tailwind 4    │
-│                     (WebChannel üzerinden Rust ile konuşur)│
-├──────────────────────────────────────────────────────────┤
-│  ui_cpp/            Qt6 / QML kabuk + C++ bridge           │
-├──────────────────────────────────────────────────────────┤
-│  core_rs/           Rust çekirdek                          │
-│    ├── innertube/    InnerTube istemcisi, cipher, sözler   │
-│    ├── audio/        mpv motoru + kuyruk                    │
-│    ├── db/           SQLite depolama                       │
-│    └── linux/        MPRIS (D-Bus) + Waybar socket IPC     │
-└──────────────────────────────────────────────────────────┘
+
+C++ ↔ Rust sınırı `cxx` köprüsüyle, arayüz ile çekirdek arasındaki iletişim
+Qt/WebChannel üzerinden kurulur.
+
+## Kurulum
+
+Arch ve Debian/Ubuntu paketleri
+[sürüm sayfasında](https://github.com/MAKHMUDuz/melyar/releases/latest)
+bulunur. Derleme aracı gerekmez:
+
+**Debian / Ubuntu** (Ubuntu 24.04 veya yenisi):
+
+```bash
+sudo apt install ./melyar_*_amd64.deb
 ```
 
-C++ ↔ Rust iletişimi [`cxx`](https://cxx.rs) köprüsü üzerinden sağlanır.
-Rust tarafı `tokio` runtime'ı üzerinde asenkron çalışır, ses `libmpv` ile senkron
-oynatılır.
+**Arch** (bağımlılıklar resmi depolardan gelir):
 
----
+```bash
+sudo pacman -U melyar-*.pkg.tar.zst
+```
 
-## Gereksinimler
+Paketler kendi dağıtımlarının Qt 6 ve glibc sürümlerine bağlıdır. Diğer
+dağıtımlarda binary'nin o sistemdeki Qt ve sistem kütüphanelerine bağlanması
+için aşağıdaki kaynak derlemesini kullanın.
 
-| Bileşen | Sürüm |
-|---|---|
-| CMake | ≥ 3.25 |
-| Rust | ≥ 1.75 |
-| Qt6 | Core, Gui, Quick, Qml, WebEngineQuick, WebChannel |
-| mpv | ≥ 2.x (`libmpv`) |
-| pkg-config | — |
-| Node.js + pnpm | ≥ 20 / ≥ 9 (yalnızca web arayüzü geliştirmek için) |
-| yt-dlp | isteğe bağlı, kuruluysa kullanılır |
+Kaynaktan derledikten sonra şöyle de kurabilirsiniz:
 
-Corrosion (Rust ↔ CMake entegrasyonu) `CMakeLists.txt` tarafından otomatik olarak
-indirilir; ayrıca kurulum gerekmez.
+```bash
+sudo cmake --install build
+```
 
-### Arch / Manjaro
+CMake varsayılan olarak `/usr/local`'a kurar (`bin/melyar`,
+`share/melyar/web/`, `share/applications/melyar.desktop`,
+`share/icons/.../melyar.svg`). Sistem dizinine kurmak için derlemeden önce
+`-DCMAKE_INSTALL_PREFIX=/usr` verin. Depoda bir `PKGBUILD`
+(`makepkg -si`) ve bir `debian/` tarifi (`dpkg-buildpackage -us -uc -b`)
+vardır. CI her push'ta iki paketi oluşturup doğrular; sürüm etiketleriyle
+doğrulanmış paketleri GitHub Releases'a yayımlar.
+
+## Kaynaktan derleme
+
+### Gereksinimler
+
+- Rust ≥ 1.88 (rustup ile kurun; Ubuntu 24.04'ün paketindeki Rust eski)
+- CMake ≥ 3.25
+- Qt 6 (`Core`, `Gui`, `Quick`, `Qml`, `WebEngineQuick`, `WebChannel`)
+- Node.js ≥ 20
+- pnpm ≥ 10
+- mpv ≥ 2.x (development dosyalarıyla)
+- `pkg-config`
+- `yt-dlp` (isteğe bağlı, kuruluysa kullanılır)
+
+<details>
+<summary>Dağıtım örnekleri (Arch / Manjaro, Debian / Ubuntu)</summary>
+
+**Arch / Manjaro**
 
 ```bash
 sudo pacman -S base-devel cmake rust pkgconf \
-    qt6-base qt6-declarative qt6-webengine qt6-webchannel mpv
+    qt6-base qt6-declarative qt6-webengine qt6-webchannel qt6-svg mpv
 ```
 
-### Debian / Ubuntu
+**Debian / Ubuntu**
 
 ```bash
-sudo apt install build-essential cmake pkg-config rustc cargo \
+sudo apt install build-essential cmake pkg-config \
     qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
-    libmpv-dev yt-dlp
+    qml6-module-qtquick qml6-module-qtquick-controls \
+    qml6-module-qtquick-dialogs qml6-module-qtquick-layouts \
+    qml6-module-qtquick-templates qml6-module-qtquick-window \
+    qml6-module-qtqml-workerscript qml6-module-qtwebchannel \
+    qml6-module-qtwebengine libqt6svg6 libmpv-dev yt-dlp
 ```
 
----
+</details>
 
-## Derleme
+Derlemeden önce [rustup](https://rustup.rs/) ile Rust 1.88 veya yenisini kurun.
 
-### 1. Web arayüzünü derle (opsiyonel ama önerilir)
-
-`ui_web/dist/` depoda hazır gelir. Yine de güncel arayüzü kullanmak için:
+### Derle ve çalıştır
 
 ```bash
+git clone https://github.com/MAKHMUDuz/melyar.git
+cd melyar
+
 cd ui_web
 pnpm install
 pnpm build
 cd ..
-```
 
-### 2. C++ + Rust çekirdeğini derle
-
-```bash
-cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j$(nproc)
-```
-
-### 3. Çalıştır
-
-```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j"$(nproc)"
 ./build/melyar
 ```
 
-Web arayüzünü canlı geliştirmek için Vite dev sunucusunu ayrı bir terminalde
-başlatın ve uygulamayı şu şekilde çalıştırın:
+## Masaüstü entegrasyonu
 
-```bash
-cd ui_web && pnpm dev      # terminal 1
-MELYAR_DEV_URL=http://localhost:5173 ./build/melyar   # terminal 2
-```
+### MPRIS
 
-### Kurulum
+Melyar, oturum veri yolunda `org.mpris.MediaPlayer2.melyar` olarak kendini
+kaydeder; Linux masaüstleri çalma durumunu elle yapılandırma olmadan keşfeder.
 
-```bash
-sudo cmake --install build
-```
+### Waybar / durum çubuğu
 
-CMake'in varsayılan kurulum prefix'i `/usr/local` olacaktır:
+Melyar, Waybar, Polybar ve i3status gibi araçlar için
+`$XDG_RUNTIME_DIR/melyar.sock` adresinde sıfır gecikmeli bir Unix soketi
+sunar.
 
-| Dosya | Yol |
-|---|---|
-| Binary | `/usr/local/bin/melyar` |
-| Web arayüzü | `/usr/local/share/melyar/web/` |
-| `.desktop` | `/usr/local/share/applications/melyar.desktop` |
-| İkon | `/usr/local/share/icons/hicolor/scalable/apps/melyar.svg` |
-
-Sistem dizinine (`/usr`) kurmak için derleme sırasında prefix verin:
-
-```bash
-cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-sudo cmake --install build
-```
-
-Uygulama, web arayüzünü şu sırayla arar: çalışma dizini → binary'nin yanı →
-`/usr/share/melyar/web/` → `/usr/local/share/melyar/web/`. Geliştirme sırasında
-canlı Vite sunucusuna bağlanmak için `MELYAR_DEV_URL` ortam değişkenini
-kullanın.
-
-### Arch / AUR paketi
-
-Depodaki `PKGBUILD` ile:
-
-```bash
-makepkg -si
-```
-
----
-
-## Waybar / durum çubuğu entegrasyonu
-
-Melyar, `$XDG_RUNTIME_DIR/melyar.sock` adresinde Unix Domain Socket üzerinden
-sıfır gecikmeli bir IPC sunucusu çalıştırır.
-
-`~/.config/waybar/config.jsonc`:
-
-```jsonc
-"custom/melyar": {
-    "format": "{icon} {}",
-    "return-type": "json",
-    "exec": "socat -u UNIX-CONNECT:${XDG_RUNTIME_DIR:-/tmp}/melyar.sock -",
-    "on-click": "echo toggle | nc -U ${XDG_RUNTIME_DIR:-/tmp}/melyar.sock",
-    "on-click-right": "echo next | nc -U ${XDG_RUNTIME_DIR:-/tmp}/melyar.sock",
-    "on-click-middle": "echo prev | nc -U ${XDG_RUNTIME_DIR:-/tmp}/melyar.sock",
-    "interval": 1
-}
-```
-
-Komutlar: `toggle`, `next`, `prev`, `stop`.
-
-Detaylı kurulum, CSS ve Hyprland/Sway kısayol örnekleri için
-[`docs/WAYBAR.md`](docs/WAYBAR.md) dosyasına bakın.
-
----
-
-## Proje yapısı
-
-```
-melyar/
-├── core_rs/              Rust çekirdek
-│   ├── src/
-│   │   ├── innertube/     InnerTube API istemcisi, stream cipher, sözler
-│   │   ├── audio/         mpv ses motoru ve kuyruk yönetimi
-│   │   ├── db/            SQLite depolama (favoriler, geçmiş, cache)
-│   │   ├── linux/         MPRIS (D-Bus) ve Waybar socket IPC
-│   │   └── lib.rs         cxx köprüsü ve genel API
-│   └── build.rs
-├── ui_cpp/                Qt6 / QML kabuk ve C++ bridge
-│   ├── main.cpp
-│   ├── bridge/
-│   └── qml/               QML bileşenleri (Liquid glass arayüz)
-├── ui_web/                React + TypeScript web arayüzü
-│   ├── src/components/
-│   ├── src/lib/
-│   └── dist/              derlenmiş çıktı
-├── docs/                  Waybar ve entegrasyon belgeleri
-├── resources/             ikonlar ve .desktop dosyası
-├── CMakeLists.txt
-├── Cargo.toml
-└── PKGBUILD
-```
-
----
+Detaylı kurulum, CSS ve Hyprland/Sway kısayol örnekleri:
+[`docs/WAYBAR.md`](docs/WAYBAR.md).
 
 ## Veri konumu
 
 | Veri | Yol |
 |---|---|
-| Veritabanı (favoriler, geçmiş, söz cache) | `~/.local/share/melyar/melyar.db` |
+| Veritabanı | `~/.local/share/melyar/melyar.db` |
 | IPC soketi | `$XDG_RUNTIME_DIR/melyar.sock` |
 
----
+## Yol haritası
 
-## Katılım
+Melyar aktif olarak geliştiriliyor. Proje Linux masaüstü entegrasyonu,
+kütüphane akışları, sağlayıcı çeşitliliği ve güvenilirliği zamanla
+iyileştirmeyi hedefliyor.
 
-Katkılara, hata raporlarına ve odaklı pull request'lere açığız. **Yeni
-katkıcılar arıyoruz** - başlangıç için kapsamlı işler
-[good first issues](ROADMAP.md#good-first-issues) listesinde.
+Ayrıntılı plan için [ROADMAP.md](ROADMAP.md).
 
-- [CONTRIBUTING.md](CONTRIBUTING.md) — derleme kurulumu, commit/branch
-  konvansiyonları, pull request süreci
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — üç katmanın nasıl birleştiği
-- [ROADMAP.md](ROADMAP.md) — plan ve "good first issue" listesi
-- [docs/WAYBAR.md](docs/WAYBAR.md) — durum çubuğu entegrasyonu
-- [Code of Conduct](.github/CODE_OF_CONDUCT.md) — [.github/SECURITY.md](.github/SECURITY.md)
-  güvenlik raporlama
+## Katkı
 
----
+Katkılara, hata raporlarına ve odaklı pull request'lere açığız.
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- [ROADMAP.md](ROADMAP.md)
 
 ## Lisans
 
-Bu proje çift lisanslıdır — aşağıdakilerden birini seçebilirsiniz:
+Melyar çift lisanslıdır:
 
-- **MIT** — [`LICENSE-MIT`](LICENSE-MIT)
-- **Apache-2.0** — [`LICENSE-APACHE`](LICENSE-APACHE)
+- MIT — [LICENSE-MIT](LICENSE-MIT)
+- Apache 2.0 — [LICENSE-APACHE](LICENSE-APACHE)
 
 `SPDX-License-Identifier: MIT OR Apache-2.0`
 
 ---
 
-## Notlar
-
-- Melyar, YouTube'un resmi olmayan bir istemcisidir. YouTube, Spotify ya da
-  başka bir sağlayıcıyla resmi bir ortaklık veya sponsorluk ilişkisi yoktur.
-- Yalnızca kişisel kullanım ve eğitim amaçlı geliştirilmiştir. İçerik
-  lisansları, hesap şartları ve bulunduğunuz ülkenin yasaları size aittir.
-
----
-
-<a name="english"></a>
-
-## English
-
-Melyar is an ultra-lightweight native desktop client for YouTube Music, written in
-**C++20 + Rust** with a **Qt6/QML** shell and a **React + TypeScript** web UI.
-
-**Highlights:** InnerTube-based search and streaming, `libmpv` playback with
-gapless prefetch, queue with shuffle/repeat, synced LRC lyrics, favorites and
-history backed by SQLite, MPRIS D-Bus integration, and a zero-latency Unix
-socket IPC for Waybar/Polybar/i3status.
-
-**Build:**
-
-```bash
-cd ui_web && pnpm install && pnpm build && cd ..
-cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j$(nproc)
-./build/melyar
-```
-
-**Requirements:** CMake ≥ 3.25, Rust ≥ 1.75, Qt6 (Core, Gui, Quick, Qml,
-WebEngineQuick, WebChannel), mpv ≥ 2.x, pkg-config.
-
-**License:** MIT OR Apache-2.0
+<div align="center">
+<sub>Rust, Qt 6, React ve detaylara gösterilen özenle üretildi.</sub>
+</div>

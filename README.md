@@ -32,18 +32,17 @@ Melyar is built for people who want a music player that feels native on Linux:
 - Queue management, shuffle, repeat, volume, and seek controls
 - Synced LRC lyrics with plain-text fallback
 - Favorites, history, albums, artists, and library views
+- Library import from a Spotify export, JSON or CSV
+- Ten band graphic equaliser (31 Hz - 16 kHz)
 - Liquid Glass-inspired interface with light/dark theming
+- Thirteen interface languages, switched at runtime
 - Native Linux media integration via MPRIS and Unix socket IPC
 
 ## Screenshots
 
-Melyar is available in multiple languages and can be switched at runtime from the sidebar or settings panel.
-
 ![Melyar home view in Turkish](docs/screenshots/home-tr.png)
 
 ## Architecture
-
-Melyar separates the app into three layers:
 
 ```text
 React + TypeScript UI
@@ -61,18 +60,80 @@ mpv audio playback
 
 The C++ ↔ Rust boundary is connected via the `cxx` bridge, while the UI communicates with the core through Qt/WebChannel.
 
-## Quick start
+## Install
+
+Arch and Debian/Ubuntu packages are attached to the
+[latest release](https://github.com/MAKHMUDuz/melyar/releases/latest). No
+build toolchain is needed:
+
+**Debian / Ubuntu** (Ubuntu 24.04 or newer):
+
+```bash
+sudo apt install ./melyar_*_amd64.deb
+```
+
+**Arch** (dependencies come from the official repos):
+
+```bash
+sudo pacman -U melyar-*.pkg.tar.zst
+```
+
+The packages use their distribution's Qt 6 and glibc. For other distributions,
+build from source below so the binary links against the Qt and system libraries
+available on that machine.
+
+You can also install from source once it is built:
+
+```bash
+sudo cmake --install build
+```
+
+CMake installs to `/usr/local` by default (`bin/melyar`,
+`share/melyar/web/`, `share/applications/melyar.desktop`,
+`share/icons/.../melyar.svg`). Configure with `-DCMAKE_INSTALL_PREFIX=/usr`
+to install into the system directory instead. A `PKGBUILD` (`makepkg -si`)
+and a `debian/` recipe (`dpkg-buildpackage -us -uc -b`) are included in the
+repository. CI builds and validates both packages on every push; version tags
+publish the validated packages to GitHub Releases.
+
+## Build from source
 
 ### Requirements
 
-- Rust ≥ 1.75
+- Rust ≥ 1.88 (install with rustup; Ubuntu 24.04's packaged Rust is too old)
 - CMake ≥ 3.25
 - Qt 6 (`Core`, `Gui`, `Quick`, `Qml`, `WebEngineQuick`, `WebChannel`)
 - Node.js ≥ 20
-- pnpm ≥ 9
+- pnpm ≥ 10
 - mpv ≥ 2.x with development files
 - `pkg-config`
 - `yt-dlp` (optional, used when installed)
+
+<details>
+<summary>Distribution examples (Arch / Manjaro, Debian / Ubuntu)</summary>
+
+**Arch / Manjaro**
+
+```bash
+sudo pacman -S base-devel cmake rust pkgconf \
+    qt6-base qt6-declarative qt6-webengine qt6-webchannel qt6-svg mpv
+```
+
+**Debian / Ubuntu**
+
+```bash
+sudo apt install build-essential cmake pkg-config \
+    qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
+    qml6-module-qtquick qml6-module-qtquick-controls \
+    qml6-module-qtquick-dialogs qml6-module-qtquick-layouts \
+    qml6-module-qtquick-templates qml6-module-qtquick-window \
+    qml6-module-qtqml-workerscript qml6-module-qtwebchannel \
+    qml6-module-qtwebengine libqt6svg6 libmpv-dev yt-dlp
+```
+
+</details>
+
+Install Rust 1.88 or newer with [rustup](https://rustup.rs/) before building.
 
 ### Build and run
 
@@ -99,6 +160,8 @@ Melyar registers itself on the session bus as `org.mpris.MediaPlayer2.melyar`, s
 ### Waybar / status bar
 
 Melyar also exposes a zero-latency Unix socket at `$XDG_RUNTIME_DIR/melyar.sock` for tools such as Waybar, Polybar, and i3status.
+
+Full setup, CSS and Hyprland/Sway keybinding examples: [`docs/WAYBAR.md`](docs/WAYBAR.md).
 
 ## Local data
 

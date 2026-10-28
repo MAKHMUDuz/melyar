@@ -1,6 +1,9 @@
-import { usePlayer } from "@/store";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
+import { useLibraryStore } from "@/store";
 import { register } from "@/lib/registry";
 import { useSettings } from "@/lib/settings";
+import { usePlugins } from "@/lib/plugins";
 import { bindImportProgress } from "@/lib/import";
 import type { RepeatMode, TrackMeta } from "@/lib/types";
 
@@ -39,43 +42,43 @@ export function initBridge() {
     const transport = (window.qt as any)?.webChannelTransport;
     if (!transport || typeof window.QWebChannel !== "function") {
       console.error("[Melyar] webChannelTransport or QWebChannel missing (browser mode?)");
-      usePlayer.getState().patch({ bridgeError: "native" });
+      useUIStore.getState().patch({ bridgeError: "native" });
       return;
     }
     new window.QWebChannel(transport, (channel: any) => {
       const b = channel?.objects?.bridge;
       if (!b) {
         console.error("[Melyar] channel.objects.bridge not found");
-        usePlayer.getState().patch({ bridgeError: "bridge" });
+        useUIStore.getState().patch({ bridgeError: "bridge" });
         return;
       }
       bridgeInstance = b;
       window.bridge = b;
       console.log("[Melyar] Native bridge connected");
 
-      const s = usePlayer.getState();
-      s.patch({
+      usePlaybackStore.getState().patch({
         volume: clamp01((b.volume ?? 80) / 100),
         shuffle: Boolean(b.shuffleMode),
         repeat: (Math.max(0, Math.min(2, Number(b.repeatMode) || 0)) as RepeatMode),
-        booted: true,
       });
+      useUIStore.getState().patch({ booted: true });
 
       // ---- signals: connected exactly once; handlers never re-connect ----
       b.progressUpdated.connect((current: number, total: number) => {
-        const st = usePlayer.getState();
+        const playback = usePlaybackStore.getState();
+        const ui = useUIStore.getState();
         // Ignore position updates from a different track (race between
         // playTrack setting current and currentTrackChanged firing).
-        if (st.current && st.current.id !== b.currentTrackId) return;
-        usePlayer.setState({
+        if (playback.current && playback.current.id !== b.currentTrackId) return;
+        usePlaybackStore.setState({
           position: Number(current) || 0,
-          duration: Number(total) > 0 ? Number(total) : st.duration,
+          duration: Number(total) > 0 ? Number(total) : playback.duration,
         });
-        if (st.lyricsOpen) void 0; // lyric index derives from position reactively
+        if (ui.lyricsOpen) void 0; // lyric index derives from position reactively
       });
 
       b.playbackStateChanged.connect((playing: boolean) => {
-        usePlayer.setState({ playing: Boolean(playing) });
+        usePlaybackStore.setState({ playing: Boolean(playing) });
       });
 
       b.currentTrackChanged.connect(() => {
@@ -92,11 +95,13 @@ export function initBridge() {
         });
         // New request id guards against stale polls overwriting a newer track's lyrics.
         const requestId = Date.now();
-        usePlayer.setState({
+        usePlaybackStore.setState({
           current: meta,
           playing: Boolean(b.isPlaying),
           duration: Number(b.currentDuration) || 0,
           position: 0,
+        });
+        useUIStore.setState({
           lyricsRaw: null,
           lyricsRequestId: requestId,
           lyricsAutoFollow: true, // fresh track => re-center on the playing line
@@ -106,10 +111,10 @@ export function initBridge() {
           let polls = 0;
           const poll = () => {
             // Ignore this poll if a newer track has already requested lyrics.
-            if (usePlayer.getState().lyricsRequestId !== requestId) return;
+            if (useUIStore.getState().lyricsRequestId !== requestId) return;
             const lrc = b.currentLyrics;
             if (lrc && lrc.trim()) {
-              usePlayer.getState().patch({ lyricsRaw: lrc });
+              useUIStore.getState().patch({ lyricsRaw: lrc });
             } else if (polls < 30) {
               polls++;
               setTimeout(poll, 500);
@@ -122,23 +127,23 @@ export function initBridge() {
       });
 
       b.searchResultsChanged.connect(() => {
-        usePlayer.setState({ results: toTracks(b.searchResults), searching: false });
+        useUIStore.setState({ results: toTracks(b.searchResults), searching: false });
       });
 
       b.favoritesChanged.connect(() => {
-        usePlayer.setState({ liked: toTracks(b.favorites) });
+        useLibraryStore.setState({ liked: toTracks(b.favorites) });
       });
 
       b.historyChanged.connect(() => {
-        usePlayer.setState({ history: toTracks(b.history) });
+        useLibraryStore.setState({ history: toTracks(b.history) });
       });
 
       b.queueChanged.connect(() => {
-        usePlayer.setState({ queue: toTracks(b.queue) });
+        useLibraryStore.setState({ queue: toTracks(b.queue) });
       });
 
       b.volumeChanged.connect(() => {
-        usePlayer.setState({ volume: clamp01((b.volume ?? 80) / 100) });
+        usePlaybackStore.setState({ volume: clamp01((b.volume ?? 80) / 100) });
       });
 
       b.lyricsChanged.connect(() => {
@@ -149,15 +154,15 @@ export function initBridge() {
         // stored request id against Date.now() at delivery time - two different
         // milliseconds, always - so it rejected every signal and lyrics only
         // arrived through the 500 ms poll, half a second late.
-        usePlayer.setState({ lyricsRaw: (b.currentLyrics || "") || null });
+        useUIStore.setState({ lyricsRaw: (b.currentLyrics || "") || null });
       });
 
       b.shuffleModeChanged.connect(() => {
-        usePlayer.setState({ shuffle: Boolean(b.shuffleMode) });
+        usePlaybackStore.setState({ shuffle: Boolean(b.shuffleMode) });
       });
 
       b.repeatModeChanged.connect(() => {
-        usePlayer.setState({ repeat: Math.max(0, Math.min(2, Number(b.repeatMode) || 0)) as RepeatMode });
+        usePlaybackStore.setState({ repeat: Math.max(0, Math.min(2, Number(b.repeatMode) || 0)) as RepeatMode });
       });
 
       // Deep links: the desktop entry declares the melyar:// handler, so the
@@ -173,8 +178,8 @@ export function initBridge() {
         const meta = b.pendingTrackMeta;
         if (!meta || !meta.id) return;
         b.pendingTrackMeta = {};
-        const st = usePlayer.getState();
-        st.playTrack(
+        const playback = usePlaybackStore.getState();
+        playback.playTrack(
           register({
             id: String(meta.id),
             title: String(meta.title || ""),
@@ -215,7 +220,7 @@ export function initBridge() {
           if (!b) return;
 
           if (typeof b.setVolume === "function") b.setVolume(Math.round(stored.volume * 100));
-          usePlayer.setState({ volume: clamp01(stored.volume) });
+          usePlaybackStore.setState({ volume: clamp01(stored.volume) });
 
           if (typeof b.setShuffleMode === "function" && stored.shuffle) b.setShuffleMode(true);
           if (typeof b.setRepeatMode === "function" && stored.repeat > 0) {
@@ -233,7 +238,7 @@ export function initBridge() {
           duration: Number(b.currentDuration) || 0,
           thumbnail: b.currentThumbnail || "",
         });
-        usePlayer.setState({
+        usePlaybackStore.setState({
           current: meta,
           playing: Boolean(b.isPlaying),
           duration: Number(b.currentDuration) || 0,
@@ -244,20 +249,21 @@ export function initBridge() {
       // ---- automation hooks (used by end-to-end tests) ----
       const w = window as any;
       w.__testSearch = (q: string) => {
-        usePlayer.getState().setQuery(q);
+        useUIStore.getState().setQuery(q);
         runSearch(q);
       };
       w.__testPlay = (i: number) => {
-        const st = usePlayer.getState();
-        const t = st.results[i];
-        if (t) st.playTrack(t, st.results);
+        const ui = useUIStore.getState();
+        const t = ui.results[i];
+        if (t) usePlaybackStore.getState().playTrack(t, ui.results);
       };
       w.__testLike = (i: number) => {
-        const st = usePlayer.getState();
-        const t = st.results[i] ?? st.current;
-        if (t) st.toggleLike(t);
+        const ui = useUIStore.getState();
+        const playback = usePlaybackStore.getState();
+        const t = ui.results[i] ?? playback.current;
+        if (t) useLibraryStore.getState().toggleLike(t);
       };
-      w.__testToggle = () => usePlayer.getState().toggle();
+      w.__testToggle = () => usePlaybackStore.getState().toggle();
       w.__testSetSetting = (k: string, v: string) =>
         useSettings.getState().set(k as never, v as never);
       w.__testSettings = () => useSettings.getState().settings;
@@ -267,39 +273,50 @@ export function initBridge() {
       // Navigation and overlay hooks, so the interface can be driven from
       // outside for the automated checks.
       w.__navigate = (view: string) => {
-        const st = usePlayer.getState();
-        st.navigate({ name: view } as never);
+        const ui = useUIStore.getState();
+        ui.navigate({ name: view } as never);
       };
-      w.__openExpandedPlayer = () => usePlayer.getState().setExpandedPlayerOpen(true);
-      w.__openLyrics = () => usePlayer.getState().setLyricsOpen(true);
-      w.__openQueue = () => usePlayer.getState().setQueueOpen(true);
-      w.__testSetState = (partial: Record<string, unknown>) =>
-        usePlayer.setState(partial as never);
+      w.__openExpandedPlayer = () => useUIStore.getState().setExpandedPlayerOpen(true);
+      w.__openLyrics = () => useUIStore.getState().setLyricsOpen(true);
+      w.__openQueue = () => useUIStore.getState().setQueueOpen(true);
+      w.__openPlugins = () => usePlugins.getState().setOpen(true);
+      w.__pluginsState = () => {
+        const s = usePlugins.getState();
+        return { open: s.open, sources: s.sources, loading: s.loading, pending: s.pending };
+      };
+      w.__testSetState = (partial: Record<string, unknown>) => {
+        usePlaybackStore.setState(partial as never);
+        useUIStore.setState(partial as never);
+        useLibraryStore.setState(partial as never);
+      };
       w.__openMenuOnFirstTrack = () => {
-        const st = usePlayer.getState();
-        const track = st.results[0] ?? st.liked[0] ?? st.history[0];
+        const ui = useUIStore.getState();
+        const library = useLibraryStore.getState();
+        const track = ui.results[0] ?? library.liked[0] ?? library.history[0];
         if (!track) return false;
-        st.openMenu({ track, x: 200, y: 200 });
+        ui.openMenu({ track, x: 200, y: 200 });
         return true;
       };
 
       w.__testState = () => {
-        const s = usePlayer.getState();
+        const ui = useUIStore.getState();
+        const playback = usePlaybackStore.getState();
+        const library = useLibraryStore.getState();
         return {
-          view: s.view,
-          results: s.results,
-          liked: s.liked,
-          queue: s.queue,
-          playing: s.playing,
-          position: s.position,
-          duration: s.duration,
-          current: s.current,
-          lyricsRaw: s.lyricsRaw,
-          menuOpen: s.menu !== null,
-          queueOpen: s.queueOpen,
-          lyricsOpen: s.lyricsOpen,
-          expandedPlayerOpen: s.expandedPlayerOpen,
-          bridgeError: s.bridgeError,
+          view: ui.view,
+          results: ui.results,
+          liked: library.liked,
+          queue: library.queue,
+          playing: playback.playing,
+          position: playback.position,
+          duration: playback.duration,
+          current: playback.current,
+          lyricsRaw: ui.lyricsRaw,
+          menuOpen: ui.menu !== null,
+          queueOpen: ui.queueOpen,
+          lyricsOpen: ui.lyricsOpen,
+          expandedPlayerOpen: ui.expandedPlayerOpen,
+          bridgeError: ui.bridgeError,
         };
       };
     });
@@ -315,7 +332,7 @@ export function initBridge() {
 export function runSearch(query: string) {
   const b = bridgeInstance;
   if (!b) return;
-  usePlayer.setState({ searching: true });
+  useUIStore.setState({ searching: true });
   b.search(query);
 }
 
@@ -330,7 +347,7 @@ export async function handleUri(uri: string) {
   const raw = uri.replace(/^melyar:\/\//i, "");
   const [head, ...rest] = raw.split("/");
   const tail = decodeURIComponent(rest.join("/"));
-  const st = usePlayer.getState();
+  const ui = useUIStore.getState();
 
   switch (head.toLowerCase()) {
     case "settings":
@@ -339,8 +356,8 @@ export async function handleUri(uri: string) {
 
     case "search":
       if (!tail) return;
-      st.setQuery(tail);
-      st.navigate({ name: "search" });
+      ui.setQuery(tail);
+      ui.navigate({ name: "search" });
       runSearch(tail);
       return;
 

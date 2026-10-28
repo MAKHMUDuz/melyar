@@ -123,6 +123,13 @@ public:
     Q_INVOKABLE QString loadSettings() const;
     Q_INVOKABLE bool saveSetting(const QString &key, const QString &value);
     Q_INVOKABLE bool removeSetting(const QString &key);
+    /** The music sources the core knows about, as a JSON array. Each entry
+     *  carries its id, name, whether it is on, and what it is made of. */
+    Q_INVOKABLE QString listSources() const;
+    /** Switch one source on or off. Returns false for an unknown id, or for
+     *  an attempt to switch YouTube off — it is the default and the anchor
+     *  every bare track id resolves against. */
+    Q_INVOKABLE bool setSourceEnabled(const QString &sourceId, bool enabled);
     Q_INVOKABLE void openUri(const QString &uri);
     Q_INVOKABLE QVariantMap getTrackMetadata(const QString &trackId);
     Q_INVOKABLE void requestFilePick();

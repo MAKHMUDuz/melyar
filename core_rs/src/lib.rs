@@ -3,6 +3,7 @@ pub mod db;
 pub mod import;
 pub mod innertube;
 pub mod linux;
+pub mod source;
 
 use once_cell::sync::OnceCell;
 use parking_lot::Mutex;
@@ -118,11 +119,16 @@ pub mod ffi {
         fn import_library(path: String) -> bool;
         fn cancel_import() -> bool;
         fn set_equalizer_bands(bands: Vec<f64>) -> bool;
+        fn list_sources_json() -> String;
+        fn set_source_enabled(source_id: String, enabled: bool) -> bool;
     }
 }
 
 pub struct MelyarCore {
     innertube: Arc<InnerTubeClient>,
+    /// Where music can come from. YouTube is one of these, not a special case,
+    /// so a track id from anywhere resolves the same way.
+    sources: Arc<crate::source::SourceRegistry>,
     queue: Arc<TrackQueue>,
     storage: Arc<DbStorage>,
     audio: Mutex<Option<Arc<MelyarAudioEngine>>>,
@@ -135,7 +141,10 @@ pub struct MelyarCore {
 
 struct EngineEvents {
     queue: Arc<TrackQueue>,
-    innertube: Arc<InnerTubeClient>,
+    /// Stream resolution goes through `sources` — it is the one seam that knows
+    /// which site a track id belongs to. The innertube client itself is no
+    /// longer read here; it lives on the registry's YouTube source.
+    sources: Arc<crate::source::SourceRegistry>,
     audio_holder: Mutex<Option<Arc<MelyarAudioEngine>>>,
     mpris_holder: Mutex<Option<Arc<MprisManager>>>,
     waybar_holder: Mutex<Option<Arc<WaybarIpc>>>,
@@ -174,11 +183,18 @@ impl AudioEventHandler for EngineEvents {
             .unwrap_or(false);
 
         let Some(next) = self.queue.next_track() else {
+            // The queue is empty. mpv ran the last file out and goes idle
+            // without ever changing `pause`, so nothing corrects the engine's
+            // own flag - it keeps saying `true` while nothing is audible, and
+            // `toggle_play` answers the next press from that stale value.
+            if let Some(audio) = audio_opt.as_ref() {
+                audio.mark_stopped();
+            }
             ffi::on_state_changed(false);
             return;
         };
 
-        let innertube = self.innertube.clone();
+        let sources = self.sources.clone();
         let storage = self.storage.clone();
         let mpris_opt = self.mpris_holder.lock().clone();
         let waybar_opt = self.waybar_holder.lock().clone();
@@ -189,7 +205,19 @@ impl AudioEventHandler for EngineEvents {
             if already_started {
                 started = true;
             } else {
-                match innertube.get_stream_url(&next.id).await {
+                // The old file has run out, but mpv never reports a `pause`
+                // change for running dry - so this flag is the only thing that
+                // still believes something is playing. Dropping it before the
+                // resolve means every failure below leaves the desktop on
+                // "stopped" instead of claiming a track that never started,
+                // and `play_url` raises it again on the one path that works.
+                if let Some(audio) = &audio_opt {
+                    audio.mark_stopped();
+                }
+                // The next track carries its own id prefix, so a SoundCloud or
+                // Audius track keeps being itself across a track boundary
+                // instead of being reinterpreted as a YouTube video id.
+                match sources.resolve_stream(&next.id).await {
                     Ok(url) => {
                         if let Some(audio) = audio_opt {
                             match audio.play_url(&url) {
@@ -239,12 +267,15 @@ impl AudioEventHandler for EngineEvents {
 
     fn on_gapless_prefetch_needed(&self) {
         if let Some(next) = self.queue.peek_next_track() {
-            let innertube = self.innertube.clone();
+            let sources = self.sources.clone();
             let audio_opt = self.audio_holder.lock().clone();
             let rt = self.runtime.clone();
 
             rt.spawn(async move {
-                if let Ok(url) = innertube.get_stream_url(&next.id).await {
+                // Prefetch resolves through the same seam as playback, so a
+                // queued SoundCloud track is warmed with its own stream rather
+                // than a YouTube one that would fail at the boundary.
+                if let Ok(url) = sources.resolve_stream(&next.id).await {
                     if let Some(audio) = audio_opt {
                         let _ = audio.queue_next_url(&url);
                     }
@@ -333,9 +364,21 @@ fn get_core() -> &'static Arc<MelyarCore> {
         let queue = Arc::new(TrackQueue::new());
         let storage = Arc::new(DbStorage::new().expect("Failed to initialize SQLite storage"));
 
+        // The user's source choices survive restarts as a comma list. Anything
+        // unparseable reads as "just YouTube", which is the safe default.
+        let saved_sources = storage
+            .get_setting("enabledSources")
+            .ok()
+            .flatten()
+            .unwrap_or_default();
+        let sources = Arc::new(crate::source::SourceRegistry::new(
+            innertube.clone(),
+            &saved_sources,
+        ));
+
         let events = Arc::new(EngineEvents {
             queue: queue.clone(),
-            innertube: innertube.clone(),
+            sources: sources.clone(),
             audio_holder: Mutex::new(None),
             mpris_holder: Mutex::new(None),
             waybar_holder: Mutex::new(None),
@@ -372,6 +415,7 @@ fn get_core() -> &'static Arc<MelyarCore> {
 
         Arc::new(MelyarCore {
             innertube,
+            sources,
             queue,
             storage,
             audio: Mutex::new(audio),
@@ -389,32 +433,28 @@ pub fn init_melyar_core() -> bool {
 
 pub fn search(query: String) -> Vec<ffi::CxxTrackMetadata> {
     let core = get_core();
-    let client = core.innertube.clone();
+    let sources = core.sources.clone();
     let q_clone = query.clone();
 
-    let res = core
+    // Every enabled source answers at once; the wait is the slowest one, not the
+    // sum. With only YouTube on — the default — this is a single future, the
+    // same call the search box always made.
+    let tracks = core
         .runtime
-        .block_on(async move { client.search_tracks(&q_clone).await });
+        .block_on(async move { sources.search_all(&q_clone).await });
 
-    match res {
-        Ok(tracks) => {
-            // Deliberately not pushed into the queue. Typing in the search box is not
-            // a request to replace what is playing: auto-advance and the media keys
-            // follow the queue, so this one line turned a search into a queue reset.
-            // The UI pushes a queue on purpose through replace_queue().
-            ffi::on_search_results(tracks.clone());
-            tracks
-        }
-        Err(e) => {
-            eprintln!("Search error for '{}': {}", query, e);
-            Vec::new()
-        }
-    }
+    // Deliberately not pushed into the queue. Typing in the search box is not
+    // a request to replace what is playing: auto-advance and the media keys
+    // follow the queue, so pushing here turned a search into a queue reset.
+    // The UI pushes a queue on purpose through replace_queue().
+    ffi::on_search_results(tracks.clone());
+    tracks
 }
 
 pub fn play_track(track_id: String) -> bool {
     let core = get_core();
     let innertube = core.innertube.clone();
+    let sources = core.sources.clone();
     let audio_opt = core.audio.lock().clone();
     let storage = core.storage.clone();
     let mpris_opt = core.mpris.lock().clone();
@@ -426,10 +466,13 @@ pub fn play_track(track_id: String) -> bool {
     let track_id_clone = track_id.clone();
 
     rt.spawn(async move {
-        // Metadata: queue lookup first; otherwise resolve once via yt-dlp.
+        // Metadata: queue lookup first; otherwise resolve once. Only a bare
+        // YouTube id is handed to yt-dlp — an `audius:`/`soundcloud:` id would
+        // be nonsense there, and those sources already returned full metadata
+        // with their search results.
         let meta = match current_meta {
             Some(m) => m,
-            None => {
+            None if sources.source_for_id(&track_id_clone).1 == track_id_clone => {
                 let innertube_meta = innertube.clone();
                 let tid = track_id_clone.clone();
                 match tokio::task::spawn_blocking(move || {
@@ -450,9 +493,16 @@ pub fn play_track(track_id: String) -> bool {
                     }
                 }
             }
+            // A prefixed id played straight from a deep link, with no queue to
+            // read from. The id is all we know; a title can wait until the
+            // source's own metadata arrives.
+            None => ffi::CxxTrackMetadata {
+                id: track_id_clone.clone(),
+                ..Default::default()
+            },
         };
 
-        match innertube.get_stream_url(&track_id_clone).await {
+        match sources.resolve_stream(&track_id_clone).await {
             Ok(url) => {
                 if let Some(audio) = audio_opt {
                     if let Err(e) = audio.play_url(&url) {
@@ -746,6 +796,50 @@ pub fn get_settings_json() -> String {
 pub fn set_setting(key: String, value: String) -> bool {
     let core = get_core();
     core.storage.set_setting(&key, &value).is_ok()
+}
+
+/// The sources the plugins panel lists, as one JSON array.
+///
+/// Everything the panel needs to draw a row — name, what it is made of,
+/// whether it is on — comes from here, so the panel itself holds no list of
+/// sites to keep in sync.
+pub fn list_sources_json() -> String {
+    let core = get_core();
+    let infos = core.sources.info();
+    let arr: Vec<serde_json::Value> = infos.iter().map(SourceInfoJson::from_info).collect();
+    serde_json::Value::Array(arr).to_string()
+}
+
+/// Turn one source on or off. The choice is written straight to settings, so
+/// it survives a restart without the panel having to remember it.
+pub fn set_source_enabled(source_id: String, enabled: bool) -> bool {
+    let core = get_core();
+    if !core.sources.set_enabled(&source_id, enabled) {
+        // An unknown id, or an attempt to switch YouTube off. Either way the
+        // registry refused and there is nothing worth writing.
+        return false;
+    }
+    let _ = core
+        .storage
+        .set_setting("enabledSources", &core.sources.enabled_serialized());
+    true
+}
+
+/// Small adapter so the JSON shape is written in one place rather than being
+/// spelled out inside the registry, which does not depend on serde derives.
+struct SourceInfoJson;
+
+impl SourceInfoJson {
+    fn from_info(info: &crate::source::SourceInfo) -> serde_json::Value {
+        serde_json::json!({
+            "id": info.id,
+            "name": info.display_name,
+            "description": info.description,
+            "kind": info.kind,
+            "enabled": info.enabled,
+            "default": info.default_enabled,
+        })
+    }
 }
 
 pub fn delete_setting(key: String) -> bool {

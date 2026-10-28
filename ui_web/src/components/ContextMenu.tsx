@@ -1,22 +1,24 @@
 import { Heart, ListPlus, Mic2, Share2, X, Trash2, Play } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { usePlayer } from "@/store";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
+import { useLibraryStore } from "@/store";
 import { Artwork } from "@/components/Toolbar";
 import { t, useLocale } from "@/lib/i18n";
 
 export function ContextMenu() {
   useLocale();
-  const menu = usePlayer((s) => s.menu);
-  const closeMenu = usePlayer((s) => s.closeMenu);
-  const liked = usePlayer((s) => s.liked);
-  const toggleLike = usePlayer((s) => s.toggleLike);
-  const playNextInQueue = usePlayer((s) => s.playNextInQueue);
-  const addToQueue = usePlayer((s) => s.addToQueue);
-  const removeFromQueue = usePlayer((s) => s.removeFromQueue);
-  const queue = usePlayer((s) => s.queue);
-  const navigate = usePlayer((s) => s.navigate);
-  const setLyricsOpen = usePlayer((s) => s.setLyricsOpen);
-  const toastNote = usePlayer((s) => s.toastNote);
+  const menu = useUIStore((s) => s.menu);
+  const closeMenu = useUIStore((s) => s.closeMenu);
+  const liked = useLibraryStore((s) => s.liked);
+  const toggleLike = useLibraryStore((s) => s.toggleLike);
+  const playNextInQueue = useLibraryStore((s) => s.playNextInQueue);
+  const addToQueue = useLibraryStore((s) => s.addToQueue);
+  const removeFromQueue = useLibraryStore((s) => s.removeFromQueue);
+  const queue = useLibraryStore((s) => s.queue);
+  const navigate = useUIStore((s) => s.navigate);
+  const setLyricsOpen = useUIStore((s) => s.setLyricsOpen);
+  const toastNote = useUIStore((s) => s.toastNote);
 
   if (!menu) return null;
   const { track, x, y } = menu;

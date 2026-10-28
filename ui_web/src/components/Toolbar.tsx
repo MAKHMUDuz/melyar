@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  FolderPlus,
   ChevronLeft,
   ChevronRight,
   Heart,
@@ -19,9 +20,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { formatTime } from "@/lib/lyrics";
-import { usePlayer } from "@/store";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
+import { useLibraryStore } from "@/store";
 import { PlayPauseMorph, GlassSlider } from "@/components/GlassComponents";
 import { handleUri } from "@/lib/client";
+import { useLibraryImport } from "@/lib/import";
 import type { TrackMeta } from "@/lib/types";
 import { t, useLocale, setLocale, LOCALES } from "@/lib/i18n";
 
@@ -70,7 +74,7 @@ export function Artwork({
 }
 
 function WaveBars() {
-  const playing = usePlayer((s) => s.playing);
+  const playing = usePlaybackStore((s) => s.playing);
   if (!playing) return null;
   return (
     <div className="eq-bars flex items-end gap-1 h-4" aria-hidden>
@@ -83,9 +87,9 @@ function WaveBars() {
 
 /** The seek bar. Thin at rest, thicker under the pointer, as every player does. */
 export function MiniTimeline() {
-  const position = usePlayer((s) => s.position);
-  const duration = usePlayer((s) => s.duration);
-  const seekRatio = usePlayer((s) => s.seekRatio);
+  const position = usePlaybackStore((s) => s.position);
+  const duration = usePlaybackStore((s) => s.duration);
+  const seekRatio = usePlaybackStore((s) => s.seekRatio);
   const drag = useRef(false);
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -141,14 +145,14 @@ export function MiniTimeline() {
  */
 function TransportCapsule() {
   useLocale();
-  const playing = usePlayer((s) => s.playing);
-  const shuffle = usePlayer((s) => s.shuffle);
-  const repeat = usePlayer((s) => s.repeat);
-  const toggle = usePlayer((s) => s.toggle);
-  const next = usePlayer((s) => s.next);
-  const prev = usePlayer((s) => s.prev);
-  const toggleShuffle = usePlayer((s) => s.toggleShuffle);
-  const cycleRepeat = usePlayer((s) => s.cycleRepeat);
+  const playing = usePlaybackStore((s) => s.playing);
+  const shuffle = usePlaybackStore((s) => s.shuffle);
+  const repeat = usePlaybackStore((s) => s.repeat);
+  const toggle = usePlaybackStore((s) => s.toggle);
+  const next = usePlaybackStore((s) => s.next);
+  const prev = usePlaybackStore((s) => s.prev);
+  const toggleShuffle = usePlaybackStore((s) => s.toggleShuffle);
+  const cycleRepeat = usePlaybackStore((s) => s.cycleRepeat);
 
   return (
     <div className="transport-capsule">
@@ -172,10 +176,10 @@ function TransportCapsule() {
 /** Volume: an icon and a short track that widens under the pointer. */
 function VolumeControl() {
   useLocale();
-  const volume = usePlayer((s) => s.volume);
-  const muted = usePlayer((s) => s.muted);
-  const setVolume = usePlayer((s) => s.setVolume);
-  const toggleMute = usePlayer((s) => s.toggleMute);
+  const volume = usePlaybackStore((s) => s.volume);
+  const muted = usePlaybackStore((s) => s.muted);
+  const setVolume = usePlaybackStore((s) => s.setVolume);
+  const toggleMute = usePlaybackStore((s) => s.toggleMute);
 
   const VolIcon = muted || volume === 0 ? VolumeX : volume < 0.5 ? Volume1 : Volume2;
 
@@ -265,11 +269,11 @@ function LanguageMenu() {
  */
 export function Header() {
   useLocale();
-  const view = usePlayer((s) => s.view);
-  const navIndex = usePlayer((s) => s.navIndex);
-  const navStack = usePlayer((s) => s.navStack);
-  const goBack = usePlayer((s) => s.goBack);
-  const goForward = usePlayer((s) => s.goForward);
+  const view = useUIStore((s) => s.view);
+  const navIndex = useUIStore((s) => s.navIndex);
+  const navStack = useUIStore((s) => s.navStack);
+  const goBack = useUIStore((s) => s.goBack);
+  const goForward = useUIStore((s) => s.goForward);
 
   const canBack = navIndex > 0;
   const canForward = navIndex < navStack.length - 1;
@@ -292,9 +296,13 @@ export function Header() {
       <h1 className="hb-title">{title}</h1>
       <div className="hb-right">
         <LanguageMenu />
-        <button className="pb-icon" aria-label={t("settings.title")} onClick={() => void handleUri("melyar://settings")}>
+                <button className="pb-icon" aria-label={t("import.title")} onClick={() => useLibraryImport.getState().start()}>
+          <FolderPlus className="size-[18px]" />
+        </button>
+<button className="pb-icon" aria-label={t("settings.title")} onClick={() => void handleUri("melyar://settings")}>
           <Settings className="size-[18px]" />
         </button>
+      
       </div>
     </header>
   );
@@ -310,17 +318,17 @@ export function Header() {
  */
 export function PlayerBar() {
   useLocale();
-  const current = usePlayer((s) => s.current);
-  const position = usePlayer((s) => s.position);
-  const duration = usePlayer((s) => s.duration);
-  const playing = usePlayer((s) => s.playing);
-  const liked = usePlayer((s) => s.liked);
-  const toggleLike = usePlayer((s) => s.toggleLike);
-  const setExpandedPlayerOpen = usePlayer((s) => s.setExpandedPlayerOpen);
-  const queueOpen = usePlayer((s) => s.queueOpen);
-  const setQueueOpen = usePlayer((s) => s.setQueueOpen);
-  const lyricsOpen = usePlayer((s) => s.lyricsOpen);
-  const setLyricsOpen = usePlayer((s) => s.setLyricsOpen);
+  const current = usePlaybackStore((s) => s.current);
+  const position = usePlaybackStore((s) => s.position);
+  const duration = usePlaybackStore((s) => s.duration);
+  const playing = usePlaybackStore((s) => s.playing);
+  const liked = useLibraryStore((s) => s.liked);
+  const toggleLike = useLibraryStore((s) => s.toggleLike);
+  const setExpandedPlayerOpen = useUIStore((s) => s.setExpandedPlayerOpen);
+  const queueOpen = useUIStore((s) => s.queueOpen);
+  const setQueueOpen = useUIStore((s) => s.setQueueOpen);
+  const lyricsOpen = useUIStore((s) => s.lyricsOpen);
+  const setLyricsOpen = useUIStore((s) => s.setLyricsOpen);
 
   const track: TrackMeta | null = current;
   const isLiked = track ? liked.some((x) => x.id === track.id) : false;

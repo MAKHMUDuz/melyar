@@ -2,8 +2,10 @@ import { create } from "zustand";
 import { getBridge } from "@/lib/client";
 import { getLocale, setLocale as applyLocale, type Locale } from "@/lib/i18n";
 
-export type Theme = "dark" | "light";
+export type Theme = "dark" | "light" | "system";
 export type StreamingQuality = "low" | "medium" | "high" | "lossless";
+export type LyricsFontSize = "small" | "medium" | "large" | "extraLarge";
+export type LyricsAlignment = "left" | "center" | "right";
 
 export type Settings = {
   // Appearance
@@ -11,7 +13,8 @@ export type Settings = {
   accentColor: string;
   compactMode: boolean;
   showAlbumArt: boolean;
-  animationsEnabled: boolean;
+  animationsEnabled: boolean; // deprecated, kept for migration
+  reducedMotion: boolean;
   // Playback
   crossfadeEnabled: boolean;
   crossfadeDuration: number;
@@ -22,12 +25,24 @@ export type Settings = {
   autoPlayNext: boolean;
   showNotifications: boolean;
   showLyricsAutomatically: boolean;
+  // Audio
+  volume: number;
+  outputDevice?: string;
+  playbackSpeed: number;
+  audioNormalization: boolean;
+  // Library
+  musicFolders: string[];
+  autoScan: boolean;
+  artworkCacheSize: number;
+  // Lyrics
+  autoFollowLyrics: boolean;
+  lyricsFontSize: LyricsFontSize;
+  lyricsAlignment: LyricsAlignment;
   // Advanced
   cacheSize: number;
   // Interface
   language: Locale;
   // Playback preferences that follow the user between sessions
-  volume: number;
   shuffle: boolean;
   repeat: number;
   /** The gains of the graphic equaliser, in decibels, one per band. */
@@ -45,6 +60,7 @@ export const DEFAULT_SETTINGS: Settings = {
   compactMode: false,
   showAlbumArt: true,
   animationsEnabled: true,
+  reducedMotion: false,
   crossfadeEnabled: false,
   crossfadeDuration: 5,
   gaplessPlayback: true,
@@ -54,9 +70,18 @@ export const DEFAULT_SETTINGS: Settings = {
   autoPlayNext: true,
   showNotifications: true,
   showLyricsAutomatically: false,
+  volume: 0.8,
+  outputDevice: "default",
+  playbackSpeed: 1,
+  audioNormalization: false,
+  musicFolders: [],
+  autoScan: true,
+  artworkCacheSize: 200,
+  autoFollowLyrics: true,
+  lyricsFontSize: "medium",
+  lyricsAlignment: "center",
   cacheSize: 500,
   language: "en",
-  volume: 0.8,
   shuffle: false,
   repeat: 0,
   equalizerBands: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -68,11 +93,14 @@ const NUMERIC_KEYS = new Set<keyof Settings>([
   "cacheSize",
   "volume",
   "repeat",
+  "playbackSpeed",
+  "artworkCacheSize",
 ]);
 const BOOLEAN_KEYS = new Set<keyof Settings>([
   "compactMode",
   "showAlbumArt",
   "animationsEnabled",
+  "reducedMotion",
   "crossfadeEnabled",
   "gaplessPlayback",
   "normalizeVolume",
@@ -80,10 +108,13 @@ const BOOLEAN_KEYS = new Set<keyof Settings>([
   "autoPlayNext",
   "showNotifications",
   "showLyricsAutomatically",
+  "audioNormalization",
+  "autoScan",
+  "autoFollowLyrics",
   "shuffle",
 ]);
 
-const ARRAY_KEYS = new Set<keyof Settings>(["equalizerBands"]);
+const ARRAY_KEYS = new Set<keyof Settings>(["equalizerBands", "musicFolders"]);
 
 function coerceArray(raw: unknown, length: number): number[] {
   const values = Array.isArray(raw) ? raw : [];
@@ -138,16 +169,60 @@ function applyEqualizer(settings: Settings) {
   }
 }
 
+/** Resolve the effective theme from a theme setting, handling "system". */
+export function resolveTheme(theme: Settings["theme"]): "dark" | "light" {
+  if (theme === "system") {
+    if (typeof window !== "undefined" && window.matchMedia) {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    return "dark";
+  }
+  return theme;
+}
+
+let systemThemeListener: (() => void) | null = null;
+
+/** Set up a listener for system theme changes when theme is "system". */
+export function setupSystemThemeListener(): void {
+  if (typeof window === "undefined" || !window.matchMedia) return;
+  if (systemThemeListener) return;
+
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const handler = () => {
+    const state = useSettings.getState();
+    if (state.settings.theme === "system") {
+      applySettingsToDocument(state.settings);
+    }
+  };
+
+  if (mediaQuery.addEventListener) {
+    mediaQuery.addEventListener("change", handler);
+  } else {
+    (mediaQuery as any).addListener(handler);
+  }
+
+  systemThemeListener = () => {
+    if (mediaQuery.removeEventListener) {
+      mediaQuery.removeEventListener("change", handler);
+    } else {
+      (mediaQuery as any).removeListener(handler);
+    }
+    systemThemeListener = null;
+  };
+}
+
 /**
  * Apply the settings that are expressed in the DOM. Kept here so that the
  * store, the boot sequence and the settings panel all agree on the result.
  */
 export function applySettingsToDocument(settings: Settings) {
   const root = document.documentElement;
-  root.setAttribute("data-theme", settings.theme);
+  const effectiveTheme = resolveTheme(settings.theme);
+  root.setAttribute("data-theme", effectiveTheme);
   root.setAttribute("data-accent", settings.accentColor);
   root.dataset.compact = settings.compactMode ? "true" : "false";
   root.dataset.animations = settings.animationsEnabled ? "true" : "false";
+  root.dataset.reducedMotion = settings.reducedMotion ? "true" : "false";
 
   // The accent colour drives a handful of custom properties.
   //
@@ -271,6 +346,51 @@ function readableTextColor(hex: string): string {
   return luma > 0.6 ? "#101014" : "#ffffff";
 }
 
+/**
+ * The equaliser is the one control that is dragged rather than clicked, so it
+ * gets a trailing debounce. The engine is read back from the store when the
+ * timer fires, not captured: a toggle that lands while a write is pending
+ * must win over the snapshot the drag started from.
+ */
+let equalizerTimer: ReturnType<typeof setTimeout> | null = null;
+
+function scheduleEqualizer(_snapshot: Settings) {
+  if (equalizerTimer) clearTimeout(equalizerTimer);
+  equalizerTimer = setTimeout(() => {
+    equalizerTimer = null;
+    applyEqualizer(useSettings.getState().settings);
+  }, 80);
+}
+
+function cancelScheduledEqualizer() {
+  if (equalizerTimer) {
+    clearTimeout(equalizerTimer);
+    equalizerTimer = null;
+  }
+  for (const timer of persistTimers.values()) clearTimeout(timer);
+  persistTimers.clear();
+}
+
+const persistTimers = new Map<string, ReturnType<typeof setTimeout>>();
+
+/** Coalesce the disk writes of a dragging control into one round trip. */
+function schedulePersist(
+  key: keyof Settings,
+  value: Settings[keyof Settings],
+  delay = 350,
+) {
+  const name = String(key);
+  const existing = persistTimers.get(name);
+  if (existing) clearTimeout(existing);
+  persistTimers.set(
+    name,
+    setTimeout(() => {
+      persistTimers.delete(name);
+      persist(key, value);
+    }, delay),
+  );
+}
+
 type SettingsState = {
   settings: Settings;
   loaded: boolean;
@@ -315,23 +435,43 @@ export const useSettings = create<SettingsState>()((set, get) => ({
       applySettingsToDocument(merged);
       applyEqualizer(merged);
       set({ settings: merged, loaded: true });
+      setupSystemThemeListener();
     })();
   },
   set: (key, value) => {
     const settings = { ...get().settings, [key]: value };
-    applySettingsToDocument(settings);
     set({ settings });
+
+    // The band gains do not reach the DOM, and a drag fires this on every
+    // pointer move - recomputing the theme and the accent colours here would
+    // be pure waste on the hot path.
+    if (key !== "equalizerBands") {
+      applySettingsToDocument(settings);
+    }
 
     if (key === "language") {
       applyLocale(value as Locale);
     }
-    if (key === "equalizerEnabled" || key === "equalizerBands") {
+
+    if (key === "equalizerEnabled") {
+      // Toggling is a single, deliberate action: apply it at once so the
+      // change is audible immediately, and drop any pending band write.
+      cancelScheduledEqualizer();
       applyEqualizer(settings);
+      persist(key, value);
+    } else if (key === "equalizerBands") {
+      // A drag sends a burst of these. Apply the newest state on a short
+      // trailing delay so mpv is not rebuilt on every pixel, and persist
+      // even less often because a setting write is a round trip.
+      scheduleEqualizer(settings);
+      schedulePersist(key, value);
+    } else {
+      persist(key, value);
     }
-    persist(key, value);
   },
 
   reset: () => {
+    cancelScheduledEqualizer();
     const settings = { ...DEFAULT_SETTINGS, language: getLocale() };
     applySettingsToDocument(settings);
     applyEqualizer(settings);

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Search as SearchIcon } from "lucide-react";
-import { usePlayer } from "@/store";
+import { usePlaybackStore } from "@/store";
+import { useUIStore } from "@/store";
 import { runSearch } from "@/lib/client";
 import { groupArtists } from "@/lib/registry";
 import { TrackTable } from "@/components/TrackTable";
@@ -9,11 +10,11 @@ import { t, useLocale } from "@/lib/i18n";
 
 export function SearchView() {
   useLocale();
-  const query = usePlayer((s) => s.query);
-  const results = usePlayer((s) => s.results);
-  const searching = usePlayer((s) => s.searching);
-  const playTrack = usePlayer((s) => s.playTrack);
-  const navigate = usePlayer((s) => s.navigate);
+  const query = useUIStore((s) => s.query);
+  const results = useUIStore((s) => s.results);
+  const searching = useUIStore((s) => s.searching);
+  const playTrack = usePlaybackStore((s) => s.playTrack);
+  const navigate = useUIStore((s) => s.navigate);
   const inputRef = useRef<HTMLInputElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(0);
 
@@ -21,7 +22,7 @@ export function SearchView() {
   useEffect(() => {
     const q = query.trim();
     if (!q) {
-      usePlayer.setState({ results: [], searching: false });
+      useUIStore.setState({ results: [], searching: false });
       return;
     }
     clearTimeout(timer.current);
@@ -43,7 +44,7 @@ export function SearchView() {
           ref={inputRef}
           id="melyar-search"
           value={query}
-          onChange={(e) => usePlayer.getState().setQuery(e.target.value)}
+          onChange={(e) => useUIStore.getState().setQuery(e.target.value)}
           placeholder={t("search.placeholder")}
           className="w-full bg-transparent text-[15px] outline-none placeholder:text-text-tertiary"
           spellCheck={false}
