@@ -361,4 +361,73 @@ export const en: Record<string, string> = {
   "common.close": "Close",
   "common.clear": "Clear",
   "common.search": "Search...",
-};
+
+  // Import kicker and subtitle
+  "import.kicker": "♫",
+  "import.subtitle": "Bring your playlists and music collections into Melyar",
+
+  // Import sources overview
+  "import.sources.kicker": "Import Overview",
+  "import.sources.title": "Import from your music services and files",
+
+  // Source descriptions
+  "import.local.desc": "Add music folders from your computer. Scans recursively for supported audio formats.",
+  "import.local.addFolder": "Add a music folder",
+
+  "import.spotify.connect": "Connect Spotify",
+  "import.spotify.desc": "Import playlists and tracks from Spotify through OAuth authorization.",
+
+  "import.apple.chooseXml": "Choose iTunes Library XML",
+  "import.apple.desc": "Import playlists and tracks from an iTunes Library export file.",
+
+  "import.file.choose": "Import Playlist File",
+  "import.file.desc": "Import playlists from supported export formats (M3U, M3U8, PLS, XSPF, JSON, CSV, iTunes XML).",
+
+  // Statistics
+  "import.stats.items": "Imported tracks",
+  "import.stats.playable": "Playable local tracks",
+  "import.stats.metadataOnly": "Metadata-only tracks",
+
+  // Folders section
+  "import.folders.kicker": "Music Folders",
+  "import.folders.hint": "Your indexed music folders appear here.",
+  "import.folder.tracks": "tracks",
+  "import.folder.albums": "albums",
+
+  // Status messages
+  "requires_configuration": "Requires configuration",
+  "export_only": "Import via export file",
+
+  // Wizard step keys
+  "import.wizard.step1.title": "Choose Source",
+  "import.wizard.step1.description": "Select a provider, folder, or export file to import from.",
+
+  "import.wizard.step2.title": "Fetch and Analyze",
+  "import.wizard.step2.noPreview": "No preview available. The file may still be processing.",
+
+  "import.wizard.step3.title": "Review and Confirm",
+  "import.wizard.step3.noPreview": "No preview available.",
+
+  "import.wizard.step4.title": "Complete",
+  "import.wizard.import": "Import",
+  "import.wizard.done": "Done",
+  "import.viewLibrary": "View Library",
+
+  // Wizard summary keys
+  "import.wizard.total": "Total: {count} items",
+  "import.wizard.playable": "Playable: {count}",
+  "import.wizard.metadataOnly": "Metadata-only: {count}",
+  "import.wizard.unplayable": "Unplayable: {count}",
+  "import.wizard.playlists": "Playlists: {count}",
+  "import.wizard.noTracks": "No tracks found",
+
+  // Wizard review/selection
+  "import.wizard.selected": "{count} selected",
+  "import.wizard.playableSelected": "Playable: {count}",
+  "import.wizard.metadataSelected": "Metadata-only: {count}",
+
+  // Completion messages
+  "import.imported": "imported",
+  "import.skipped": "were skipped",
+  "import.failed": "failed",
+}

@@ -369,4 +369,39 @@ export const tr: Record<string, string> = {
   "common.close": "Kapat",
   "common.clear": "Temizle",
   "common.search": "Ara...",
+
+
+  // Wizard step keys
+  "import.wizard.step1.title": "Kaynağı Seç",
+  "import.wizard.step1.description": "Bir sağlayıcı, klasör veya dışa aktarım dosyası seçmek için import et.",
+
+  "import.wizard.step2.title": "Getir ve Analiz et",
+  "import.wizard.step2.noPreview": "Önizleme yok. Dosya hala işleniyor olabilir.",
+
+  "import.wizard.step3.title": "Gözden Geçir ve Onayla",
+  "import.wizard.step3.noPreview": "Önizleme yok.",
+
+  "import.wizard.step4.title": "Tamamla",
+  "import.wizard.import": "İçe Aktar",
+  "import.wizard.done": "Tamam",
+  "import.viewLibrary": "Kütüphaneyi Gör",
+
+  // Wizard summary keys
+  "import.wizard.total": "Toplam: {count} öğe",
+  "import.wizard.playable": "Oynanabilir: {count}",
+  "import.wizard.metadataOnly": "Sadece meta veri: {count}",
+  "import.wizard.unplayable": "Oynanamaz: {count}",
+  "import.wizard.playlists": "Çalma listeleri: {count}",
+  "import.wizard.noTracks": "Parça bulunamadı",
+
+  // Wizard review/selection
+  "import.wizard.selected": "{count} seçili",
+  "import.wizard.playableSelected": "Oynanabilir: {count}",
+  "import.wizard.metadataSelected": "Sadece meta veri: {count}",
+
+  // Completion messages
+  "import.imported": "ekele",
+  "import.skipped": "atlandı",
+  "import.failed": "başarısız",
+
 };
