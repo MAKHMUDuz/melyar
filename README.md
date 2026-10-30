@@ -32,7 +32,7 @@ Melyar is built for people who want a music player that feels native on Linux:
 - Queue management, shuffle, repeat, volume, and seek controls
 - Synced LRC lyrics with plain-text fallback
 - Favorites, history, albums, artists, and library views
-- Library import from a Spotify export, JSON or CSV
+- Library import from a Spotify export, JSON or CSV — **Import & Transfer 2.0 (demo/active stage)**
 - Ten band graphic equaliser (31 Hz - 16 kHz)
 - Liquid Glass-inspired interface with light/dark theming
 - Thirteen interface languages, switched at runtime
