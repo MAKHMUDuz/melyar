@@ -9,7 +9,6 @@
 #include <QIcon>
 #include <QDir>
 #include <QFile>
-#include <QFileInfo>
 #include <QUrl>
 #include <QUrlQuery>
 #include <iostream>
@@ -20,6 +19,7 @@
 #include <QJSValue>
 
 #include "bridge/bridge.hpp"
+#include "web_path.hpp"
 
 int main(int argc, char *argv[]) {
     // A single clock for the whole start up, so the log shows where the
@@ -74,27 +74,15 @@ int main(int argc, char *argv[]) {
     MelyarBridge *bridgePtr = bridge.get();
     engine.rootContext()->setContextProperty("bridge", bridgePtr);
 
-    // Resolve web UI path BEFORE loading QML
-    QString webUrlStr = qEnvironmentVariable("MELYAR_DEV_URL");
-    if (webUrlStr.isEmpty()) {
-        QStringList candidates = {
-            QDir::currentPath() + "/ui_web/dist/index.html",
-            QCoreApplication::applicationDirPath() + "/../ui_web/dist/index.html",
-            QCoreApplication::applicationDirPath() + "/ui_web/dist/index.html",
-            QCoreApplication::applicationDirPath() + "/../share/melyar/web/index.html",
-            "/usr/share/melyar/web/index.html",
-            "/usr/local/share/melyar/web/index.html"
-        };
-        for (const auto &cand : candidates) {
-            if (QFile::exists(cand)) {
-                webUrlStr = QUrl::fromLocalFile(QFileInfo(cand).canonicalFilePath()).toString();
-                break;
-            }
-        }
-    }
-    if (webUrlStr.isEmpty()) {
-        webUrlStr = QUrl::fromLocalFile(QDir::currentPath() + "/ui_web/dist/index.html").toString();
-    }
+    // Resolve web UI path BEFORE loading QML. The candidate order and the
+    // fallback live in web_path.cpp so they can be tested without a real
+    // filesystem layout.
+    const QStringList webCandidates = melyar::webPathCandidates(
+        QDir::currentPath(), QCoreApplication::applicationDirPath());
+    QString webUrlStr = melyar::resolveWebUrl(
+        qEnvironmentVariable("MELYAR_DEV_URL"),
+        webCandidates,
+        [](const QString &path) { return QFile::exists(path); });
 
     // MELYAR_LANG forces the interface language, overriding the browser
     // locale detection. The web layer reads it from the ?lang= parameter.

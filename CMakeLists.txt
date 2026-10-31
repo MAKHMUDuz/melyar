@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
 project(melyar LANGUAGES CXX C)
 
+include(CTest)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -43,6 +45,8 @@ qt_add_executable(melyar
     ui_cpp/main.cpp
     ui_cpp/bridge/bridge.cpp
     ui_cpp/bridge/bridge.hpp
+    ui_cpp/web_path.cpp
+    ui_cpp/web_path.hpp
 )
 
 file(GLOB_RECURSE MELYAR_QML_FILES CONFIGURE_DEPENDS
@@ -127,4 +131,20 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ui_web/dist/index.html")
             PATTERN "*.svg"
             PATTERN "*.woff"
             PATTERN "*.woff2")
+endif()
+
+# -----------------------------------------------------------------------------
+# Tests
+# -----------------------------------------------------------------------------
+if(BUILD_TESTING)
+    qt_add_executable(melyar_web_path_test
+        ui_cpp/web_path_test.cpp
+        ui_cpp/web_path.cpp
+    )
+    target_link_libraries(melyar_web_path_test PRIVATE Qt6::Core)
+    set_target_properties(melyar_web_path_test PROPERTIES
+        CXX_STANDARD 20
+        CXX_STANDARD_REQUIRED ON
+    )
+    add_test(NAME melyar_web_path COMMAND melyar_web_path_test)
 endif()
