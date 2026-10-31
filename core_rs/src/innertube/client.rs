@@ -3,9 +3,10 @@ use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use reqwest::{header, Client};
 use serde_json::{json, Value};
+use std::collections::HashMap;
 use std::path::PathBuf;
 use std::process::Command;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use super::cipher::CipherSolver;
 use super::clients::{endpoint, parse_live_config, InnerTubeConfig, CLIENT_POOL};
@@ -198,6 +199,82 @@ fn parse_ytdlp_json(data: &Value, video_id: &str) -> Result<ResolvedVideo> {
     }
 }
 
+/// How long a resolved stream URL is reused.
+///
+/// InnerTube URLs are short-lived. Thirty seconds is long enough to cover the
+/// gap between a gapless prefetch and the track actually starting, and short
+/// enough that an expired URL is never handed to mpv.
+const STREAM_URL_TTL: Duration = Duration::from_secs(30);
+
+/// A URL remembered for a short while, together with the moment it was
+/// resolved.
+#[derive(Debug)]
+struct CachedStreamUrl {
+    url: String,
+    inserted_at: Instant,
+}
+
+/// A cached URL is fresh while it is younger than the TTL.
+fn cache_entry_is_fresh(inserted_at: Instant, now: Instant) -> bool {
+    now.duration_since(inserted_at) < STREAM_URL_TTL
+}
+
+/// Short-lived cache of resolved stream URLs, keyed by video id.
+///
+/// The gapless prefetch resolves the next track early. Without this cache the
+/// same track resolved again when it actually started, doubling the InnerTube
+/// requests for every transition.
+#[derive(Default)]
+struct StreamUrlCache {
+    entries: Mutex<HashMap<String, CachedStreamUrl>>,
+}
+
+impl StreamUrlCache {
+    /// Return a still-fresh URL, dropping it when it has expired.
+    fn get(&self, video_id: &str) -> Option<String> {
+        let now = Instant::now();
+        let mut entries = self.entries.lock();
+        match entries.get(video_id) {
+            Some(entry) if cache_entry_is_fresh(entry.inserted_at, now) => Some(entry.url.clone()),
+            Some(_) => {
+                entries.remove(video_id);
+                None
+            }
+            None => None,
+        }
+    }
+
+    /// Remember a resolved URL for the TTL.
+    fn insert(&self, video_id: &str, url: &str) {
+        let now = Instant::now();
+        let mut entries = self.entries.lock();
+        entries.insert(
+            video_id.to_string(),
+            CachedStreamUrl {
+                url: url.to_string(),
+                inserted_at: now,
+            },
+        );
+
+        // The TTL is the real invalidation. This cap only keeps a long
+        // listening session from retaining every expired entry.
+        if entries.len() > 64 {
+            entries.retain(|_, entry| cache_entry_is_fresh(entry.inserted_at, now));
+        }
+    }
+
+    #[cfg(test)]
+    fn insert_at(&self, video_id: &str, url: &str, inserted_at: Instant) {
+        self.entries.lock().insert(
+            video_id.to_string(),
+            CachedStreamUrl {
+                url: url.to_string(),
+                inserted_at,
+            },
+        );
+    }
+}
+
 pub struct InnerTubeClient {
     http: Client,
     cipher: CipherSolver,
@@ -208,6 +285,8 @@ pub struct InnerTubeClient {
     /// Which identity in the pool worked last, so the working one is tried
     /// first.
     preferred: Mutex<usize>,
+    /// Resolved stream URLs, shared by prefetch and playback.
+    stream_cache: StreamUrlCache,
 }
 
 impl InnerTubeClient {
@@ -245,6 +324,7 @@ impl InnerTubeClient {
             cipher: CipherSolver::new(),
             config: Mutex::new(InnerTubeConfig::default()),
             preferred: Mutex::new(0),
+            stream_cache: StreamUrlCache::default(),
         })
     }
 
@@ -381,19 +461,27 @@ impl InnerTubeClient {
     /// Primary: yt-dlp (handles PO tokens + deciphering).
     /// Fallback: innertube clients + public APIs.
     pub async fn get_stream_url(&self, video_id: &str) -> Result<String> {
+        // A prefetch may have resolved this track a moment ago.
+        if let Some(url) = self.stream_cache.get(video_id) {
+            return Ok(url);
+        }
+
         // 1. yt-dlp (metadata json gives us both url and meta in one shot)
         if yt_dlp_available() {
             let vid = video_id.to_string();
             let resolved = tokio::task::spawn_blocking(move || yt_dlp_json_blocking(&vid)).await;
             if let Ok(Ok(res)) = resolved {
                 if !res.stream_url.is_empty() {
+                    self.stream_cache.insert(video_id, &res.stream_url);
                     return Ok(res.stream_url);
                 }
             }
         }
 
         // 2. The InnerTube player endpoint, trying the identities in turn.
-        self.resolve_stream_via_pool(video_id).await
+        let url = self.resolve_stream_via_pool(video_id).await?;
+        self.stream_cache.insert(video_id, &url);
+        Ok(url)
     }
 
     /// Resolve a stream using only the InnerTube identities, with no help
@@ -559,4 +647,47 @@ static YTDLP_LOCK: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
 pub fn with_ytdlp_lock<T>(f: impl FnOnce() -> T) -> T {
     let _guard = YTDLP_LOCK.lock();
     f()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn fresh_stream_url_is_returned() {
+        let cache = StreamUrlCache::default();
+        cache.insert("video-1", "https://example.test/audio-1");
+
+        assert_eq!(
+            cache.get("video-1").as_deref(),
+            Some("https://example.test/audio-1")
+        );
+        assert_eq!(cache.get("another-video"), None);
+    }
+
+    #[test]
+    fn expired_stream_url_is_dropped() {
+        let cache = StreamUrlCache::default();
+        let expired = Instant::now()
+            .checked_sub(STREAM_URL_TTL + Duration::from_secs(1))
+            .expect("the test clock is far enough from the epoch");
+        cache.insert_at("video-2", "https://example.test/audio-2", expired);
+
+        assert_eq!(cache.get("video-2"), None);
+        assert!(!cache.entries.lock().contains_key("video-2"));
+    }
+
+    #[test]
+    fn ttl_boundary_is_treated_as_expired() {
+        let now = Instant::now();
+        let inserted = now
+            .checked_sub(STREAM_URL_TTL)
+            .expect("the test clock is far enough from the epoch");
+
+        assert!(!cache_entry_is_fresh(inserted, now));
+        assert!(cache_entry_is_fresh(
+            inserted + Duration::from_millis(1),
+            now
+        ));
+    }
 }
