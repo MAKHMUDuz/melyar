@@ -150,7 +150,6 @@ pub fn parse_duration_str(s: &str) -> f64 {
     }
 }
 
-
 fn first_run_text(value: Option<&Value>) -> Option<String> {
     value?
         .pointer("/runs/0/text")
@@ -173,7 +172,13 @@ fn response_browse_id(json: &Value) -> Option<String> {
     json.pointer("/responseContext/serviceTrackingParams")
         .and_then(Value::as_array)?
         .iter()
-        .flat_map(|service| service.get("params").and_then(Value::as_array).into_iter().flatten())
+        .flat_map(|service| {
+            service
+                .get("params")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+        })
         .find(|param| param.get("key").and_then(Value::as_str) == Some("browse_id"))
         .and_then(|param| param.get("value").and_then(Value::as_str))
         .map(str::to_string)
@@ -326,7 +331,9 @@ pub fn parse_playlist_detail(json: &Value) -> Option<CxxLibraryPlaylist> {
         .and_then(|value| value.get("playlistId"))
         .and_then(Value::as_str)
         .map(str::to_string)
-        .or_else(|| response_browse_id(json).map(|value| value.trim_start_matches("VL").to_string()))?;
+        .or_else(|| {
+            response_browse_id(json).map(|value| value.trim_start_matches("VL").to_string())
+        })?;
     let second_subtitle = header.get("secondSubtitle");
     let summary = second_subtitle
         .and_then(|value| value.pointer("/runs/0/text"))
@@ -338,15 +345,15 @@ pub fn parse_playlist_detail(json: &Value) -> Option<CxxLibraryPlaylist> {
         name: first_run_text(header.get("title"))?,
         thumbnail_url: thumbnail_url(header),
         track_count: parse_leading_count(summary),
-        is_owner: json.pointer("/header/musicEditablePlaylistDetailHeaderRenderer").is_some(),
+        is_owner: json
+            .pointer("/header/musicEditablePlaylistDetailHeaderRenderer")
+            .is_some(),
     })
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
 
     #[test]
     fn parses_a_track_from_a_real_innertube_browse_response() {
@@ -396,7 +403,6 @@ mod tests {
         assert!(!playlist.is_owner);
         assert!(playlist.thumbnail_url.starts_with("https://"));
     }
-
 
     #[test]
     fn test_parse_duration_str() {
