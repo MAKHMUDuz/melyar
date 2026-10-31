@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { en } from "@/locales/en";
 import { tr } from "@/locales/tr";
+import { uz } from "@/locales/uz";
 import { es } from "@/locales/es";
 import { de } from "@/locales/de";
 import { fr } from "@/locales/fr";
@@ -16,6 +17,7 @@ import { sq } from "@/locales/sq";
 export type Locale =
   | "en"
   | "tr"
+  | "uz"
   | "es"
   | "de"
   | "fr"
@@ -31,6 +33,7 @@ export type Locale =
 export const LOCALES: { code: Locale; label: string }[] = [
   { code: "en", label: "English" },
   { code: "tr", label: "Türkçe" },
+  { code: "uz", label: "Oʻzbekcha" },
   { code: "es", label: "Español" },
   { code: "de", label: "Deutsch" },
   { code: "fr", label: "Français" },
@@ -48,6 +51,7 @@ export const LOCALES: { code: Locale; label: string }[] = [
 const MESSAGES: Record<Locale, Record<string, string>> = {
   en,
   tr,
+  uz,
   es,
   de,
   fr,
@@ -138,8 +142,9 @@ export function t(key: string, params?: Record<string, string | number>): string
 /**
  * The plural form of a count for the current language.
  *
- * English, German, Spanish, French, Italian and Portuguese have two forms.
- * Russian and Ukrainian have three, and count differently for every digit.
+ * English, German, Spanish, French, Italian, Portuguese and Uzbek have two
+ * forms. Russian and Ukrainian have three, and count differently for every
+ * digit.
  */
 function pluralForm(locale: Locale, n: number): "one" | "few" | "many" {
   if (n === 1) return "one";
