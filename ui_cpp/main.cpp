@@ -33,7 +33,9 @@ int main(int argc, char *argv[]) {
 
     std::setlocale(LC_NUMERIC, "C");
 
-    // Prevent GPU buffer sharing segfault on Wayland with hybrid GPU (NVIDIA + AMD/Intel)
+    // Avoid Linux/Wayland hybrid-GPU buffer sharing crashes (NVIDIA + AMD/Intel).
+    // --disable-dev-shm-usage targets Linux /dev/shm; it has no effect on
+    // platforms without that shared-memory path. The GPU flags also apply elsewhere.
     // A music player draws no video, so the whole GPU stack is dead weight: it
     // costs roughly 50 MB of resident memory and buys nothing. Turning it off
     // also keeps the software rasteriser from being pulled in as a fallback.
@@ -57,9 +59,10 @@ int main(int argc, char *argv[]) {
     app.setApplicationDisplayName("Melyar");
     app.setOrganizationName("Melyar");
     app.setOrganizationDomain("melyar.org");
-    // The desktop file calls itself melyar and declares StartupWMClass=melyar.
+    // Linux desktop integration: the .desktop file declares StartupWMClass=melyar.
     // Without this the session cannot match the window to the entry on Wayland,
     // so the launcher gets a generic icon and the window cannot be pinned.
+    // This metadata does not provide Windows/macOS launcher integration.
     app.setDesktopFileName(QStringLiteral("melyar"));
     QIcon appIcon;
     appIcon.addFile(":/melyar/resources/melyar.svg");
@@ -69,7 +72,7 @@ int main(int argc, char *argv[]) {
     engine.addImportPath(":/melyar");
     engine.addImportPath("qrc:/melyar");
 
-    // C++/Rust bridge exposed to QML (for global media shortcuts)
+    // C++/Rust bridge exposed to QML (including window-scoped media shortcuts)
     auto bridge = std::make_unique<MelyarBridge>();
     MelyarBridge *bridgePtr = bridge.get();
     engine.rootContext()->setContextProperty("bridge", bridgePtr);

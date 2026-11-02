@@ -113,11 +113,21 @@ The order matters, and it is deliberate:
 If the URL were set first, the page could initialise its QWebChannel client
 before the bridge object existed, and the first calls would silently fail.
 
-### Global shortcuts
+### Window-scoped shortcuts
 
-`MelyarBridge` registers X11/Wayland global key grabs for the media keys and
-for the application shortcuts. The bindings are configurable from the settings
-view, and `ShortcutEditor.qml` / `ShortcutRow.qml` render them.
+`ui_cpp/qml/Main.qml` declares QML `Shortcut` items using the default
+[`Qt.WindowShortcut` context](https://doc.qt.io/qt-6/qml-qtquick-shortcut.html#context-prop).
+They work while the Melyar window is active: `StandardKey.PlayPause` and
+`Ctrl+Space` toggle playback; `Ctrl+Right` / `Ctrl+Left` change tracks;
+`Ctrl+Up` / `Ctrl+Down` adjust volume. These bindings are declared in QML,
+not registered as X11/Wayland global key grabs or configured by the web settings.
+
+System-wide media keys remain separate platform-integration work tracked by
+[#36](https://github.com/MAKHMUDuz/melyar/issues/36) and its platform ports.
+
+Desktop notifications currently have no delivery consumer. The web settings
+panel therefore hides that toggle; the stored `showNotifications` preference
+and translation keys remain for compatibility until a consumer is implemented.
 
 ---
 

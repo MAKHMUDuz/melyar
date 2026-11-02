@@ -272,13 +272,8 @@ export function SettingsPanel() {
                 aria-label={t("settings.showLyricsAutomatically")}
               />
             </Row>
-            <Row label={t("settings.showNotifications")}>
-              <GlassToggle
-                checked={settings.showNotifications}
-                onChange={setBool("showNotifications")}
-                aria-label={t("settings.showNotifications")}
-              />
-            </Row>
+            {/* Notifications have no delivery consumer yet (#39). Keep the
+                persisted preference/locale keys, but do not offer a no-op control. */}
             <Row label={t("settings.showAlbumArt")}>
               <GlassToggle
                 checked={settings.showAlbumArt}

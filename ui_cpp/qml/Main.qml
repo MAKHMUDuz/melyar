@@ -85,7 +85,7 @@ Window {
         font.pixelSize: 16
     }
 
-    // Global Hardware / Desktop Media Key Shortcuts
+    // Window-scoped shortcuts (default Qt.WindowShortcut), not system-wide grabs.
     Shortcut {
         sequence: StandardKey.PlayPause
         onActivated: bridge.togglePlay()
