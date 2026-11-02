@@ -2,6 +2,14 @@ import { useRef, useEffect, useState, forwardRef, type RefObject, type Forwarded
 import { cn } from "@/lib/cn";
 import { t, useLocale } from "@/lib/i18n";
 import {
+  surfaceActive,
+  surfaceActiveTint,
+  surfaceDisabled,
+  surfaceLoading,
+  surfacePrimaryGradient,
+  surfaceTooltip,
+} from "@/lib/surface";
+import {
   prefersReducedMotion,
   getMotionTokens,
   applyFlipTransform,
@@ -44,7 +52,7 @@ function GlassMorphIndicatorRender(
   const rafRef = useRef<number | undefined>(undefined);
 
   const variantClasses = {
-    default: "bg-accent/15 border-accent/30",
+    default: surfaceActiveTint,
     accent: "bg-accent/20 border-accent/40 shadow-[0_0_12px_rgba(250,35,59,0.3)]",
     subtle: "bg-white/5 border-white/10",
   };
@@ -295,13 +303,16 @@ export const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
       isIconOnly ? "rounded-full" : "rounded-full",
       sizeClasses[size],
       variant === "primary"
-        ? "bg-gradient-to-br from-accent to-[#d61d33] text-on-accent border-none shadow-[0_4px_16px_rgba(250,35,59,0.4),0_8px_32px_rgba(250,35,59,0.25)] hover:brightness-105 active:scale-[0.96]"
+        ? cn(
+            surfacePrimaryGradient,
+            "shadow-[0_4px_16px_rgba(250,35,59,0.4),0_8px_32px_rgba(250,35,59,0.25)] hover:brightness-105 active:scale-[0.96]"
+          )
         : variant === "ghost"
         ? "bg-transparent border-transparent hover:bg-glass-hover"
         : "glass-strong",
-      active && variant !== "primary" && "bg-accent/15 border-accent/30 text-accent-text",
-      loading && "opacity-50 cursor-wait",
-      disabled && "opacity-30 pointer-events-none",
+      active && variant !== "primary" && surfaceActive,
+      loading && surfaceLoading,
+      disabled && surfaceDisabled,
       className
     );
 
@@ -381,9 +392,9 @@ export const GlassIconButton = forwardRef<HTMLButtonElement, GlassIconButtonProp
       "grid place-items-center rounded-full glass-interactive focus-ring",
       iconSizes[size],
       intensity === "strong" ? "glass-strong" : "glass-elevated",
-      active && "bg-accent/15 border-accent/30 text-accent-text",
-      loading && "opacity-50 cursor-wait",
-      disabled && "opacity-30 pointer-events-none",
+      active && surfaceActive,
+      loading && surfaceLoading,
+      disabled && surfaceDisabled,
       className
     );
 
@@ -398,7 +409,7 @@ export const GlassIconButton = forwardRef<HTMLButtonElement, GlassIconButtonProp
         {children}
         {tooltip && (
           <span
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs font-medium bg-glass-strong text-white rounded-md shadow-lg whitespace-nowrap opacity-0 pointer-events-none transition-opacity group-hover:opacity-100"
+            className={cn(surfaceTooltip, "opacity-0 pointer-events-none transition-opacity group-hover:opacity-100")}
             role="tooltip"
           >
             {tooltip}
@@ -736,7 +747,7 @@ export const GlassSlider = forwardRef<HTMLDivElement, GlassSliderProps>(
           />
           {showTooltip && hoverValue !== null && (
             <div
-              className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs font-medium bg-glass-strong text-white rounded-md shadow-lg whitespace-nowrap"
+              className={surfaceTooltip}
               role="tooltip"
             >
               {formatTooltip ? formatTooltip(hoverValue) : hoverValue.toFixed(0)}
@@ -1165,7 +1176,7 @@ export const PlayPauseMorph = forwardRef<HTMLButtonElement, PlayPauseMorphProps>
           "transition-all",
           sizeClasses[size],
           playing
-            ? "bg-gradient-to-br from-accent to-[#d61d33] text-on-accent border-none"
+            ? surfacePrimaryGradient
             : "glass-strong",
           "focus-ring",
           isPressed && "scale-[0.95]",
