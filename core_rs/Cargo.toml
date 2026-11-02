@@ -21,7 +21,6 @@ tokio = { workspace = true, features = ["full", "rt-multi-thread", "macros"] }
 reqwest = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-anyhow = { workspace = true }
 thiserror = { workspace = true }
 cxx = { workspace = true }
 tracing = { workspace = true }

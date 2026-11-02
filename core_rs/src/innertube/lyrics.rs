@@ -1,7 +1,10 @@
-use anyhow::{anyhow, Result};
+use super::error::InnerTubeError;
 use reqwest::Client;
 use serde::Deserialize;
 use std::sync::OnceLock;
+
+/// A lyrics lookup, or the reason the track has none.
+type Result<T> = std::result::Result<T, InnerTubeError>;
 
 /// One shared client for every lyrics request, with a deadline.
 ///
@@ -95,7 +98,7 @@ pub async fn fetch_lyrics(
         }
     }
 
-    Err(anyhow!("No lyrics found for track"))
+    Err(InnerTubeError::NoLyrics)
 }
 
 #[cfg(test)]

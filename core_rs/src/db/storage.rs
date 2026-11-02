@@ -1,11 +1,15 @@
-use anyhow::Result;
 use parking_lot::Mutex;
 use rusqlite::{params, Connection};
 use std::fs;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use super::error::StorageError;
 use crate::ffi::{CxxLibraryAlbum, CxxLibraryArtist, CxxLibraryPlaylist, CxxTrackMetadata};
+
+/// Every fallible operation in this module reports a [`StorageError`], so a
+/// caller can tell a locked database from a read-only home directory.
+type Result<T> = std::result::Result<T, StorageError>;
 
 pub struct DbStorage {
     conn: Mutex<Connection>,

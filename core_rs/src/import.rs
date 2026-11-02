@@ -14,9 +14,54 @@
 //! title and at least one other field agree, so an import never floods the
 //! library with the wrong songs.
 
-use anyhow::{anyhow, Result};
 use serde_json::Value;
 use std::path::Path;
+use thiserror::Error;
+
+/// Why an export file could not be turned into a library.
+///
+/// The file could be unreadable, not be the format it claims to be, or be a
+/// well-formed file that carries no tracks. Those three are worth telling
+/// apart: the first two mean the user picked the wrong file, the third
+/// means they exported the wrong thing.
+#[derive(Debug, Error)]
+pub enum ImportError {
+    /// The export file could not be read from disk.
+    #[error("could not read {path}: {source}")]
+    Read {
+        path: String,
+        #[source]
+        source: std::io::Error,
+    },
+
+    /// The file was not valid JSON.
+    #[error("invalid JSON: {0}")]
+    Json(#[from] serde_json::Error),
+
+    /// A JSON export that parsed but carried no entries.
+    #[error("no tracks found in the JSON file")]
+    EmptyJson,
+
+    /// A JSON export whose top level was neither a list nor a known wrapper.
+    #[error("the JSON file does not contain a list of tracks")]
+    NotAList,
+
+    /// A CSV export with no rows at all.
+    #[error("the CSV file is empty")]
+    EmptyCsv,
+
+    /// A CSV export with no recognisable title column.
+    #[error("the CSV file needs a title column (one of: title, track, track name, song)")]
+    MissingTitleColumn,
+
+    /// A CSV export that parsed but carried no entries.
+    #[error("no tracks found in the CSV file")]
+    EmptyCsvTracks,
+}
+
+/// Every fallible operation in this module reports an [`ImportError`], so a
+/// caller can tell a wrong file from an empty library.
+type Result<T> = std::result::Result<T, ImportError>;
 
 /// One entry of an imported library.
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -50,8 +95,10 @@ pub struct ImportPlan {
 
 /// Read an export file and turn it into a list of entries.
 pub fn read_import_file(path: &Path) -> Result<ImportPlan> {
-    let raw = std::fs::read_to_string(path)
-        .map_err(|e| anyhow!("could not read {}: {e}", path.display()))?;
+    let raw = std::fs::read_to_string(path).map_err(|source| ImportError::Read {
+        path: path.display().to_string(),
+        source,
+    })?;
 
     let trimmed = raw.trim_start();
     if trimmed.starts_with('[') || trimmed.starts_with('{') {
@@ -61,7 +108,7 @@ pub fn read_import_file(path: &Path) -> Result<ImportPlan> {
 }
 
 fn parse_json(raw: &str) -> Result<ImportPlan> {
-    let value: Value = serde_json::from_str(raw).map_err(|e| anyhow!("invalid JSON: {e}"))?;
+    let value: Value = serde_json::from_str(raw)?;
 
     let array = match &value {
         Value::Array(items) => items.clone(),
@@ -74,11 +121,11 @@ fn parse_json(raw: &str) -> Result<ImportPlan> {
                 }
             }
             if collected.is_empty() {
-                return Err(anyhow!("no tracks found in the JSON file"));
+                return Err(ImportError::EmptyJson);
             }
             collected
         }
-        _ => return Err(anyhow!("the JSON file does not contain a list of tracks")),
+        _ => return Err(ImportError::NotAList),
     };
 
     let mut entries = Vec::new();
@@ -142,7 +189,7 @@ fn parse_json(raw: &str) -> Result<ImportPlan> {
     }
 
     if entries.is_empty() {
-        return Err(anyhow!("no tracks found in the JSON file"));
+        return Err(ImportError::EmptyJson);
     }
 
     Ok(ImportPlan {
@@ -158,9 +205,7 @@ fn parse_json(raw: &str) -> Result<ImportPlan> {
 
 fn parse_csv(raw: &str) -> Result<ImportPlan> {
     let mut lines = raw.lines().filter(|l| !l.trim().is_empty());
-    let header = lines
-        .next()
-        .ok_or_else(|| anyhow!("the CSV file is empty"))?;
+    let header = lines.next().ok_or(ImportError::EmptyCsv)?;
 
     let columns: Vec<String> = split_csv_line(header)
         .into_iter()
@@ -173,9 +218,7 @@ fn parse_csv(raw: &str) -> Result<ImportPlan> {
     let duration_idx = find_column(&columns, &["duration", "length", "time", "duration (ms)"]);
 
     let Some(title_idx) = title_idx else {
-        return Err(anyhow!(
-            "the CSV file needs a title column (one of: title, track, track name, song)"
-        ));
+        return Err(ImportError::MissingTitleColumn);
     };
 
     let mut entries = Vec::new();
@@ -210,7 +253,7 @@ fn parse_csv(raw: &str) -> Result<ImportPlan> {
     }
 
     if entries.is_empty() {
-        return Err(anyhow!("no tracks found in the CSV file"));
+        return Err(ImportError::EmptyCsvTracks);
     }
 
     Ok(ImportPlan {

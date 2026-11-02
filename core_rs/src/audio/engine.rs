@@ -1,9 +1,14 @@
-use anyhow::{anyhow, Result};
+use super::error::AudioError;
 use libmpv_sys as mpv_sys;
 use std::ffi::{CStr, CString};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::thread;
+
+/// Every fallible operation in this module reports an [`AudioError`], so the
+/// kind of failure - mpv missing, mpv broken, one bad command - reaches the
+/// caller instead of collapsing into a string.
+type Result<T> = std::result::Result<T, AudioError>;
 
 /// The band centres of a ten band graphic equaliser, in hertz.
 ///
@@ -71,7 +76,7 @@ impl MelyarAudioEngine {
     pub fn new<H: AudioEventHandler>(handler: Arc<H>) -> Result<Self> {
         let handle = unsafe { mpv_sys::mpv_create() };
         if handle.is_null() {
-            return Err(anyhow!("Failed to create MPV handle"));
+            return Err(AudioError::HandleCreate);
         }
 
         // Configure MPV for zero video and high performance audio streaming
@@ -94,7 +99,7 @@ impl MelyarAudioEngine {
             let res = mpv_sys::mpv_initialize(handle);
             if res < 0 {
                 mpv_sys::mpv_terminate_destroy(handle);
-                return Err(anyhow!("Failed to initialize MPV, code {}", res));
+                return Err(AudioError::InitFailed(res));
             }
 
             // Observe properties
@@ -315,7 +320,7 @@ impl MelyarAudioEngine {
         let c_cmd = CString::new(cmd)?;
         let res = unsafe { mpv_sys::mpv_command_string(self.mpv.raw, c_cmd.as_ptr()) };
         if res < 0 {
-            Err(anyhow!("MPV command failed: {} (code {})", cmd.trim(), res))
+            Err(AudioError::command_rejected(cmd, res))
         } else {
             Ok(())
         }

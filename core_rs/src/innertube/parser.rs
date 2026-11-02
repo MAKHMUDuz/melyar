@@ -1,6 +1,10 @@
 use crate::ffi::{CxxLibraryAlbum, CxxLibraryArtist, CxxLibraryPlaylist, CxxTrackMetadata};
-use anyhow::Result;
 use serde_json::Value;
+
+use super::error::InnerTubeError;
+
+/// A parse, or the reason the response could not be understood.
+type Result<T> = std::result::Result<T, InnerTubeError>;
 
 pub fn parse_search_results(json: &Value) -> Result<Vec<CxxTrackMetadata>> {
     let mut tracks = Vec::new();

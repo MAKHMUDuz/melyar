@@ -1,7 +1,13 @@
-use anyhow::{anyhow, Result};
 use parking_lot::Mutex;
 use regex::Regex;
 use std::collections::HashMap;
+
+use super::error::InnerTubeError;
+
+/// Every fallible operation in this module reports an [`InnerTubeError`], so
+/// a missing URL in the cipher is distinguishable from a player.js that
+/// could not be read.
+type Result<T> = std::result::Result<T, InnerTubeError>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CipherAction {
@@ -37,7 +43,7 @@ impl CipherSolver {
             }
         }
 
-        let base_url = url_val.ok_or_else(|| anyhow!("Missing url in cipher string"))?;
+        let base_url = url_val.ok_or(InnerTubeError::MissingCipherUrl)?;
         let s = match s_val {
             Some(sig) => sig,
             None => return Ok(base_url),
@@ -124,7 +130,7 @@ impl CipherSolver {
             if let Some(caps) = alt_re.captures(js) {
                 caps.get(1).map(|m| m.as_str()).unwrap_or("")
             } else {
-                return Err(anyhow!("Could not find decipher function in player.js"));
+                return Err(InnerTubeError::NoDecipherFunction);
             }
         };
 
@@ -184,7 +190,7 @@ impl CipherSolver {
         }
 
         if actions.is_empty() {
-            Err(anyhow!("No cipher operations extracted"))
+            Err(InnerTubeError::NoCipherOperations)
         } else {
             Ok(actions)
         }

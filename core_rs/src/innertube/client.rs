@@ -1,4 +1,3 @@
-use anyhow::{anyhow, Context, Result};
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use reqwest::{header, Client};
@@ -10,8 +9,14 @@ use std::time::{Duration, Instant};
 
 use super::cipher::CipherSolver;
 use super::clients::{endpoint, parse_live_config, InnerTubeConfig, CLIENT_POOL};
+use super::error::InnerTubeError;
 use super::parser::parse_search_results;
 use crate::ffi::CxxTrackMetadata;
+
+/// Every fallible operation in this module reports an [`InnerTubeError`], so
+/// a caller can tell a network timeout from a player.js that could not be
+/// read - the difference between retrying and giving up.
+type Result<T> = std::result::Result<T, InnerTubeError>;
 
 /// The API key as a last resort, when the live configuration cannot be read.
 const FALLBACK_API_KEY: &str = "AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30";
@@ -96,25 +101,24 @@ fn yt_dlp_command() -> Command {
 /// Run yt-dlp -J (single JSON) and parse metadata + best audio stream url.
 fn yt_dlp_json_blocking(video_id: &str) -> Result<ResolvedVideo> {
     if !yt_dlp_available() {
-        return Err(anyhow!("yt-dlp binary not found"));
+        return Err(InnerTubeError::YtDlpMissing);
     }
     let watch_url = format!("https://www.youtube.com/watch?v={}", video_id);
     let output = yt_dlp_command()
         .arg("-J")
         .arg(&watch_url)
         .output()
-        .context("yt-dlp -J failed to spawn")?;
+        .map_err(InnerTubeError::YtDlpSpawn)?;
 
     if !output.status.success() {
         let err = String::from_utf8_lossy(&output.stderr);
-        return Err(anyhow!(
-            "yt-dlp -J failed for {}: {}",
-            video_id,
-            err.lines().next().unwrap_or("")
-        ));
+        return Err(InnerTubeError::YtDlpFailed {
+            video_id: video_id.to_string(),
+            message: err.lines().next().unwrap_or("").to_string(),
+        });
     }
 
-    let data: Value = serde_json::from_slice(&output.stdout).context("yt-dlp -J invalid JSON")?;
+    let data: Value = serde_json::from_slice(&output.stdout).map_err(InnerTubeError::YtDlpJson)?;
     parse_ytdlp_json(&data, video_id)
 }
 
@@ -192,10 +196,7 @@ fn parse_ytdlp_json(data: &Value, video_id: &str) -> Result<ResolvedVideo> {
             thumbnail,
             stream_url: url,
         }),
-        None => Err(anyhow!(
-            "no usable audio stream in yt-dlp output for {}",
-            video_id
-        )),
+        None => Err(InnerTubeError::NoUsableStream(video_id.to_string())),
     }
 }
 
@@ -317,7 +318,7 @@ impl InnerTubeClient {
             .timeout(Duration::from_secs(15))
             .gzip(true)
             .build()
-            .context("Failed to build HTTP client")?;
+            .map_err(InnerTubeError::HttpClient)?;
 
         Ok(Self {
             http,
@@ -420,7 +421,7 @@ impl InnerTubeClient {
         self.ensure_config().await;
         let key = self.api_key();
 
-        let mut last_error: anyhow::Error = anyhow!("no InnerTube client could answer the search");
+        let mut last_error = InnerTubeError::NoClientAnswered;
 
         for profile in self.pool_order() {
             let url = format!("{}/{SEARCH_PATH}?key={key}", endpoint(&profile));
@@ -443,12 +444,12 @@ impl InnerTubeClient {
                                 return Ok(tracks);
                             }
                         }
-                        last_error = anyhow!("the search returned nothing");
+                        last_error = InnerTubeError::EmptySearch;
                     }
                     Err(e) => last_error = e.into(),
                 },
                 Ok(resp) => {
-                    last_error = anyhow!("the search failed with status {}", resp.status());
+                    last_error = InnerTubeError::SearchStatus(resp.status());
                 }
                 Err(e) => last_error = e.into(),
             }
@@ -561,9 +562,7 @@ impl InnerTubeClient {
             }
         }
 
-        Err(anyhow!(
-            "Failed to extract audio stream for video {video_id}"
-        ))
+        Err(InnerTubeError::NoAudioStream(video_id.to_string()))
     }
 
     async fn extract_best_audio_stream(&self, player_json: &Value) -> Option<String> {

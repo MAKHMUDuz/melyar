@@ -11,8 +11,12 @@
 //! down here, and a small pool of identities is tried in turn, so that one
 //! of them being refused does not stop playback.
 
-use anyhow::{anyhow, Result};
 use std::time::{Duration, Instant};
+
+use super::error::InnerTubeError;
+
+/// The live configuration read, or the reason it could not be read.
+type Result<T> = std::result::Result<T, InnerTubeError>;
 
 /// One client identity InnerTube accepts.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -113,9 +117,9 @@ impl InnerTubeConfig {
 /// out by name rather than by parsing the whole object.
 pub fn parse_live_config(html: &str) -> Result<InnerTubeConfig> {
     let api_key = extract_string_value(html, "INNERTUBE_API_KEY")
-        .ok_or_else(|| anyhow!("the web client did not carry an API key"))?;
+        .ok_or(InnerTubeError::MissingConfigValue("an API key"))?;
     let client_version = extract_string_value(html, "INNERTUBE_CLIENT_VERSION")
-        .ok_or_else(|| anyhow!("the web client did not carry a client version"))?;
+        .ok_or(InnerTubeError::MissingConfigValue("a client version"))?;
 
     Ok(InnerTubeConfig {
         api_key,
