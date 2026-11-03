@@ -186,6 +186,23 @@ iyileştirmeyi hedefliyor.
 
 Ayrıntılı plan için [ROADMAP.md](ROADMAP.md).
 
+## Yardım aranıyor: Windows, macOS, Android ve iOS
+
+Melyar Linux önceliklidir. Dört port açıldı; her birinde kontrol listesi,
+doğrulanmış araç zinciri tablosu ve kod tabanını baştan bilmeden girilebilecek
+bir ilk adım var:
+
+| Port | Issue |
+|---|---|
+| Windows | [#28](https://github.com/MAKHMUDuz/melyar/issues/28) |
+| macOS (Apple Silicon + Intel) | [#27](https://github.com/MAKHMUDuz/melyar/issues/27) |
+| Android (APK) | [#29](https://github.com/MAKHMUDuz/melyar/issues/29) |
+| iOS / iPadOS | [#30](https://github.com/MAKHMUDuz/melyar/issues/30) |
+
+- İlerleme panosu: [#31](https://github.com/MAKHMUDuz/melyar/issues/31)
+- Kod yazmadan katkı: [#33](https://github.com/MAKHMUDuz/melyar/issues/33) paketleme ve mağaza manifestleri, [#34](https://github.com/MAKHMUDuz/melyar/issues/34) mağaza politikası araştırması, [#35](https://github.com/MAKHMUDuz/melyar/issues/35) oynatma dayanıklılığı
+- Katılım çağrısı: [Discussion #32](https://github.com/MAKHMUDuz/melyar/discussions/32)
+
 ## Katkı
 
 Katkılara, hata raporlarına ve odaklı pull request'lere açığız.

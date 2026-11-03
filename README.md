@@ -13,7 +13,7 @@
 
 Melyar is a Linux-first, local-first desktop music client for YouTube Music. It combines a fast Rust core, a native Qt/C++ shell, and a polished React + TypeScript interface to deliver a clean, responsive listening experience without the overhead of heavier desktop frameworks.
 
-![Melyar home view](docs/screenshots/home-en.png)
+![Melyar GIF](https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.gif)
 
 ## Why Melyar
 
@@ -175,6 +175,23 @@ Full setup, CSS and Hyprland/Sway keybinding examples: [`docs/WAYBAR.md`](docs/W
 Melyar is actively under development. The project aims to improve Linux desktop integration, library workflows, provider breadth, and reliability over time.
 
 See [ROADMAP.md](ROADMAP.md) for the detailed project plan and upcoming work.
+
+## Help wanted: Windows, macOS, Android and iOS
+
+Melyar is Linux-first. Four ports are now open, each with a checklist, a
+verified toolchain matrix, and an entry point that does not require knowing
+the whole codebase:
+
+| Port | Issue |
+|---|---|
+| Windows | [#28](https://github.com/MAKHMUDuz/melyar/issues/28) |
+| macOS (Apple Silicon + Intel) | [#27](https://github.com/MAKHMUDuz/melyar/issues/27) |
+| Android (APK) | [#29](https://github.com/MAKHMUDuz/melyar/issues/29) |
+| iOS / iPadOS | [#30](https://github.com/MAKHMUDuz/melyar/issues/30) |
+
+- Live status board: [#31](https://github.com/MAKHMUDuz/melyar/issues/31)
+- No code needed: [#33](https://github.com/MAKHMUDuz/melyar/issues/33) packaging and store manifests, [#34](https://github.com/MAKHMUDuz/melyar/issues/34) store policy research, [#35](https://github.com/MAKHMUDuz/melyar/issues/35) playback resilience
+- Call for contributors: [Discussion #32](https://github.com/MAKHMUDuz/melyar/discussions/32)
 
 ## Contributing
 
