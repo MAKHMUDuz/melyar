@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Heart, Home, Library, ListMusic, SearchIcon, Clock3, Plug } from "lucide-react";
 import { useUIStore } from "@/store";
-import { usePlugins } from "@/lib/plugins";
 import { GlassMorphIndicator } from "@/components/GlassComponents";
 import { cn } from "@/lib/cn";
 import { t, useLocale } from "@/lib/i18n";
@@ -42,7 +41,6 @@ export function Sidebar() {
   const navigate = useUIStore((s) => s.navigate);
   const setQueueOpen = useUIStore((s) => s.setQueueOpen);
   const queueOpen = useUIStore((s) => s.queueOpen);
-  const setPluginsOpen = usePlugins((s) => s.setOpen);
   const current = useUIStore((s) => s.view);
 
   const listenNavRef = useRef<HTMLDivElement>(null);
@@ -148,7 +146,7 @@ export function Sidebar() {
             hold — one click opens the panel rather than a view. */}
         <p className="side-section">{t("nav.section.sources")}</p>
         <nav className="flex flex-col gap-0.5" role="navigation" aria-label={t("nav.aria.sources")}>
-          <button className="text-btn relative z-10" onClick={() => setPluginsOpen(true)}>
+          <button className="text-btn relative z-10" onClick={() => navigate({ name: "plugins" })}>
             <Plug className="size-[17px]" />
             <span className="truncate">{t("nav.plugins")}</span>
           </button>

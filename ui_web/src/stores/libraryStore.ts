@@ -8,6 +8,7 @@ type LibraryState = {
   liked: TrackMeta[];
   history: TrackMeta[];
   queue: TrackMeta[];
+  imported: TrackMeta[];
   patch: (partial: Partial<LibraryState>) => void;
 };
 
@@ -32,6 +33,7 @@ export const useLibraryStore = create<LibraryState & LibraryActions>()((set, get
   liked: [],
   history: [],
   queue: [],
+  imported: [],
 
   setLiked: (liked) => set({ liked }),
   setHistory: (history) => set({ history }),

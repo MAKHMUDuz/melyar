@@ -21,6 +21,7 @@ namespace melyar {
     void on_lyrics_loaded(rust::String track_id, rust::String lyrics_lrc);
     void on_search_results(rust::Vec<CxxTrackMetadata> results);
     void on_import_progress(int32_t current, int32_t total, int32_t matched, int32_t skipped);
+    void on_import_event(rust::String event_json);
 }
 
 class MelyarBridge : public QObject {
@@ -130,6 +131,11 @@ public:
      *  an attempt to switch YouTube off — it is the default and the anchor
      *  every bare track id resolves against. */
     Q_INVOKABLE bool setSourceEnabled(const QString &sourceId, bool enabled);
+    /** Account providers (Spotify, Google/YouTube, Yandex, Apple, custom). */
+    Q_INVOKABLE QString listAccounts() const;
+    Q_INVOKABLE bool connectAccount(const QString &providerId);
+    Q_INVOKABLE bool disconnectAccount(const QString &providerId);
+    Q_INVOKABLE bool importAccount(const QString &providerId, const QString &optionsJson);
     Q_INVOKABLE void openUri(const QString &uri);
     Q_INVOKABLE QVariantMap getTrackMetadata(const QString &trackId);
     Q_INVOKABLE void requestFilePick();
@@ -159,6 +165,7 @@ signals:
     void uriChanged();
     void trackMetadataChanged();
     void importProgressChanged();
+    void importEvent(const QString &event_json);
     void filePickRequested();
     void filePicked(const QString &path);
 

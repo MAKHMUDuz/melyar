@@ -3,7 +3,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { Header, PlayerBar } from "@/components/Toolbar";
 import { ContextMenu } from "@/components/ContextMenu";
 import { SettingsPanel } from "@/components/SettingsPanel";
-import { PluginsPanel } from "@/components/PluginsPanel";
+import { PluginsView } from "@/components/views/PluginsView";
 import { ImportOverlay } from "@/components/ImportOverlay";
 import { QueuePanel } from "@/components/QueuePanel";
 import { LyricsOverlay } from "@/components/LyricsOverlay";
@@ -41,6 +41,8 @@ function Stage() {
       return <LikedView />;
     case "history":
       return <HistoryView />;
+    case "plugins":
+      return <PluginsView />;
     case "album":
       return <AlbumDetailView albumKey={view.key} />;
     case "artist":
@@ -201,7 +203,6 @@ export default function App() {
         {lyricsOpen && <LyricsOverlay />}
         <ContextMenu />
         <SettingsPanel />
-        <PluginsPanel />
         <ImportOverlay />
         <Toast />
       </OverlayPortal>

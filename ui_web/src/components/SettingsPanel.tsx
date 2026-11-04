@@ -476,9 +476,6 @@ function GeneralContent({ settings, set }: { settings: Settings; set: <K extends
         description={t("settings.section.general.description")}
       >
         <SettingsRow
-          />
-        </SettingsRow>
-        <SettingsRow
           label={t("settings.showAlbumArt")}
           description={t("settings.showAlbumArt.description")}
         >

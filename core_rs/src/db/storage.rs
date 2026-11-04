@@ -12,6 +12,18 @@ pub struct DbStorage {
 }
 
 impl DbStorage {
+    /// Run a closure against the underlying connection. The closure receives
+    /// a `&Connection` and must return a `rusqlite::Result<T>`.
+    pub fn with_conn<T, F>(&self, f: F) -> Result<T>
+    where
+        F: FnOnce(&Connection) -> rusqlite::Result<T>,
+    {
+        let conn = self.conn.lock();
+        f(&conn).map_err(|e| e.into())
+    }
+}
+
+impl DbStorage {
     pub fn new() -> Result<Self> {
         let db_path = Self::get_db_path()?;
         if let Some(parent) = db_path.parent() {

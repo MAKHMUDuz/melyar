@@ -1,6 +1,8 @@
+pub mod accounts;
 pub mod audio;
 pub mod db;
 pub mod import;
+pub mod importer;
 pub mod innertube;
 pub mod linux;
 pub mod source;
@@ -69,6 +71,7 @@ pub mod ffi {
         fn on_lyrics_loaded(track_id: String, lyrics_lrc: String);
         fn on_search_results(results: Vec<CxxTrackMetadata>);
         fn on_import_progress(current: i32, total: i32, matched: i32, skipped: i32);
+        fn on_import_event(event_json: String);
     }
 
     extern "Rust" {
@@ -121,6 +124,10 @@ pub mod ffi {
         fn set_equalizer_bands(bands: Vec<f64>) -> bool;
         fn list_sources_json() -> String;
         fn set_source_enabled(source_id: String, enabled: bool) -> bool;
+        fn list_accounts_json() -> String;
+        fn connect_account(provider_id: String) -> bool;
+        fn disconnect_account(provider_id: String) -> bool;
+        fn import_account(provider_id: String, options_json: String) -> bool;
     }
 }
 
@@ -137,6 +144,27 @@ pub struct MelyarCore {
     mpris: Mutex<Option<Arc<MprisManager>>>,
     _waybar: Mutex<Option<Arc<WaybarIpc>>>,
     runtime: Arc<Runtime>,
+}
+
+impl MelyarCore {
+    /// Read-only access to the SQLite storage. Used by the account providers
+    /// to persist tokens and imported tracks.
+    pub fn storage(&self) -> Arc<DbStorage> {
+        self.storage.clone()
+    }
+    /// The tokio runtime the core owns. Account providers spawn their
+    /// OAuth loopback listeners on it.
+    pub fn runtime(&self) -> Arc<Runtime> {
+        self.runtime.clone()
+    }
+    /// The InnerTube client, shared with the YouTube source.
+    pub fn innertube(&self) -> Arc<InnerTubeClient> {
+        self.innertube.clone()
+    }
+    /// The source registry, so an account import can resolve streams.
+    pub fn sources(&self) -> Arc<crate::source::SourceRegistry> {
+        self.sources.clone()
+    }
 }
 
 struct EngineEvents {
@@ -823,6 +851,22 @@ pub fn set_source_enabled(source_id: String, enabled: bool) -> bool {
         .storage
         .set_setting("enabledSources", &core.sources.enabled_serialized());
     true
+}
+
+pub fn list_accounts_json() -> String {
+    crate::accounts::list_accounts_json()
+}
+
+pub fn connect_account(provider_id: String) -> bool {
+    crate::accounts::connect_account(&provider_id)
+}
+
+pub fn disconnect_account(provider_id: String) -> bool {
+    crate::accounts::disconnect_account(&provider_id)
+}
+
+pub fn import_account(provider_id: String, options_json: String) -> bool {
+    crate::accounts::import_account(&provider_id, &options_json)
 }
 
 /// Small adapter so the JSON shape is written in one place rather than being

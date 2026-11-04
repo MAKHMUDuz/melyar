@@ -463,6 +463,22 @@ bool MelyarBridge::setSourceEnabled(const QString &sourceId, bool enabled) {
     return melyar::set_source_enabled(rust::String(sourceId.toStdString()), enabled);
 }
 
+QString MelyarBridge::listAccounts() const {
+    return QString::fromStdString(std::string(melyar::list_accounts_json()));
+}
+
+bool MelyarBridge::connectAccount(const QString &providerId) {
+    return melyar::connect_account(rust::String(providerId.toStdString()));
+}
+
+bool MelyarBridge::disconnectAccount(const QString &providerId) {
+    return melyar::disconnect_account(rust::String(providerId.toStdString()));
+}
+
+bool MelyarBridge::importAccount(const QString &providerId, const QString &optionsJson) {
+    return melyar::import_account(rust::String(providerId.toStdString()), rust::String(optionsJson.toStdString()));
+}
+
 void MelyarBridge::openUri(const QString &uri) {
     if (uri.trimmed().isEmpty()) return;
     m_pendingUri = uri;
@@ -650,6 +666,17 @@ void on_import_progress(int32_t current, int32_t total, int32_t matched, int32_t
 
     QMetaObject::invokeMethod(b, [b, progress]() {
         b->setImportProgress(progress);
+    }, Qt::QueuedConnection);
+}
+
+void on_import_event(rust::String event_json) {
+    auto *b = MelyarBridge::instance();
+    if (!b) {
+        return;
+    }
+    QString q_event = QString::fromStdString(std::string(event_json));
+    QMetaObject::invokeMethod(b, [b, q_event]() {
+        emit b->importEvent(q_event);
     }, Qt::QueuedConnection);
 }
 
