@@ -23,7 +23,6 @@ export type Settings = {
   equalizerEnabled: boolean;
   streamingQuality: StreamingQuality;
   autoPlayNext: boolean;
-  showNotifications: boolean;
   showLyricsAutomatically: boolean;
   // Audio
   volume: number;
@@ -68,7 +67,6 @@ export const DEFAULT_SETTINGS: Settings = {
   equalizerEnabled: false,
   streamingQuality: "high",
   autoPlayNext: true,
-  showNotifications: true,
   showLyricsAutomatically: false,
   volume: 0.8,
   outputDevice: "default",
@@ -106,7 +104,6 @@ const BOOLEAN_KEYS = new Set<keyof Settings>([
   "normalizeVolume",
   "equalizerEnabled",
   "autoPlayNext",
-  "showNotifications",
   "showLyricsAutomatically",
   "audioNormalization",
   "autoScan",

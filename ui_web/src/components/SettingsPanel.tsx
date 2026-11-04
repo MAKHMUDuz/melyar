@@ -476,13 +476,6 @@ function GeneralContent({ settings, set }: { settings: Settings; set: <K extends
         description={t("settings.section.general.description")}
       >
         <SettingsRow
-          label={t("settings.showNotifications")}
-          description={t("settings.showNotifications.description")}
-        >
-          <GlassToggle
-            checked={settings.showNotifications}
-            onChange={(v) => set("showNotifications", v)}
-            aria-label={t("settings.showNotifications")}
           />
         </SettingsRow>
         <SettingsRow

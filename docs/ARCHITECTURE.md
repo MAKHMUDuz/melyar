@@ -115,7 +115,9 @@ before the bridge object existed, and the first calls would silently fail.
 
 ### Global shortcuts
 
-`MelyarBridge` registers X11/Wayland global key grabs for the media keys and
+
+`ui_cpp/qml/Main.qml` dosyasında `StandardKey` ile window-scoped (pencere kapsamlı) Shortcut tanımlanmıştır. X11/Wayland global grab yoktur; sadece pencere odaklı kısayollardir.
+
 for the application shortcuts. The bindings are configurable from the settings
 view, and `ShortcutEditor.qml` / `ShortcutRow.qml` render them.
 
