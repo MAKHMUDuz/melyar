@@ -105,7 +105,13 @@ export function PluginsView() {
   const loading = usePlugins((s) => s.loading);
   const load = usePlugins((s) => s.load);
 
-  const [accounts, setAccounts] = useState<any[]>([]);
+  const [accounts, setAccounts] = useState<any[]>([
+    { id: "spotify", name: "Spotify", connected: false, user: "", requiresConfig: true, configHint: "" },
+    { id: "google", name: "Google", connected: false, user: "", requiresConfig: true, configHint: "" },
+    { id: "yandex", name: "Yandex Music", connected: false, user: "", requiresConfig: true, configHint: "" },
+    { id: "apple", name: "Apple Music", connected: false, user: "", requiresConfig: true, configHint: "" },
+    { id: "custom", name: "Custom API", connected: false, user: "", requiresConfig: true, configHint: "" },
+  ]);
   const [ytModalOpen, setYtModalOpen] = useState(false);
   const [ytBusy, setYtBusy] = useState(false);
 
