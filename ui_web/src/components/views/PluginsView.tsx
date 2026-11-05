@@ -313,6 +313,7 @@ export function PluginsView() {
     // If config missing, open config modal first.
     const acc = accounts.find((a) => a.id === id);
     if (acc?.requiresConfig) {
+      setStatusLine(`${acc.name}: önce ⚙ Yapılandır ile Client ID girin.`);
       openConfig(id);
       return;
     }
@@ -481,11 +482,30 @@ export function PluginsView() {
                 <X className="size-4" />
               </button>
             </div>
-            {REDIRECT_HINT[configProvider] ? (
-              <p className="text-[11px] text-text-tertiary leading-snug">
-                {REDIRECT_HINT[configProvider]}
-              </p>
-            ) : null}
+            <div className="rounded-lg border border-line/40 bg-panel/40 p-3 text-[12px] text-text-tertiary leading-snug space-y-1">
+              <p className="font-medium text-text">Nasıl alınır?</p>
+              {configProvider === "google" && (
+                <>
+                  <p>1. console.cloud.google.com → APIs & Services → Credentials → Create OAuth client (Desktop app).</p>
+                  <p>2. YouTube Data API v3'ü etkinleştirin.</p>
+                  <p>3. Client ID'yi (ve varsa Secret'ı) aşağıya yapıştırın.</p>
+                </>
+              )}
+              {configProvider === "spotify" && (
+                <>
+                  <p>1. developer.spotify.com/dashboard → Create app.</p>
+                  <p>2. Settings → Redirect URIs: <code className="text-text">http://127.0.0.1:43821/callback</code></p>
+                  <p>3. Client ID'yi aşağıya yapıştırın.</p>
+                </>
+              )}
+              {configProvider === "yandex" && (
+                <p>Yandex OAuth client ID girin (deneysel; resmi API kapalı).</p>
+              )}
+              {configProvider === "custom" && (
+                <p>Subsonic/Navidrome sunucunuzun adresi ve kullanıcı bilgilerini girin.</p>
+              )}
+              {REDIRECT_HINT[configProvider] ? <p className="text-[10px] mt-1">{REDIRECT_HINT[configProvider]}</p> : null}
+            </div>
             {(CONFIG_FIELDS[configProvider] || []).map((f) => (
               <label key={f.key} className="flex flex-col gap-1">
                 <span className="text-[12px] font-medium text-text">{f.label}</span>
@@ -508,11 +528,29 @@ export function PluginsView() {
                 {t("common.close") || "İptal"}
               </button>
               <button
-                className="btn-glass import-primary-chip text-xs"
+                className="btn-glass chip text-xs"
                 onClick={() => void saveConfig()}
                 disabled={configSaving}
               >
                 {configSaving ? t("plugins.loading") : "Kaydet"}
+              </button>
+              <button
+                className="btn-glass import-primary-chip text-xs"
+                onClick={async () => {
+                  await saveConfig();
+                  const id = configProvider;
+                  if (id) {
+                    setConfigProvider(null);
+                    if (id === "google") setYtModalOpen(true);
+                    else {
+                      const b = getBridge();
+                      b?.connectAccount?.(id);
+                    }
+                  }
+                }}
+                disabled={configSaving}
+              >
+                Kaydet ve bağlan
               </button>
             </div>
           </div>

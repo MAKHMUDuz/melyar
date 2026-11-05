@@ -19,7 +19,8 @@ interface SettingsCategory {
   isImplemented: boolean;
 }
 
-const CATEGORIES: SettingsCategory[] = [
+function getCategories(): SettingsCategory[] {
+  return [
   {
     id: "general",
     label: t("settings.category.general"),
@@ -97,7 +98,8 @@ const CATEGORIES: SettingsCategory[] = [
     icon: <Info className="size-5" />,
     isImplemented: true,
   },
-];
+  ];
+}
 
 /* ============================================================
    REUSABLE SETTINGS ROW
@@ -1557,7 +1559,7 @@ export function SettingsPanel() {
   const [isNarrow, setIsNarrow] = useState(false);
 
   // Filter only implemented categories
-  const availableCategories = CATEGORIES.filter((c) => c.isImplemented);
+  const availableCategories = getCategories().filter((c) => c.isImplemented);
 
   // Update narrow state on resize
   useEffect(() => {
