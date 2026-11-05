@@ -1,10 +1,4 @@
-/**
- * Italiano metinleri.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const it: Record<string, string> = {
+{
   "nav.section.listen": "ASCOLTA",
   "nav.section.library": "BIBLIOTECA",
   "nav.home": "Home",
@@ -21,11 +15,8 @@ export const it: Record<string, string> = {
   "nav.section.sources": "SORGENTI",
   "nav.plugins": "Estensioni",
   "nav.aria.sources": "Navigazione delle sorgenti",
-
-  // Sorgenti musicali
   "plugins.title": "Estensioni",
-  "plugins.intro":
-    "Scegli da dove arriva la musica. YouTube è integrato e sempre attivo; il resto è facoltativo e ha un costo solo quando lo attivi.",
+  "plugins.intro": "Scegli da dove arriva la musica. YouTube è integrato e sempre attivo; il resto è facoltativo e ha un costo solo quando lo attivi.",
   "plugins.default": "Predefinito",
   "plugins.on": "Attiva",
   "plugins.off": "Disattiva",
@@ -53,7 +44,6 @@ export const it: Record<string, string> = {
   "queue.count": "{n} brani",
   "queue.count.one": "{n} brano",
   "queue.count.many": "{n} brani",
-
   "queue.count.few": "{n} brani",
   "queue.clear": "Svuota la coda",
   "queue.clearButton": "Svuota",
@@ -133,12 +123,10 @@ export const it: Record<string, string> = {
   "library.count": "{n} brani",
   "library.count.one": "{n} brano",
   "library.count.many": "{n} brani",
-
   "library.count.few": "{n} brani",
   "library.countDuration": "{n} brani · {time}",
   "library.countDuration.one": "{n} brano · {time}",
   "library.countDuration.many": "{n} brani · {time}",
-
   "library.countDuration.few": "{n} brani · {time}",
   "library.albums.notFound": "Album non trovato.",
   "library.albums.label": "Album",
@@ -148,7 +136,6 @@ export const it: Record<string, string> = {
   "library.artists.knownTracks": "{n} brani noti",
   "library.artists.knownTracks.one": "{n} brano noto",
   "library.artists.knownTracks.many": "{n} brani noti",
-
   "library.artists.knownTracks.few": "{n} brani noti",
   "library.detail.tracks": "Brani",
   "search.placeholder": "Cerca brani, artisti o album",
@@ -198,7 +185,6 @@ export const it: Record<string, string> = {
   "settings.quality.high": "Alta",
   "settings.quality.lossless": "Senza perdita",
   "settings.showLyricsAutomatically": "Mostra il testo automaticamente",
-  "settings.showNotifications": "Notifiche",
   "settings.showAlbumArt": "Copertina dell'album",
   "settings.equalizer": "Equalizzatore",
   "settings.equalizer.description": "Dieci bande, da 31 Hz a 16 kHz.",
@@ -216,23 +202,19 @@ export const it: Record<string, string> = {
   "import.progress": "{current} di {total} brani",
   "import.progress.one": "{current} di {total} brani",
   "import.progress.many": "{current} di {total} brani",
-
   "import.progress.few": "{current} di {total} brani",
   "import.matched": "{n} corrisposti",
   "import.matched.one": "{n} corrispondenza",
   "import.matched.many": "{n} corrispondenze",
-
   "import.matched.few": "{n} corrispondenze",
   "import.notFound": "{n} non trovati",
   "import.notFound.one": "{n} non trovato",
   "import.notFound.many": "{n} non trovati",
-
   "import.notFound.few": "{n} non trovati",
   "import.cancel": "Annulla l'importazione",
   "import.finished": "{matched} brani importati, {skipped} non trovati",
   "import.finished.one": "Importato {matched} brano, {skipped} non trovati",
   "import.finished.many": "Importati {matched} brani, {skipped} non trovati",
-
   "import.finished.few": "Importati {matched} brani, {skipped} non trovati",
   "common.close": "Chiudi",
   "common.clear": "Cancella",
@@ -286,7 +268,6 @@ export const it: Record<string, string> = {
   "settings.reducedMotion.description": "Riduci animazioni ed effetti di movimento in tutta l'interfaccia",
   "settings.normalizeVolume.description": "Regola il volume di riproduzione a un livello costante tra i brani",
   "settings.showLyricsAutomatically.description": "Apri la vista dei testi quando inizia la riproduzione di un brano",
-  "settings.showNotifications.description": "Mostra notifiche desktop ai cambi di brano",
   "settings.showAlbumArt.description": "Mostra la copertina dell'album nel player e nella libreria",
   "settings.defaultVolume": "Volume predefinito",
   "settings.defaultVolume.description": "Livello di volume all'avvio dell'applicazione",
@@ -341,5 +322,5 @@ export const it: Record<string, string> = {
   "import.localMusic": "Importa musica locale",
   "import.localMusicBtn": "Seleziona file",
   "import.source": "Fonte",
-  "import.default": "Predefinito",
-};
+  "import.default": "Predefinito"
+}

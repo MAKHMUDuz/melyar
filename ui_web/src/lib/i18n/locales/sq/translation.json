@@ -1,5 +1,4 @@
-export const sq: Record<string, string> = {
-  // Navigation
+{
   "nav.section.listen": "DËGJO",
   "nav.section.library": "BIBLIOTEKA",
   "nav.home": "Kreu",
@@ -16,19 +15,14 @@ export const sq: Record<string, string> = {
   "nav.section.sources": "BURIMET",
   "nav.plugins": "Shtesat",
   "nav.aria.sources": "Navigimi i burimeve",
-
-  // Burimet e muzikës
   "plugins.title": "Shtesat",
-  "plugins.intro":
-    "Zgjidhni nga vjen muzika. YouTube është i integruar dhe gjithmonë i aktivizuar; pjesa tjetër është opsionale dhe kushton diçka vetëm kur e aktivizoni.",
+  "plugins.intro": "Zgjidhni nga vjen muzika. YouTube është i integruar dhe gjithmonë i aktivizuar; pjesa tjetër është opsionale dhe kushton diçka vetëm kur e aktivizoni.",
   "plugins.default": "Parazgjedhje",
   "plugins.on": "Aktiv",
   "plugins.off": "Joaktiv",
   "plugins.loading": "Duke ngarkuar burimet…",
   "plugins.empty": "Nuk ka burime të disponueshme.",
   "nav.search.placeholder": "Kërko artistë, këngë, albume",
-
-  // Toolbar
   "toolbar.seek": "Pozicioni i riprodhimit",
   "toolbar.shuffle": "Përziej",
   "toolbar.prev": "E mëparshmja",
@@ -46,20 +40,15 @@ export const sq: Record<string, string> = {
   "toolbar.mute.on": "Ndalo zërin",
   "toolbar.mute.off": "Aktivizo zërin",
   "toolbar.volume": "Zëri",
-
-  // Queue panel
   "queue.title": "Radha",
   "queue.count": "{n} këngë",
   "queue.count.one": "{n} këngë",
   "queue.count.many": "{n} këngë",
-
   "queue.count.few": "{n} këngë",
   "queue.clear": "Pastro radhën",
   "queue.clearButton": "Pastro",
   "queue.close": "Mbyll radhën",
   "queue.empty": "Radha është bosh. Këngët shfaqen këtu ndërsa luhen.",
-
-  // Track table
   "track.play": "Luaj",
   "track.pause": "Ndalo",
   "track.like": "Pëlqeje",
@@ -69,8 +58,6 @@ export const sq: Record<string, string> = {
   "track.col.track": "Kënga",
   "track.col.album": "Albumi",
   "track.col.duration": "Kohëzgjatja",
-
-  // Context menu
   "menu.playNext": "Luaj në vijim",
   "menu.addToQueue": "Shto në radhë",
   "menu.like": "Shto te të pëlqyerat",
@@ -81,8 +68,6 @@ export const sq: Record<string, string> = {
   "menu.copyLink": "Kopjo lidhjen",
   "menu.goToArtist": "Shko te artisti",
   "menu.removeFromQueue": "Hiq nga radha",
-
-  // Lyrics overlay
   "lyrics.aria": "Teksti i këngës",
   "lyrics.close": "Mbyll tekstin",
   "lyrics.title": "Teksti",
@@ -91,8 +76,6 @@ export const sq: Record<string, string> = {
   "lyrics.prev": "E mëparshmja",
   "lyrics.queue.open": "Hap radhën",
   "lyrics.queue.close": "Mbyll radhën",
-
-  // Expanded player
   "expanded.aria": "Luajtësi i zgjeruar",
   "expanded.minimize": "Minimizo",
   "expanded.nowPlaying": "Po luhet tani",
@@ -104,8 +87,6 @@ export const sq: Record<string, string> = {
   "expanded.repeat": "Përsërit",
   "expanded.shuffle": "Përziej",
   "expanded.externalLink": "Lidhje e jashtme",
-
-  // Home
   "home.greeting.night": "Mirëmbrëma",
   "home.greeting.morning": "Mirëmëngjes",
   "home.greeting.day": "Mirëdita",
@@ -117,14 +98,11 @@ export const sq: Record<string, string> = {
   "home.liked": "Të pëlqyerat",
   "home.showAll": "Shfaqi të gjitha",
   "home.libraryEmpty.title": "Biblioteka jote do të shfaqet këtu",
-  "home.libraryEmpty.body":
-    "Gjej diçka me kutinë e kërkimit më lart dhe luaje. Këngët që luan renditen këtu, dhe ato që të pëlqejnë mund t'i ruash me ikonën e zemrës.",
+  "home.libraryEmpty.body": "Gjej diçka me kutinë e kërkimit më lart dhe luaje. Këngët që luan renditen këtu, dhe ato që të pëlqejnë mund t'i ruash me ikonën e zemrës.",
   "home.genres": "Eksploro zhanret",
   "home.genre.turkishPop": "Pop turk",
   "home.genre.electronic": "Elektronike",
   "home.genre.classical": "Klasike",
-
-  // Library
   "library.kicker": "Biblioteka",
   "library.songs.title": "Këngët",
   "library.songs.empty": "Këngët që luan dhe pëlqen mblidhen këtu.",
@@ -145,12 +123,10 @@ export const sq: Record<string, string> = {
   "library.count": "{n} këngë",
   "library.count.one": "{n} këngë",
   "library.count.many": "{n} këngë",
-
   "library.count.few": "{n} këngë",
   "library.countDuration": "{n} këngë · {time}",
   "library.countDuration.one": "{n} këngë · {time}",
   "library.countDuration.many": "{n} këngë · {time}",
-
   "library.countDuration.few": "{n} këngë · {time}",
   "library.albums.notFound": "Albumi nuk u gjet.",
   "library.albums.label": "Album",
@@ -160,18 +136,13 @@ export const sq: Record<string, string> = {
   "library.artists.knownTracks": "{n} këngë të njohura",
   "library.artists.knownTracks.one": "{n} këngë e njohur",
   "library.artists.knownTracks.many": "{n} këngë të njohura",
-
   "library.artists.knownTracks.few": "{n} këngë të njohura",
   "library.detail.tracks": "Këngët",
-
-  // Search
   "search.placeholder": "Kërko këngë, artistë ose albume",
   "search.hint": "Shkruaj një artist, këngë ose album. Rezultatet vijnë drejtpërdrejt nga YouTube Music.",
   "search.noResults": "Asnjë rezultat për \"{query}\".",
   "search.artists": "Artistët",
   "search.songs": "Këngët",
-
-  // Toasts
   "toast.liked": "U shtua te të pëlqyerat",
   "toast.unliked": "U hoq nga të pëlqyerat",
   "toast.playNext": "Do të luhet në vijim",
@@ -179,8 +150,6 @@ export const sq: Record<string, string> = {
   "toast.linkCopied": "Lidhja u kopjua",
   "toast.queueCleared": "Radha u pastrua",
   "toast.undo": "Zhbëj",
-
-  // Settings
   "settings.title": "Cilësimet",
   "settings.reset": "Rivendos të gjitha cilësimet",
   "settings.section.appearance": "Pamja",
@@ -216,7 +185,6 @@ export const sq: Record<string, string> = {
   "settings.quality.high": "E lartë",
   "settings.quality.lossless": "Pa humbje",
   "settings.showLyricsAutomatically": "Shfaq tekstin automatikisht",
-  "settings.showNotifications": "Njoftimet",
   "settings.showAlbumArt": "Kopertina e albumit",
   "settings.equalizer": "Ekualizuesi",
   "settings.equalizer.description": "Dhjetë breza, nga 31 Hz deri në 16 kHz.",
@@ -225,8 +193,6 @@ export const sq: Record<string, string> = {
   "settings.cacheSize.description": "Sa hapësirë në disk mund të përdorë cache-i i transmetimit.",
   "settings.language": "Gjuha",
   "settings.language.description": "Gjuha e ndërfaqes.",
-
-  // Shared
   "common.loading": "Duke u ngarkuar...",
   "common.unknownTrack": "Këngë e panjohur",
   "common.unknownArtist": "Artist i panjohur",
@@ -236,23 +202,19 @@ export const sq: Record<string, string> = {
   "import.progress": "{current} nga {total} këngë",
   "import.progress.one": "{current} nga {total} këngë",
   "import.progress.many": "{current} nga {total} këngë",
-
   "import.progress.few": "{current} nga {total} këngë",
   "import.matched": "{n} u gjetën",
   "import.matched.one": "{n} u përputh",
   "import.matched.many": "{n} u përputhën",
-
   "import.matched.few": "{n} u përputhën",
   "import.notFound": "{n} nuk u gjetën",
   "import.notFound.one": "{n} nuk u gjet",
   "import.notFound.many": "{n} nuk u gjetën",
-
   "import.notFound.few": "{n} nuk u gjetën",
   "import.cancel": "Anulo importimin",
   "import.finished": "U importuan {matched} këngë, {skipped} nuk u gjetën",
   "import.finished.one": "U importua {matched} këngë, {skipped} nuk u gjetën",
   "import.finished.many": "U importuan {matched} këngë, {skipped} nuk u gjetën",
-
   "import.finished.few": "U importuan {matched} këngë, {skipped} nuk u gjetën",
   "common.close": "Mbyll",
   "common.clear": "Pastro",
@@ -306,7 +268,6 @@ export const sq: Record<string, string> = {
   "settings.reducedMotion.description": "Redukto animacionet dhe efektet e lëvizjes në gjithë ndërfaqen",
   "settings.normalizeVolume.description": "Përshtat volumin e luajtjes në një nivel të qëndrueshëm midis këndimeve",
   "settings.showLyricsAutomatically.description": "Hap pamjen e teksteve kur nis luajtja e një këndimi",
-  "settings.showNotifications.description": "Shfaq njoimet e desktopit për ndryshimet e këndimeve",
   "settings.showAlbumArt.description": "Shfaq kopertinën e albumit në luajtës dhe bibliotekë",
   "settings.defaultVolume": "Volumi i paracaktuar",
   "settings.defaultVolume.description": "Niveli i volumit kur niset aplikacioni",
@@ -361,5 +322,5 @@ export const sq: Record<string, string> = {
   "import.localMusic": "Importo muzikë lokale",
   "import.localMusicBtn": "Zgjidh skedarin",
   "import.source": "Burimi",
-  "import.default": "E paracaktuar",
-};
+  "import.default": "E paracaktuar"
+}

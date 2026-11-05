@@ -1,52 +1,49 @@
-/**
- * English strings for Melyar.
- *
- * Keys are grouped by the surface that uses them. When you add a string,
- * add it here and to `tr.ts` with the same key.
- */
-export const en: Record<string, string> = {
-  // Navigation
-  "nav.section.listen": "LISTEN",
-  "nav.section.library": "LIBRARY",
-  "nav.home": "Home",
-  "nav.search": "Search",
-  "nav.songs": "Songs",
-  "nav.liked": "Liked",
-  "nav.history": "Recently played",
-  "nav.albums": "Albums",
-  "nav.artists": "Artists",
-  "nav.playlists": "Playlists",
-  "nav.queue": "Queue",
-  "nav.aria.library": "Library navigation",
-  "nav.aria.listen": "Listen navigation",
-  "nav.section.sources": "SOURCES",
-  "nav.plugins": "Plugins",
-  "nav.aria.sources": "Sources navigation",
-
-  // Music sources
-  "plugins.title": "Plugins",
-  "plugins.intro":
-    "Choose where music comes from. YouTube is built in and always on; the rest are optional and only cost something when you turn them on.",
-  "plugins.default": "Default",
-  "plugins.on": "On",
-  "plugins.off": "Off",
-  "plugins.loading": "Loading sources…",
-  "plugins.empty": "No sources are available.",
-  "plugins.section.sources": "Music sources",
-  "plugins.section.accounts": "Accounts & API",
-  "plugins.connect": "Connect",
-  "plugins.connected": "Connected",
-  "plugins.customApi": "Custom API",
-  "plugins.desc.youtube": "Link your YouTube account to import playlists and liked songs.",
-  "plugins.desc.google": "Link your Google account for YouTube Music library access.",
-  "plugins.desc.spotify": "Import playlists and liked songs from Spotify.",
-  "plugins.desc.yandex": "Link your Yandex Music account (experimental).",
-  "plugins.desc.apple": "Link your Apple Music account (requires Apple Developer membership).",
-  "plugins.desc.custom": "Connect your own music API (Subsonic, Jellyfin, or custom REST).",
-  "common.back": "Back",
+{
+  "nav.section.listen": "TINGLASH",
+  "nav.section.library": "KUTUBXONA",
+  "nav.home": "Bosh sahifa",
+  "nav.search": "Qidiruv",
+  "nav.songs": "Qo'shiqlar",
+  "nav.liked": "Yoqtirilgan",
+  "nav.history": "Yaqinda tinglangan",
+  "nav.albums": "Albomlar",
+  "nav.artists": "Ijrochilar",
+  "nav.playlists": "Pleylistlar",
+  "nav.queue": "Navbat",
+  "nav.aria.library": "Kutubxona navigatsiyasi",
+  "nav.aria.listen": "Tinglash navigatsiyasi",
+  "nav.section.sources": "MANBALAR",
+  "nav.plugins": "Plaginlar",
+  "nav.aria.sources": "Manbalar navigatsiyasi",
+  "plugins.title": "Plaginlar",
+  "plugins.intro": "Musiqa qayerdan kelishini tanlang. YouTube ichki va har doim yoqilgan; qolganlari ixtiyoriy va faqat yoqqaningizda resurs sarflaydi.",
+  "plugins.default": "Standart",
+  "plugins.on": "Yoqilgan",
+  "plugins.off": "O'chirilgan",
+  "plugins.loading": "Manbalar yuklanmoqda…",
+  "plugins.empty": "Manbalar mavjud emas.",
+  "plugins.section.sources": "Musiqa manbalari",
+  "plugins.section.accounts": "Hisoblar va API",
+  "plugins.connect": "Ulash",
+  "plugins.connected": "Ulangan",
+  "plugins.customApi": "Maxsus API",
+  "plugins.desc.youtube": "Pleylistlar va yoqtirilgan qo'shiqlarni import qilish uchun YouTube hisobingizni ulang.",
+  "plugins.desc.google": "YouTube Music kutubxonasiga kirish uchun Google hisobingizni ulang.",
+  "plugins.desc.spotify": "Spotify'dan pleylistlar va yoqtirilgan qo'shiqlarni import qiling.",
+  "plugins.desc.yandex": "Yandex Music hisobingizni ulang (tajriba).",
+  "plugins.desc.apple": "Apple Music hisobingizni ulang (Apple Developer a'zoligi talab qilinadi).",
+  "plugins.desc.custom": "O'zingizning musiqa API'ingizni ulang (Subsonic, Jellyfin yoki maxsus REST).",
+  "common.back": "Orqaga",
+  "common.close": "Yopish",
+  "settings.section.general": "Umumiy",
+  "settings.section.general.description": "Asosiy interfeys sozlamalari.",
+  "settings.showAlbumArt": "Albom muqovasini ko'rsatish",
+  "settings.showAlbumArt.description": "Qo'shiq ijro etilayotganda albom muqovasini ko'rsatish.",
+  "settings.showLyricsAutomatically": "Lirikani avtomatik ko'rsatish",
+  "settings.showLyricsAutomatically.description": "Qo'shiq boshlanganda lirikani avtomatik ochish.",
+  "settings.language": "Til",
+  "settings.language.description": "Interfeys tilini tanlang.",
   "nav.search.placeholder": "Search artists, songs, albums",
-
-  // Toolbar
   "toolbar.seek": "Playback position",
   "toolbar.shuffle": "Shuffle",
   "toolbar.prev": "Previous",
@@ -64,8 +61,6 @@ export const en: Record<string, string> = {
   "toolbar.mute.on": "Mute",
   "toolbar.mute.off": "Unmute",
   "toolbar.volume": "Volume",
-
-  // Queue panel
   "queue.title": "Queue",
   "queue.count": "{n} tracks",
   "queue.count.one": "{n} track",
@@ -75,8 +70,6 @@ export const en: Record<string, string> = {
   "queue.clearButton": "Clear",
   "queue.close": "Close queue",
   "queue.empty": "The queue is empty. Tracks show up here as they play.",
-
-  // Track table
   "track.play": "Play",
   "track.pause": "Pause",
   "track.like": "Like",
@@ -86,8 +79,6 @@ export const en: Record<string, string> = {
   "track.col.track": "Track",
   "track.col.album": "Album",
   "track.col.duration": "Duration",
-
-  // Context menu
   "menu.playNext": "Play next",
   "menu.addToQueue": "Add to queue",
   "menu.like": "Add to liked",
@@ -98,8 +89,6 @@ export const en: Record<string, string> = {
   "menu.copyLink": "Copy link",
   "menu.goToArtist": "Go to artist",
   "menu.removeFromQueue": "Remove from queue",
-
-  // Lyrics overlay
   "lyrics.aria": "Lyrics",
   "lyrics.close": "Close lyrics",
   "lyrics.title": "Lyrics",
@@ -108,8 +97,6 @@ export const en: Record<string, string> = {
   "lyrics.prev": "Previous",
   "lyrics.queue.open": "Open queue",
   "lyrics.queue.close": "Close queue",
-
-  // Expanded player
   "expanded.aria": "Expanded player",
   "expanded.minimize": "Minimize",
   "expanded.nowPlaying": "Now playing",
@@ -121,8 +108,6 @@ export const en: Record<string, string> = {
   "expanded.repeat": "Repeat",
   "expanded.shuffle": "Shuffle",
   "expanded.externalLink": "External link",
-
-  // Home
   "home.greeting.night": "Good night",
   "home.greeting.morning": "Good morning",
   "home.greeting.day": "Good afternoon",
@@ -134,14 +119,11 @@ export const en: Record<string, string> = {
   "home.liked": "Liked",
   "home.showAll": "Show all",
   "home.libraryEmpty.title": "Your library will show up here",
-  "home.libraryEmpty.body":
-    "Find something with the search box above and play it. The tracks you play are listed here, and you can keep the ones you like with the heart icon.",
+  "home.libraryEmpty.body": "Find something with the search box above and play it. The tracks you play are listed here, and you can keep the ones you like with the heart icon.",
   "home.genres": "Explore genres",
   "home.genre.turkishPop": "Turkish Pop",
   "home.genre.electronic": "Electronic",
   "home.genre.classical": "Classical",
-
-  // Library
   "library.kicker": "Library",
   "library.songs.title": "Songs",
   "library.songs.empty": "Songs you play and like collect here.",
@@ -177,15 +159,11 @@ export const en: Record<string, string> = {
   "library.artists.knownTracks.many": "{n} known tracks",
   "library.artists.knownTracks.few": "{n} known tracks",
   "library.detail.tracks": "Tracks",
-
-  // Search
   "search.placeholder": "Search songs, artists, or albums",
   "search.hint": "Type an artist, song, or album. Results come live from YouTube Music.",
   "search.noResults": "No results for \"{query}\".",
   "search.artists": "Artists",
   "search.songs": "Songs",
-
-  // Toasts
   "toast.liked": "Added to liked",
   "toast.unliked": "Removed from liked",
   "toast.playNext": "Set as next",
@@ -193,8 +171,6 @@ export const en: Record<string, string> = {
   "toast.linkCopied": "Link copied",
   "toast.queueCleared": "Queue cleared",
   "toast.undo": "Undo",
-
-  // Settings
   "settings.title": "Settings",
   "settings.subtitle": "Customize your Melyar experience",
   "settings.reset": "Reset all settings",
@@ -226,8 +202,6 @@ export const en: Record<string, string> = {
   "settings.category.advanced.description": "Developer and power-user options",
   "settings.category.about": "About",
   "settings.category.about.description": "Version and license information",
-  "settings.section.general": "General",
-  "settings.section.general.description": "Basic application preferences",
   "settings.section.appearance": "Appearance",
   "settings.section.appearance.description": "Visual theme and interface style",
   "settings.section.playback": "Playback",
@@ -277,10 +251,6 @@ export const en: Record<string, string> = {
   "settings.quality.medium": "Medium",
   "settings.quality.high": "High",
   "settings.quality.lossless": "Lossless",
-  "settings.showLyricsAutomatically": "Show lyrics automatically",
-  "settings.showLyricsAutomatically.description": "Open the lyrics view when a track starts playing",
-  "settings.showAlbumArt": "Show album art",
-  "settings.showAlbumArt.description": "Display album artwork in the player and library",
   "settings.defaultVolume": "Default volume",
   "settings.defaultVolume.description": "Starting volume level when the app launches",
   "settings.outputDevice": "Output device",
@@ -330,16 +300,12 @@ export const en: Record<string, string> = {
   "settings.equalizer.preset.classical": "Classical",
   "settings.cacheSize": "Cache size",
   "settings.cacheSize.description": "How much disk space the stream cache may use",
-  "settings.language": "Language",
-  "settings.language.description": "Choose the language used by the interface",
   "settings.about.version": "Version {version}",
   "settings.about.repository": "Repository",
   "settings.about.license": "License",
   "settings.about.thirdPartyLicenses": "Third-party licenses",
   "settings.about.reportIssue": "Report an issue",
   "settings.about.builtWith": "Built with {technologies}",
-
-  // Shared
   "common.loading": "Loading...",
   "common.unknownTrack": "Unknown track",
   "common.unknownArtist": "Unknown artist",
@@ -362,82 +328,54 @@ export const en: Record<string, string> = {
   "import.finished": "Imported {matched} tracks, {skipped} were not found",
   "import.finished.one": "Imported {matched} track, {skipped} were not found",
   "import.finished.many": "Imported {matched} tracks, {skipped} were not found",
-
   "import.localMusic": "Import Local Music",
   "import.localMusicBtn": "Select File",
   "import.finished.few": "Imported {matched} tracks, {skipped} were not found",
   "import.source": "Source",
   "import.default": "Default",
-  "common.close": "Close",
   "common.clear": "Clear",
   "common.search": "Search...",
-
-  // Import kicker and subtitle
   "import.kicker": "♫",
   "import.subtitle": "Bring your playlists and music collections into Melyar",
-
-  // Import sources overview
   "import.sources.kicker": "Import Overview",
   "import.sources.title": "Import from your music services and files",
-
-  // Source descriptions
   "import.local.desc": "Add music folders from your computer. Scans recursively for supported audio formats.",
   "import.local.addFolder": "Add a music folder",
-
   "import.spotify.connect": "Connect Spotify",
   "import.spotify.desc": "Import playlists and tracks from Spotify through OAuth authorization.",
-
   "import.apple.chooseXml": "Choose iTunes Library XML",
   "import.apple.desc": "Import playlists and tracks from an iTunes Library export file.",
-
   "import.file.choose": "Import Playlist File",
   "import.file.desc": "Import playlists from supported export formats (M3U, M3U8, PLS, XSPF, JSON, CSV, iTunes XML).",
-
-  // Statistics
   "import.stats.items": "Imported tracks",
   "import.stats.playable": "Playable local tracks",
   "import.stats.metadataOnly": "Metadata-only tracks",
-
-  // Folders section
   "import.folders.kicker": "Music Folders",
   "import.folders.hint": "Your indexed music folders appear here.",
   "import.folder.tracks": "tracks",
   "import.folder.albums": "albums",
-
-  // Status messages
   "requires_configuration": "Requires configuration",
   "export_only": "Import via export file",
-
-  // Wizard step keys
   "import.wizard.step1.title": "Choose Source",
   "import.wizard.step1.description": "Select a provider, folder, or export file to import from.",
-
   "import.wizard.step2.title": "Fetch and Analyze",
   "import.wizard.step2.noPreview": "No preview available. The file may still be processing.",
-
   "import.wizard.step3.title": "Review and Confirm",
   "import.wizard.step3.noPreview": "No preview available.",
-
   "import.wizard.step4.title": "Complete",
   "import.wizard.import": "Import",
   "import.wizard.done": "Done",
   "import.viewLibrary": "View Library",
-
-  // Wizard summary keys
   "import.wizard.total": "Total: {count} items",
   "import.wizard.playable": "Playable: {count}",
   "import.wizard.metadataOnly": "Metadata-only: {count}",
   "import.wizard.unplayable": "Unplayable: {count}",
   "import.wizard.playlists": "Playlists: {count}",
   "import.wizard.noTracks": "No tracks found",
-
-  // Wizard review/selection
   "import.wizard.selected": "{count} selected",
   "import.wizard.playableSelected": "Playable: {count}",
   "import.wizard.metadataSelected": "Metadata-only: {count}",
-
-  // Completion messages
   "import.imported": "imported",
   "import.skipped": "were skipped",
-  "import.failed": "failed",
+  "import.failed": "failed"
 }

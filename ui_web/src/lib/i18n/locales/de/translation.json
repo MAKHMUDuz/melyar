@@ -1,10 +1,4 @@
-/**
- * Deutsch metinleri.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const de: Record<string, string> = {
+{
   "nav.section.listen": "HÖREN",
   "nav.section.library": "BIBLIOTHEK",
   "nav.home": "Start",
@@ -21,11 +15,8 @@ export const de: Record<string, string> = {
   "nav.section.sources": "QUELLEN",
   "nav.plugins": "Plugins",
   "nav.aria.sources": "Quellnavigation",
-
-  // Musikquellen
   "plugins.title": "Plugins",
-  "plugins.intro":
-    "Wähle, wo die Musik herkommt. YouTube ist eingebaut und immer an; der Rest ist optional und kostet nur etwas, wenn du ihn einschaltest.",
+  "plugins.intro": "Wähle, wo die Musik herkommt. YouTube ist eingebaut und immer an; der Rest ist optional und kostet nur etwas, wenn du ihn einschaltest.",
   "plugins.default": "Standard",
   "plugins.on": "An",
   "plugins.off": "Aus",
@@ -53,7 +44,6 @@ export const de: Record<string, string> = {
   "queue.count": "{n} Titel",
   "queue.count.one": "{n} Titel",
   "queue.count.many": "{n} Titel",
-
   "queue.count.few": "{n} Titel",
   "queue.clear": "Warteschlange leeren",
   "queue.clearButton": "Leeren",
@@ -133,12 +123,10 @@ export const de: Record<string, string> = {
   "library.count": "{n} Titel",
   "library.count.one": "{n} Titel",
   "library.count.many": "{n} Titel",
-
   "library.count.few": "{n} Titel",
   "library.countDuration": "{n} Titel · {time}",
   "library.countDuration.one": "{n} Titel · {time}",
   "library.countDuration.many": "{n} Titel · {time}",
-
   "library.countDuration.few": "{n} Titel · {time}",
   "library.albums.notFound": "Album nicht gefunden.",
   "library.albums.label": "Album",
@@ -148,7 +136,6 @@ export const de: Record<string, string> = {
   "library.artists.knownTracks": "{n} bekannte Titel",
   "library.artists.knownTracks.one": "{n} bekannter Titel",
   "library.artists.knownTracks.many": "{n} bekannte Titel",
-
   "library.artists.knownTracks.few": "{n} bekannte Titel",
   "library.detail.tracks": "Titel",
   "search.placeholder": "Titel, Interpreten oder Alben suchen",
@@ -198,7 +185,6 @@ export const de: Record<string, string> = {
   "settings.quality.high": "Hoch",
   "settings.quality.lossless": "Verlustfrei",
   "settings.showLyricsAutomatically": "Lyrics automatisch anzeigen",
-  "settings.showNotifications": "Benachrichtigungen",
   "settings.showAlbumArt": "Albumcover",
   "settings.equalizer": "Equalizer",
   "settings.equalizer.description": "Zehn Bänder, von 31 Hz bis 16 kHz.",
@@ -216,23 +202,19 @@ export const de: Record<string, string> = {
   "import.progress": "{current} von {total} Titeln",
   "import.progress.one": "{current} von {total} Titeln",
   "import.progress.many": "{current} von {total} Titeln",
-
   "import.progress.few": "{current} von {total} Titeln",
   "import.matched": "{n} gefunden",
   "import.matched.one": "{n} gefunden",
   "import.matched.many": "{n} gefunden",
-
   "import.matched.few": "{n} gefunden",
   "import.notFound": "{n} nicht gefunden",
   "import.notFound.one": "{n} nicht gefunden",
   "import.notFound.many": "{n} nicht gefunden",
-
   "import.notFound.few": "{n} nicht gefunden",
   "import.cancel": "Import abbrechen",
   "import.finished": "{matched} Titel importiert, {skipped} wurden nicht gefunden",
   "import.finished.one": "{matched} Titel importiert, {skipped} nicht gefunden",
   "import.finished.many": "{matched} Titel importiert, {skipped} nicht gefunden",
-
   "import.finished.few": "{matched} Titel importiert, {skipped} nicht gefunden",
   "common.close": "Schließen",
   "common.clear": "Leeren",
@@ -286,7 +268,6 @@ export const de: Record<string, string> = {
   "settings.reducedMotion.description": "Animationen und Bewegungseffekte in der gesamten Oberfläche reduzieren",
   "settings.normalizeVolume.description": "Abspiel-Lautstärke über alle Titel hinweg auf ein gleichmäßiges Niveau anpassen",
   "settings.showLyricsAutomatically.description": "Liedtextansicht öffnen, sobald ein Titel abgespielt wird",
-  "settings.showNotifications.description": "Desktop-Benachrichtigungen bei Titelwechsel anzeigen",
   "settings.showAlbumArt.description": "Albumcover im Player und in der Bibliothek anzeigen",
   "settings.defaultVolume": "Standard-Lautstärke",
   "settings.defaultVolume.description": "Lautstärke beim Start der Anwendung",
@@ -341,5 +322,5 @@ export const de: Record<string, string> = {
   "import.localMusic": "Lokale Musik importieren",
   "import.localMusicBtn": "Datei auswählen",
   "import.source": "Quelle",
-  "import.default": "Standard",
-};
+  "import.default": "Standard"
+}

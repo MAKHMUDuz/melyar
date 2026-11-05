@@ -1,10 +1,4 @@
-/**
- * Español metinleri.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const es: Record<string, string> = {
+{
   "nav.section.listen": "ESCUCHA",
   "nav.section.library": "BIBLIOTECA",
   "nav.home": "Inicio",
@@ -21,11 +15,8 @@ export const es: Record<string, string> = {
   "nav.section.sources": "FUENTES",
   "nav.plugins": "Complementos",
   "nav.aria.sources": "Navegación de fuentes",
-
-  // Fuentes de música
   "plugins.title": "Complementos",
-  "plugins.intro":
-    "Elige de dónde viene la música. YouTube está integrado y siempre activo; el resto es opcional y solo tiene coste cuando lo activas.",
+  "plugins.intro": "Elige de dónde viene la música. YouTube está integrado y siempre activo; el resto es opcional y solo tiene coste cuando lo activas.",
   "plugins.default": "Predeterminado",
   "plugins.on": "Activado",
   "plugins.off": "Desactivado",
@@ -53,7 +44,6 @@ export const es: Record<string, string> = {
   "queue.count": "{n} canciones",
   "queue.count.one": "{n} canción",
   "queue.count.many": "{n} canciones",
-
   "queue.count.few": "{n} canciones",
   "queue.clear": "Vaciar la cola",
   "queue.clearButton": "Vaciar",
@@ -133,12 +123,10 @@ export const es: Record<string, string> = {
   "library.count": "{n} canciones",
   "library.count.one": "{n} canción",
   "library.count.many": "{n} canciones",
-
   "library.count.few": "{n} canciones",
   "library.countDuration": "{n} canciones · {time}",
   "library.countDuration.one": "{n} canción · {time}",
   "library.countDuration.many": "{n} canciones · {time}",
-
   "library.countDuration.few": "{n} canciones · {time}",
   "library.albums.notFound": "Álbum no encontrado.",
   "library.albums.label": "Álbum",
@@ -148,7 +136,6 @@ export const es: Record<string, string> = {
   "library.artists.knownTracks": "{n} canciones conocidas",
   "library.artists.knownTracks.one": "{n} canción conocida",
   "library.artists.knownTracks.many": "{n} canciones conocidas",
-
   "library.artists.knownTracks.few": "{n} canciones conocidas",
   "library.detail.tracks": "Canciones",
   "search.placeholder": "Buscar canciones, artistas o álbumes",
@@ -198,7 +185,6 @@ export const es: Record<string, string> = {
   "settings.quality.high": "Alta",
   "settings.quality.lossless": "Sin pérdida",
   "settings.showLyricsAutomatically": "Mostrar la letra automáticamente",
-  "settings.showNotifications": "Notificaciones",
   "settings.showAlbumArt": "Carátula del álbum",
   "settings.equalizer": "Ecualizador",
   "settings.equalizer.description": "Diez bandas, de 31 Hz a 16 kHz.",
@@ -216,23 +202,19 @@ export const es: Record<string, string> = {
   "import.progress": "{current} de {total} canciones",
   "import.progress.one": "{current} de {total} canciones",
   "import.progress.many": "{current} de {total} canciones",
-
   "import.progress.few": "{current} de {total} canciones",
   "import.matched": "{n} coincidentes",
   "import.matched.one": "{n} coincidente",
   "import.matched.many": "{n} coincidentes",
-
   "import.matched.few": "{n} coincidentes",
   "import.notFound": "{n} no encontradas",
   "import.notFound.one": "{n} no encontrado",
   "import.notFound.many": "{n} no encontrados",
-
   "import.notFound.few": "{n} no encontrados",
   "import.cancel": "Cancelar la importación",
   "import.finished": "Se importaron {matched} canciones, no se encontraron {skipped}",
   "import.finished.one": "Se importó {matched} canción, no se encontraron {skipped}",
   "import.finished.many": "Se importaron {matched} canciones, no se encontraron {skipped}",
-
   "import.finished.few": "Se importaron {matched} canciones, no se encontraron {skipped}",
   "common.close": "Cerrar",
   "common.clear": "Limpiar",
@@ -286,7 +268,6 @@ export const es: Record<string, string> = {
   "settings.reducedMotion.description": "Reducir animaciones y efectos de movimiento en toda la interfaz",
   "settings.normalizeVolume.description": "Ajustar el volumen de reproducción a un nivel constante entre canciones",
   "settings.showLyricsAutomatically.description": "Abrir la vista de letras cuando empieza a reproducirse una canción",
-  "settings.showNotifications.description": "Mostrar notificaciones del escritorio al cambiar de canción",
   "settings.showAlbumArt.description": "Mostrar la carátula del álbum en el reproductor y la biblioteca",
   "settings.defaultVolume": "Volumen predeterminado",
   "settings.defaultVolume.description": "Nivel de volumen al iniciar la aplicación",
@@ -341,5 +322,5 @@ export const es: Record<string, string> = {
   "import.localMusic": "Importar música local",
   "import.localMusicBtn": "Seleccionar archivo",
   "import.source": "Fuente",
-  "import.default": "Predeterminado",
-};
+  "import.default": "Predeterminado"
+}

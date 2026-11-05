@@ -1,11 +1,4 @@
-/**
- * Türkçe metinler.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const tr: Record<string, string> = {
-  // Gezinme
+{
   "nav.section.listen": "DİNLE",
   "nav.section.library": "KİTAPLIK",
   "nav.home": "Ana Sayfa",
@@ -22,19 +15,14 @@ export const tr: Record<string, string> = {
   "nav.section.sources": "KAYNAKLAR",
   "nav.plugins": "Eklentiler",
   "nav.aria.sources": "Kaynak navigasyonu",
-
-  // Müzik kaynakları
   "plugins.title": "Eklentiler",
-  "plugins.intro":
-    "Metiğin nereden geldiğini seç. YouTube yerleşiktir ve daima açıktır; geri kalanı isteğe bağlıdır ve yalnızca açtığında bir bedel öder.",
+  "plugins.intro": "Metiğin nereden geldiğini seç. YouTube yerleşiktir ve daima açıktır; geri kalanı isteğe bağlıdır ve yalnızca açtığında bir bedel öder.",
   "plugins.default": "Varsayılan",
   "plugins.on": "Açık",
   "plugins.off": "Kapalı",
   "plugins.loading": "Kaynaklar yükleniyor…",
   "plugins.empty": "Kullanılabilir kaynak yok.",
   "nav.search.placeholder": "Sanatçı, şarkı, albüm ara",
-
-  // Araç çubuğu
   "toolbar.seek": "Oynatma konumu",
   "toolbar.shuffle": "Karıştır",
   "toolbar.prev": "Önceki",
@@ -52,20 +40,15 @@ export const tr: Record<string, string> = {
   "toolbar.mute.on": "Sessize Al",
   "toolbar.mute.off": "Sesi Aç",
   "toolbar.volume": "Ses",
-
-  // Sıra paneli
   "queue.title": "Çalma Sırası",
   "queue.count": "{n} parça",
   "queue.count.one": "{n} parça",
   "queue.count.many": "{n} parça",
-
   "queue.count.few": "{n} parça",
   "queue.clear": "Sırayı temizle",
   "queue.clearButton": "Temizle",
   "queue.close": "Kuyruğu kapat",
   "queue.empty": "Sıra boş. Bir parça çaldığında burada listelenir.",
-
-  // Parça tablosu
   "track.play": "Çal",
   "track.pause": "Duraklat",
   "track.like": "Beğen",
@@ -75,8 +58,6 @@ export const tr: Record<string, string> = {
   "track.col.track": "Parça",
   "track.col.album": "Albüm",
   "track.col.duration": "Süre",
-
-  // Sağ tık menüsü
   "menu.playNext": "Sonra Çal",
   "menu.addToQueue": "Sıraya Ekle",
   "menu.like": "Beğen",
@@ -87,8 +68,6 @@ export const tr: Record<string, string> = {
   "menu.copyLink": "Bağlantıyı Kopyala",
   "menu.goToArtist": "Sanatçıya Git",
   "menu.removeFromQueue": "Çaldan Kaldır",
-
-  // Söz katmanı
   "lyrics.aria": "Sözler",
   "lyrics.close": "Sözleri kapat",
   "lyrics.title": "Sözler",
@@ -97,8 +76,6 @@ export const tr: Record<string, string> = {
   "lyrics.prev": "Önceki",
   "lyrics.queue.open": "Kuyruğu Aç",
   "lyrics.queue.close": "Kuyruğu Kapat",
-
-  // Genişletilmiş oynatıcı
   "expanded.aria": "Genişletilmiş Oynatıcı",
   "expanded.minimize": "Küçült",
   "expanded.nowPlaying": "Şimdi Çalıyor",
@@ -110,8 +87,6 @@ export const tr: Record<string, string> = {
   "expanded.repeat": "Döngü",
   "expanded.shuffle": "Karışık",
   "expanded.externalLink": "Harici Bağlantı",
-
-  // Ana sayfa
   "home.greeting.night": "İyi geceler",
   "home.greeting.morning": "Günaydın",
   "home.greeting.day": "İyi günler",
@@ -123,14 +98,11 @@ export const tr: Record<string, string> = {
   "home.liked": "Beğenilenler",
   "home.showAll": "Tümünü gör",
   "home.libraryEmpty.title": "Kitaplığın burada görünecek",
-  "home.libraryEmpty.body":
-    "Yukarıdaki arama kutusundan bir şey bul ve çal. Çaldığın parçalar burada listelenir; kalp ikonuyla beğendiklerini kaydedebilirsin.",
+  "home.libraryEmpty.body": "Yukarıdaki arama kutusundan bir şey bul ve çal. Çaldığın parçalar burada listelenir; kalp ikonuyla beğendiklerini kaydedebilirsin.",
   "home.genres": "Türleri Keşfet",
   "home.genre.turkishPop": "Türkçe Pop",
   "home.genre.electronic": "Elektronik",
   "home.genre.classical": "Klasik",
-
-  // Kitaplık
   "library.kicker": "Kitaplık",
   "library.songs.title": "Şarkılar",
   "library.songs.empty": "Çaldığın ve beğendiğin şarkılar burada birikir.",
@@ -151,12 +123,10 @@ export const tr: Record<string, string> = {
   "library.count": "{n} parça",
   "library.count.one": "{n} parça",
   "library.count.many": "{n} parça",
-
   "library.count.few": "{n} parça",
   "library.countDuration": "{n} parça · {time}",
   "library.countDuration.one": "{n} parça · {time}",
   "library.countDuration.many": "{n} parça · {time}",
-
   "library.countDuration.few": "{n} parça · {time}",
   "library.albums.notFound": "Albüm bulunamadı.",
   "library.albums.label": "Albüm",
@@ -166,18 +136,13 @@ export const tr: Record<string, string> = {
   "library.artists.knownTracks": "{n} bilinen parça",
   "library.artists.knownTracks.one": "{n} bilinen parça",
   "library.artists.knownTracks.many": "{n} bilinen parça",
-
   "library.artists.knownTracks.few": "{n} bilinen parça",
   "library.detail.tracks": "Parçalar",
-
-  // Arama
   "search.placeholder": "Şarkı, sanatçı veya albüm ara",
   "search.hint": "Sanatçı, şarkı veya albüm adı yaz. Sonuçlar YouTube Music'ten canlı gelir.",
   "search.noResults": "\"{query}\" için sonuç bulunamadı.",
   "search.artists": "Sanatçılar",
   "search.songs": "Şarkılar",
-
-  // Bildirimler
   "toast.liked": "Beğenilenlere eklendi",
   "toast.unliked": "Beğenilenlerden çıkarıldı",
   "toast.playNext": "Sıradaki olarak eklendi",
@@ -185,8 +150,6 @@ export const tr: Record<string, string> = {
   "toast.linkCopied": "Bağlantı kopyalandı",
   "toast.queueCleared": "Kuyruk temizlendi",
   "toast.undo": "Geri al",
-
-  // Ayarlar
   "settings.title": "Ayarlar",
   "settings.subtitle": "Melyar deneyiminizi özelleştirin",
   "settings.reset": "Tüm ayarları sıfırla",
@@ -271,8 +234,6 @@ export const tr: Record<string, string> = {
   "settings.quality.lossless": "Kayıpsız",
   "settings.showLyricsAutomatically": "Sözleri otomatik göster",
   "settings.showLyricsAutomatically.description": "Bir parça çalmaya başladığında söz görünümünü aç",
-  "settings.showNotifications": "Bildirimleri göster",
-  "settings.showNotifications.description": "Parça değişiklikleri için masaüstü bildirimleri göster",
   "settings.showAlbumArt": "Albüm kapağını göster",
   "settings.showAlbumArt.description": "Oynatıcıda ve kitaplıkta albüm kapaklarını göster",
   "settings.defaultVolume": "Varsayılan ses",
@@ -332,8 +293,6 @@ export const tr: Record<string, string> = {
   "settings.about.thirdPartyLicenses": "Üçüncü parti lisanslar",
   "settings.about.reportIssue": "Sorun bildir",
   "settings.about.builtWith": "{technologies} ile geliştirildi",
-
-  // Ortak
   "common.loading": "Yükleniyor...",
   "common.unknownTrack": "Bilinmeyen Parça",
   "common.unknownArtist": "Bilinmeyen Sanatçı",
@@ -343,24 +302,19 @@ export const tr: Record<string, string> = {
   "import.progress": "{total} parçadan {current} tanesi",
   "import.progress.one": "{total} parçadan {current} tanesi",
   "import.progress.many": "{total} parçadan {current} tanesi",
-
   "import.progress.few": "{total} parçadan {current} tanesi",
   "import.matched": "{n} eşleşti",
   "import.matched.one": "{n} eşleşti",
   "import.matched.many": "{n} eşleşti",
-
   "import.matched.few": "{n} eşleşti",
   "import.notFound": "{n} bulunamadı",
   "import.notFound.one": "{n} bulunamadı",
   "import.notFound.many": "{n} bulunamadı",
-
   "import.notFound.few": "{n} bulunamadı",
   "import.cancel": "İçe aktarmayı iptal et",
   "import.finished": "{matched} parça içe aktarıldı, {skipped} tanesi bulunamadı",
   "import.finished.one": "{matched} parça içe aktarıldı, {skipped} bulunamadı",
   "import.finished.many": "{matched} parça içe aktarıldı, {skipped} bulunamadı",
-
-
   "import.localMusic": "Yerel Müzik İçe Aktar",
   "import.localMusicBtn": "Dosya Seç",
   "import.finished.few": "{matched} parça içe aktarıldı, {skipped} bulunamadı",
@@ -369,39 +323,59 @@ export const tr: Record<string, string> = {
   "common.close": "Kapat",
   "common.clear": "Temizle",
   "common.search": "Ara...",
-
-
-  // Wizard step keys
   "import.wizard.step1.title": "Kaynağı Seç",
   "import.wizard.step1.description": "Bir sağlayıcı, klasör veya dışa aktarım dosyası seçmek için import et.",
-
   "import.wizard.step2.title": "Getir ve Analiz et",
   "import.wizard.step2.noPreview": "Önizleme yok. Dosya hala işleniyor olabilir.",
-
   "import.wizard.step3.title": "Gözden Geçir ve Onayla",
   "import.wizard.step3.noPreview": "Önizleme yok.",
-
   "import.wizard.step4.title": "Tamamla",
   "import.wizard.import": "İçe Aktar",
   "import.wizard.done": "Tamam",
   "import.viewLibrary": "Kütüphaneyi Gör",
-
-  // Wizard summary keys
   "import.wizard.total": "Toplam: {count} öğe",
   "import.wizard.playable": "Oynanabilir: {count}",
   "import.wizard.metadataOnly": "Sadece meta veri: {count}",
   "import.wizard.unplayable": "Oynanamaz: {count}",
   "import.wizard.playlists": "Çalma listeleri: {count}",
   "import.wizard.noTracks": "Parça bulunamadı",
-
-  // Wizard review/selection
   "import.wizard.selected": "{count} seçili",
   "import.wizard.playableSelected": "Oynanabilir: {count}",
   "import.wizard.metadataSelected": "Sadece meta veri: {count}",
-
-  // Completion messages
   "import.imported": "ekele",
   "import.skipped": "atlandı",
   "import.failed": "başarısız",
-
-};
+  "plugins.section.sources": "Müzik kaynakları",
+  "plugins.section.accounts": "Hesaplar ve API",
+  "plugins.connect": "Bağla",
+  "plugins.connected": "Bağlı",
+  "plugins.customApi": "Özel API",
+  "plugins.desc.youtube": "Pleylistlerinizi ve beğendiğiniz şarkıları içe aktarmak için YouTube hesabınızı bağlayın.",
+  "plugins.desc.google": "YouTube Music kütüphanesine erişim için Google hesabınızı bağlayın.",
+  "plugins.desc.spotify": "Spotify'dan pleylistleri ve beğenilen şarkıları içe aktarın.",
+  "plugins.desc.yandex": "Yandex Music hesabınızı bağlayın (deneysel).",
+  "plugins.desc.apple": "Apple Music hesabınızı bağlayın (Apple Developer üyeliği gerekir).",
+  "plugins.desc.custom": "Kendi müzik API'nizi bağlayın (Subsonic, Jellyfin veya özel REST).",
+  "common.back": "Geri",
+  "import.kicker": "İçe Aktar",
+  "import.subtitle": "Müzik kitaplığınızı içe aktarın",
+  "import.sources.kicker": "Kaynaklar",
+  "import.sources.title": "İçe aktarma kaynakları",
+  "import.local.desc": "Yerel müzik klasörünüzü taram ve içe aktarın",
+  "import.local.addFolder": "Klasör ekle",
+  "import.spotify.connect": "Spotify'a bağlan",
+  "import.spotify.desc": "Spotify pleylistlerinizi içe aktarın",
+  "import.apple.chooseXml": "XML seç",
+  "import.apple.desc": "Apple Music kitaplığınızı içe aktarın",
+  "import.file.choose": "Dosya seç",
+  "import.file.desc": "Dışa aktarılmış bir dosyadan içe aktarın",
+  "import.stats.items": "Öğeler",
+  "import.stats.playable": "Oynatılabilir",
+  "import.stats.metadataOnly": "Yalnızca meta veri",
+  "import.folders.kicker": "Klasörler",
+  "import.folders.hint": "İçe aktarılacak klasörleri seçin",
+  "import.folder.tracks": " parça",
+  "import.folder.albums": " albüm",
+  "requires_configuration": "yapılandırma gerekli",
+  "export_only": "yalnızca dışa aktar"
+}

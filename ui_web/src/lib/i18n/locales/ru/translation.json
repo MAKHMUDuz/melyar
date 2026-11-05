@@ -1,10 +1,4 @@
-/**
- * Русский metinleri.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const ru: Record<string, string> = {
+{
   "nav.section.listen": "ПРОСЛУШИВАНИЕ",
   "nav.section.library": "БИБЛИОТЕКА",
   "nav.home": "Главная",
@@ -21,11 +15,8 @@ export const ru: Record<string, string> = {
   "nav.section.sources": "ИСТОЧНИКИ",
   "nav.plugins": "Плагины",
   "nav.aria.sources": "Навигация по источникам",
-
-  // Источники музыки
   "plugins.title": "Плагины",
-  "plugins.intro":
-    "Выберите, откуда берётся музыка. YouTube встроен и всегда включён; остальное — по желанию и стоит чего-то только когда вы его включаете.",
+  "plugins.intro": "Выберите, откуда берётся музыка. YouTube встроен и всегда включён; остальное — по желанию и стоит чего-то только когда вы его включаете.",
   "plugins.default": "По умолчанию",
   "plugins.on": "Вкл",
   "plugins.off": "Выкл",
@@ -54,7 +45,6 @@ export const ru: Record<string, string> = {
   "queue.count.one": "{n} трек",
   "queue.count.few": "{n} трека",
   "queue.count.many": "{n} треков",
-
   "queue.clear": "Очистить очередь",
   "queue.clearButton": "Очистить",
   "queue.close": "Закрыть очередь",
@@ -134,12 +124,10 @@ export const ru: Record<string, string> = {
   "library.count.one": "{n} трек",
   "library.count.few": "{n} трека",
   "library.count.many": "{n} треков",
-
   "library.countDuration": "{n} треков · {time}",
   "library.countDuration.one": "{n} трек · {time}",
   "library.countDuration.few": "{n} трека · {time}",
   "library.countDuration.many": "{n} треков · {time}",
-
   "library.albums.notFound": "Альбом не найден.",
   "library.albums.label": "Альбом",
   "library.albums.back": "← К альбомам",
@@ -149,7 +137,6 @@ export const ru: Record<string, string> = {
   "library.artists.knownTracks.one": "{n} известный трек",
   "library.artists.knownTracks.few": "{n} известных трека",
   "library.artists.knownTracks.many": "{n} известных треков",
-
   "library.detail.tracks": "Треки",
   "search.placeholder": "Ищите треки, исполнителей или альбомы",
   "search.hint": "Введите исполнителя, трек или альбом. Результаты приходят в реальном времени из YouTube Music.",
@@ -198,7 +185,6 @@ export const ru: Record<string, string> = {
   "settings.quality.high": "Высокое",
   "settings.quality.lossless": "Без потерь",
   "settings.showLyricsAutomatically": "Показывать текст автоматически",
-  "settings.showNotifications": "Уведомления",
   "settings.showAlbumArt": "Обложка альбома",
   "settings.equalizer": "Эквалайзер",
   "settings.equalizer.description": "Десять полос, от 31 Гц до 16 кГц.",
@@ -216,23 +202,19 @@ export const ru: Record<string, string> = {
   "import.progress": "{current} из {total} треков",
   "import.progress.one": "{current} из {total} треков",
   "import.progress.many": "{current} из {total} треков",
-
   "import.progress.few": "{current} из {total} треков",
   "import.matched": "{n} найдено",
   "import.matched.one": "{n} совпал",
   "import.matched.few": "{n} совпали",
   "import.matched.many": "{n} совпали",
-
   "import.notFound": "{n} не найдено",
   "import.notFound.one": "{n} не найден",
   "import.notFound.few": "{n} не найдены",
   "import.notFound.many": "{n} не найдены",
-
   "import.cancel": "Отменить импорт",
   "import.finished": "Импортировано {matched} треков, {skipped} не найдено",
   "import.finished.one": "Импортирован {matched} трек, {skipped} не найдены",
   "import.finished.many": "Импортировано {matched} треков, {skipped} не найдены",
-
   "import.finished.few": "Импортировано {matched} треков, {skipped} не найдены",
   "common.close": "Закрыть",
   "common.clear": "Очистить",
@@ -286,7 +268,6 @@ export const ru: Record<string, string> = {
   "settings.reducedMotion.description": "Уменьшить анимации и движения по всему интерфейсу",
   "settings.normalizeVolume.description": "Выровнять громкость воспроизведения между треками",
   "settings.showLyricsAutomatically.description": "Открывать текст песни при начале воспроизведения трека",
-  "settings.showNotifications.description": "Показывать уведомления рабочего стола при смене трека",
   "settings.showAlbumArt.description": "Показывать обложку альбома в плеере и медиатеке",
   "settings.defaultVolume": "Громкость по умолчанию",
   "settings.defaultVolume.description": "Уровень громкости при запуске приложения",
@@ -341,5 +322,5 @@ export const ru: Record<string, string> = {
   "import.localMusic": "Импорт локальной музыки",
   "import.localMusicBtn": "Выбрать файл",
   "import.source": "Источник",
-  "import.default": "По умолчанию",
-};
+  "import.default": "По умолчанию"
+}

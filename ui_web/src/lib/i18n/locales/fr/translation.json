@@ -1,10 +1,4 @@
-/**
- * Français metinleri.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const fr: Record<string, string> = {
+{
   "nav.section.listen": "ÉCOUTE",
   "nav.section.library": "BIBLIOTHÈQUE",
   "nav.home": "Accueil",
@@ -21,11 +15,8 @@ export const fr: Record<string, string> = {
   "nav.section.sources": "SOURCES",
   "nav.plugins": "Extensions",
   "nav.aria.sources": "Navigation des sources",
-
-  // Sources de musique
   "plugins.title": "Extensions",
-  "plugins.intro":
-    "Choisissez d'où vient la musique. YouTube est intégré et toujours actif ; le reste est facultatif et ne coûte que lorsque vous l'activez.",
+  "plugins.intro": "Choisissez d'où vient la musique. YouTube est intégré et toujours actif ; le reste est facultatif et ne coûte que lorsque vous l'activez.",
   "plugins.default": "Par défaut",
   "plugins.on": "Activée",
   "plugins.off": "Désactivée",
@@ -53,7 +44,6 @@ export const fr: Record<string, string> = {
   "queue.count": "{n} morceaux",
   "queue.count.one": "{n} morceau",
   "queue.count.many": "{n} morceaux",
-
   "queue.count.few": "{n} morceaux",
   "queue.clear": "Vider la file d'attente",
   "queue.clearButton": "Vider",
@@ -133,12 +123,10 @@ export const fr: Record<string, string> = {
   "library.count": "{n} morceaux",
   "library.count.one": "{n} morceau",
   "library.count.many": "{n} morceaux",
-
   "library.count.few": "{n} morceaux",
   "library.countDuration": "{n} morceaux · {time}",
   "library.countDuration.one": "{n} morceau · {time}",
   "library.countDuration.many": "{n} morceaux · {time}",
-
   "library.countDuration.few": "{n} morceaux · {time}",
   "library.albums.notFound": "Album introuvable.",
   "library.albums.label": "Album",
@@ -148,7 +136,6 @@ export const fr: Record<string, string> = {
   "library.artists.knownTracks": "{n} morceaux connus",
   "library.artists.knownTracks.one": "{n} morceau connu",
   "library.artists.knownTracks.many": "{n} morceaux connus",
-
   "library.artists.knownTracks.few": "{n} morceaux connus",
   "library.detail.tracks": "Morceaux",
   "search.placeholder": "Rechercher morceaux, artistes ou albums",
@@ -198,7 +185,6 @@ export const fr: Record<string, string> = {
   "settings.quality.high": "Haute",
   "settings.quality.lossless": "Sans perte",
   "settings.showLyricsAutomatically": "Afficher les paroles automatiquement",
-  "settings.showNotifications": "Notifications",
   "settings.showAlbumArt": "Pochette d'album",
   "settings.equalizer": "Égaliseur",
   "settings.equalizer.description": "Dix bandes, de 31 Hz à 16 kHz.",
@@ -216,23 +202,19 @@ export const fr: Record<string, string> = {
   "import.progress": "{current} morceaux sur {total}",
   "import.progress.one": "{current} morceaux sur {total}",
   "import.progress.many": "{current} morceaux sur {total}",
-
   "import.progress.few": "{current} morceaux sur {total}",
   "import.matched": "{n} correspondus",
   "import.matched.one": "{n} correspondu",
   "import.matched.many": "{n} correspondus",
-
   "import.matched.few": "{n} correspondus",
   "import.notFound": "{n} introuvables",
   "import.notFound.one": "{n} introuvable",
   "import.notFound.many": "{n} introuvables",
-
   "import.notFound.few": "{n} introuvables",
   "import.cancel": "Annuler l'import",
   "import.finished": "{matched} morceaux importés, {skipped} sont introuvables",
   "import.finished.one": "{matched} morceau importé, {skipped} introuvables",
   "import.finished.many": "{matched} morceaux importés, {skipped} introuvables",
-
   "import.finished.few": "{matched} morceaux importés, {skipped} introuvables",
   "common.close": "Fermer",
   "common.clear": "Effacer",
@@ -286,7 +268,6 @@ export const fr: Record<string, string> = {
   "settings.reducedMotion.description": "Réduire les animations et effets de mouvement dans toute l'interface",
   "settings.normalizeVolume.description": "Ajuster le volume de lecture à un niveau constant d'un titre à l'autre",
   "settings.showLyricsAutomatically.description": "Ouvrir la vue des paroles au début de la lecture d'un titre",
-  "settings.showNotifications.description": "Afficher les notifications du bureau lors des changements de titre",
   "settings.showAlbumArt.description": "Afficher la pochette d'album dans le lecteur et la bibliothèque",
   "settings.defaultVolume": "Volume par défaut",
   "settings.defaultVolume.description": "Niveau de volume au démarrage de l'application",
@@ -341,5 +322,5 @@ export const fr: Record<string, string> = {
   "import.localMusic": "Importer de la musique locale",
   "import.localMusicBtn": "Sélectionner un fichier",
   "import.source": "Source",
-  "import.default": "Par défaut",
-};
+  "import.default": "Par défaut"
+}

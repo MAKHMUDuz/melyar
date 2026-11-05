@@ -1,10 +1,4 @@
-/**
- * 한국어 metinleri.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const ko: Record<string, string> = {
+{
   "nav.section.listen": "듣기",
   "nav.section.library": "라이브러리",
   "nav.home": "홈",
@@ -21,11 +15,8 @@ export const ko: Record<string, string> = {
   "nav.section.sources": "소스",
   "nav.plugins": "플러그인",
   "nav.aria.sources": "소스 내비게이션",
-
-  // 음악 소스
   "plugins.title": "플러그인",
-  "plugins.intro":
-    "음악을 가져올 곳을 선택하세요. YouTube는 기본 내장되어 항상 켜져 있습니다. 나머지는 선택 사항이며, 켤 때만 부담이 생깁니다.",
+  "plugins.intro": "음악을 가져올 곳을 선택하세요. YouTube는 기본 내장되어 항상 켜져 있습니다. 나머지는 선택 사항이며, 켤 때만 부담이 생깁니다.",
   "plugins.default": "기본값",
   "plugins.on": "켜짐",
   "plugins.off": "꺼짐",
@@ -53,7 +44,6 @@ export const ko: Record<string, string> = {
   "queue.count": "{n}곡",
   "queue.count.one": "{n}곡",
   "queue.count.many": "{n}곡",
-
   "queue.count.few": "{n}곡",
   "queue.clear": "대기열 비우기",
   "queue.clearButton": "비우기",
@@ -133,12 +123,10 @@ export const ko: Record<string, string> = {
   "library.count": "{n}곡",
   "library.count.one": "{n}곡",
   "library.count.many": "{n}곡",
-
   "library.count.few": "{n}곡",
   "library.countDuration": "{n}곡 · {time}",
   "library.countDuration.one": "{n}곡 · {time}",
   "library.countDuration.many": "{n}곡 · {time}",
-
   "library.countDuration.few": "{n}곡 · {time}",
   "library.albums.notFound": "앨범을 찾을 수 없습니다.",
   "library.albums.label": "앨범",
@@ -148,7 +136,6 @@ export const ko: Record<string, string> = {
   "library.artists.knownTracks": "알려진 노래 {n}곡",
   "library.artists.knownTracks.one": "{n}곡",
   "library.artists.knownTracks.many": "{n}곡",
-
   "library.artists.knownTracks.few": "{n}곡",
   "library.detail.tracks": "노래",
   "search.placeholder": "노래, 아티스트 또는 앨범 검색",
@@ -198,7 +185,6 @@ export const ko: Record<string, string> = {
   "settings.quality.high": "높음",
   "settings.quality.lossless": "무손실",
   "settings.showLyricsAutomatically": "가사 자동 표시",
-  "settings.showNotifications": "알림",
   "settings.showAlbumArt": "앨범 아트",
   "settings.equalizer": "이퀄라이저",
   "settings.equalizer.description": "31 Hz에서 16 kHz까지 10개 대역.",
@@ -216,23 +202,19 @@ export const ko: Record<string, string> = {
   "import.progress": "{total}곡 중 {current}곡",
   "import.progress.one": "{total}곡 중 {current}곡",
   "import.progress.many": "{total}곡 중 {current}곡",
-
   "import.progress.few": "{total}곡 중 {current}곡",
   "import.matched": "{n}개 일치",
   "import.matched.one": "{n}개 일치",
   "import.matched.many": "{n}개 일치",
-
   "import.matched.few": "{n}개 일치",
   "import.notFound": "{n}개 찾지 못함",
   "import.notFound.one": "{n}개 찾지 못함",
   "import.notFound.many": "{n}개 찾지 못함",
-
   "import.notFound.few": "{n}개 찾지 못함",
   "import.cancel": "가져오기 취소",
   "import.finished": "{matched}곡을 가져왔고, {skipped}곡은 찾지 못했습니다",
   "import.finished.one": "{matched}곡을 가져왔고, {skipped}곡은 찾지 못했습니다",
   "import.finished.many": "{matched}곡을 가져왔고, {skipped}곡은 찾지 못했습니다",
-
   "import.finished.few": "{matched}곡을 가져왔고, {skipped}곡은 찾지 못했습니다",
   "common.close": "닫기",
   "common.clear": "지우기",
@@ -286,7 +268,6 @@ export const ko: Record<string, string> = {
   "settings.reducedMotion.description": "인터페이스 전체의 애니메이션과 동작 효과를 줄입니다",
   "settings.normalizeVolume.description": "트랙 간 재생 음량을 일정한 수준으로 조절합니다",
   "settings.showLyricsAutomatically.description": "트랙이 재생되면 가사 보기를 엽니다",
-  "settings.showNotifications.description": "트랙이 바뀔 때 데스크톱 알림을 표시합니다",
   "settings.showAlbumArt.description": "플레이어와 라이브러리에 앨범 아트를 표시합니다",
   "settings.defaultVolume": "기본 음량",
   "settings.defaultVolume.description": "앱 시작 시 음량 수준",
@@ -341,5 +322,5 @@ export const ko: Record<string, string> = {
   "import.localMusic": "로컬 음악 가져오기",
   "import.localMusicBtn": "파일 선택",
   "import.source": "소스",
-  "import.default": "기본값",
-};
+  "import.default": "기본값"
+}

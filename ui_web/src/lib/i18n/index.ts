@@ -1,18 +1,18 @@
+/// <reference types="vite/client" />
 import { useSyncExternalStore } from "react";
-import { en } from "@/locales/en";
-import { tr } from "@/locales/tr";
-import { es } from "@/locales/es";
-import { de } from "@/locales/de";
-import { fr } from "@/locales/fr";
-import { it } from "@/locales/it";
-import { pt } from "@/locales/pt";
-import { ru } from "@/locales/ru";
-import { uk } from "@/locales/uk";
-import { ja } from "@/locales/ja";
-import { zh } from "@/locales/zh";
-import { ko } from "@/locales/ko";
-import { sq } from "@/locales/sq";
 
+// Manifest of available languages. Adding a language = add a folder under
+// `locales/<code>/translation.json` and an entry here. No other code change.
+import languagesManifest from "./locales/languages.json";
+
+export interface LanguageEntry {
+  code: string;
+  title: string;
+}
+
+export const LANGUAGES: LanguageEntry[] = languagesManifest as LanguageEntry[];
+
+// Union of supported locale codes. Keep in sync with languages.json.
 export type Locale =
   | "en"
   | "tr"
@@ -25,41 +25,32 @@ export type Locale =
   | "uk"
   | "ja"
   | "zh"
+  | "ko"
   | "sq"
-  | "ko";
+  | "uz"
+  | "uz-Cyrl";
 
-export const LOCALES: { code: Locale; label: string }[] = [
-  { code: "en", label: "English" },
-  { code: "tr", label: "Türkçe" },
-  { code: "es", label: "Español" },
-  { code: "de", label: "Deutsch" },
-  { code: "fr", label: "Français" },
-  { code: "it", label: "Italiano" },
-  { code: "pt", label: "Português" },
-  { code: "ru", label: "Русский" },
-  { code: "uk", label: "Українська" },
-  { code: "ja", label: "日本語" },
-  { code: "zh", label: "简体中文" },
-  { code: "ko", label: "한국어" },
-  { code: "sq", label: "Shqip" },
+export const LOCALES: { code: Locale; label: string }[] = LANGUAGES.map((l) => ({
+  code: l.code as Locale,
+  label: l.title,
+}));
 
-];
+// Eagerly bundle every locale's translation file so the app keeps working
+// when loaded from file:// (Qt WebEngine). Lazy loading would risk blocked
+// dynamic imports in that environment.
+const modules = import.meta.glob("./locales/*/translation.json", { eager: true }) as Record<
+  string,
+  { default: Record<string, string> }
+>;
 
-const MESSAGES: Record<Locale, Record<string, string>> = {
-  en,
-  tr,
-  es,
-  de,
-  fr,
-  it,
-  pt,
-  ru,
-  uk,
-  ja,
-  zh,
-  ko,
-  sq,
-};
+const MESSAGES: Record<string, Record<string, string>> = {};
+for (const path of Object.keys(modules)) {
+  // path: "./locales/<code>/translation.json"
+  const m = path.match(/^\.\/locales\/([^/]+)\/translation\.json$/);
+  if (!m) continue;
+  const code = m[1];
+  MESSAGES[code] = modules[path].default ?? (modules[path] as any);
+}
 
 const STORAGE_KEY = "melyar.locale";
 const FALLBACK: Locale = "en";
@@ -68,34 +59,53 @@ function isLocale(value: unknown): value is Locale {
   return typeof value === "string" && value in MESSAGES;
 }
 
+// Normalize a browser language tag to one of our supported codes.
+// e.g. "tr-TR" -> "tr", "uz-UZ" -> "uz", "uz-Cyrl-UZ" -> "uz-Cyrl".
+function normalizeLocaleTag(tag: string): string {
+  const lower = tag.toLowerCase();
+  if (isLocale(lower)) return lower;
+  // Try the full primary + script form (uz-cyrl).
+  const parts = lower.split("-");
+  if (parts.length >= 2) {
+    const scriptCandidate = `${parts[0]}-${parts[1] === "cyrl" ? "Cyrl" : parts[1]}`;
+    // match case-insensitively against known codes
+    for (const code of Object.keys(MESSAGES)) {
+      if (code.toLowerCase() === scriptCandidate.toLowerCase()) return code;
+    }
+  }
+  const short = parts[0];
+  if (isLocale(short)) return short;
+  return FALLBACK;
+}
+
 function detect(): Locale {
-  // An explicit ?lang= wins, so a launcher can force a language.
   try {
     const forced = new URLSearchParams(window.location.search).get("lang");
-    if (isLocale(forced)) return forced;
+    if (forced && isLocale(forced)) return forced as Locale;
+    if (forced) {
+      const n = normalizeLocaleTag(forced);
+      if (isLocale(n)) return n as Locale;
+    }
   } catch {
-    // No window (tests, SSR) - fall through.
+    // No window (tests) - fall through.
   }
 
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (isLocale(stored)) return stored;
+    if (isLocale(stored)) return stored as Locale;
   } catch {
-    // Private mode or a locked-down profile - fall through to the navigator.
+    // Private mode - fall through.
   }
 
   const nav = typeof navigator !== "undefined" ? navigator.language : "";
-  const short = nav.toLowerCase().split("-")[0];
-  if (isLocale(short)) return short;
+  const normalized = normalizeLocaleTag(nav);
+  if (isLocale(normalized)) return normalized as Locale;
   return FALLBACK;
 }
 
 let current: Locale = detect();
 const listeners = new Set<() => void>();
 
-// The audit has to know which strings the interface is allowed to show, so
-// it can hold every accessible label to them instead of trusting that a
-// label was translated. Only the audit reads this.
 function publishDict() {
   if (typeof window === "undefined") return;
   (window as unknown as Record<string, unknown>).__melyarDict = MESSAGES[current];
@@ -117,30 +127,18 @@ export function setLocale(locale: Locale) {
   try {
     localStorage.setItem(STORAGE_KEY, locale);
   } catch {
-    // Persisting is best effort; the session still switches language.
+    // Persisting is best effort.
   }
   document.documentElement.lang = locale;
   publishDict();
   emit();
 }
 
-/**
- * Translate a key. Unknown keys fall back to the key itself so a missing
- * entry is visible rather than silently blank.
- *
- * Placeholders use {name} and are replaced from `params`.
- */
 export function t(key: string, params?: Record<string, string | number>): string {
   const template = MESSAGES[current]?.[key] ?? MESSAGES[FALLBACK]?.[key] ?? key;
   return interpolate(template, params);
 }
 
-/**
- * The plural form of a count for the current language.
- *
- * English, German, Spanish, French, Italian and Portuguese have two forms.
- * Russian and Ukrainian have three, and count differently for every digit.
- */
 function pluralForm(locale: Locale, n: number): "one" | "few" | "many" {
   if (n === 1) return "one";
   if (n === 0) return "many";
@@ -152,12 +150,6 @@ function pluralForm(locale: Locale, n: number): "one" | "few" | "many" {
   return "many";
 }
 
-/**
- * Translate a counted string, choosing the right plural form.
- *
- * The key is looked up as `<key>.one`, `<key>.few` or `<key>.many`, so the
- * wording can follow the language rather than just appending an s.
- */
 export function tCount(
   key: string,
   n: number,
@@ -179,7 +171,6 @@ function interpolate(
   );
 }
 
-/** Subscribe to locale changes. Re-renders the component when it happens. */
 export function useLocale(): Locale {
   return useSyncExternalStore(
     (listener) => {

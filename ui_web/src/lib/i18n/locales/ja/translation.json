@@ -1,10 +1,4 @@
-/**
- * 日本語 metinleri.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const ja: Record<string, string> = {
+{
   "nav.section.listen": "再生",
   "nav.section.library": "ライブラリ",
   "nav.home": "ホーム",
@@ -21,11 +15,8 @@ export const ja: Record<string, string> = {
   "nav.section.sources": "ソース",
   "nav.plugins": "プラグイン",
   "nav.aria.sources": "ソースナビゲーション",
-
-  // 音楽ソース
   "plugins.title": "プラグイン",
-  "plugins.intro":
-    "音楽の取得元を選べます。YouTube は内蔵で常に有効です。それ以外は任意で、有効にした場合のみ負担が発生します。",
+  "plugins.intro": "音楽の取得元を選べます。YouTube は内蔵で常に有効です。それ以外は任意で、有効にした場合のみ負担が発生します。",
   "plugins.default": "デフォルト",
   "plugins.on": "オン",
   "plugins.off": "オフ",
@@ -53,7 +44,6 @@ export const ja: Record<string, string> = {
   "queue.count": "{n}曲",
   "queue.count.one": "{n} 曲",
   "queue.count.many": "{n} 曲",
-
   "queue.count.few": "{n} 曲",
   "queue.clear": "キューを空にする",
   "queue.clearButton": "クリア",
@@ -133,12 +123,10 @@ export const ja: Record<string, string> = {
   "library.count": "{n}曲",
   "library.count.one": "{n} 曲",
   "library.count.many": "{n} 曲",
-
   "library.count.few": "{n} 曲",
   "library.countDuration": "{n}曲 · {time}",
   "library.countDuration.one": "{n} 曲 · {time}",
   "library.countDuration.many": "{n} 曲 · {time}",
-
   "library.countDuration.few": "{n} 曲 · {time}",
   "library.albums.notFound": "アルバムが見つかりません。",
   "library.albums.label": "アルバム",
@@ -148,7 +136,6 @@ export const ja: Record<string, string> = {
   "library.artists.knownTracks": "{n}曲の曲",
   "library.artists.knownTracks.one": "{n} 件の曲",
   "library.artists.knownTracks.many": "{n} 件の曲",
-
   "library.artists.knownTracks.few": "{n} 件の曲",
   "library.detail.tracks": "曲",
   "search.placeholder": "曲、アーティスト、アルバムを検索",
@@ -198,7 +185,6 @@ export const ja: Record<string, string> = {
   "settings.quality.high": "高",
   "settings.quality.lossless": "ロスレス",
   "settings.showLyricsAutomatically": "歌詞を自動で表示",
-  "settings.showNotifications": "通知",
   "settings.showAlbumArt": "アルバムアート",
   "settings.equalizer": "イコライザー",
   "settings.equalizer.description": "31 Hz から 16 kHz までの 10 バンド。",
@@ -216,23 +202,19 @@ export const ja: Record<string, string> = {
   "import.progress": "{total} 曲中 {current} 曲目",
   "import.progress.one": "{total} 曲中 {current} 曲目",
   "import.progress.many": "{total} 曲中 {current} 曲目",
-
   "import.progress.few": "{total} 曲中 {current} 曲目",
   "import.matched": "{n} 件一致",
   "import.matched.one": "{n} 件一致",
   "import.matched.many": "{n} 件一致",
-
   "import.matched.few": "{n} 件一致",
   "import.notFound": "{n} 件見つかりません",
   "import.notFound.one": "{n} 件見つかりません",
   "import.notFound.many": "{n} 件見つかりません",
-
   "import.notFound.few": "{n} 件見つかりません",
   "import.cancel": "インポートを中止",
   "import.finished": "{matched} 曲をインポートしました。{skipped} 曲が見つかりませんでした",
   "import.finished.one": "{matched} 曲をインポート、{skipped} 曲が見つかりません",
   "import.finished.many": "{matched} 曲をインポート、{skipped} 曲が見つかりません",
-
   "import.finished.few": "{matched} 曲をインポート、{skipped} 曲が見つかりません",
   "common.close": "閉じる",
   "common.clear": "クリア",
@@ -286,7 +268,6 @@ export const ja: Record<string, string> = {
   "settings.reducedMotion.description": "インターフェース全体のアニメーションと動きを減らす",
   "settings.normalizeVolume.description": "曲ごとの再生音量を一定レベルに調整",
   "settings.showLyricsAutomatically.description": "曲の再生を開始したら歌詞ビューを開く",
-  "settings.showNotifications.description": "曲の切り替え時にデスクトップ通知を表示",
   "settings.showAlbumArt.description": "プレイヤーとライブラリにアルバムアートを表示",
   "settings.defaultVolume": "既定の音量",
   "settings.defaultVolume.description": "起動時の音量レベル",
@@ -341,5 +322,5 @@ export const ja: Record<string, string> = {
   "import.localMusic": "ローカル音楽をインポート",
   "import.localMusicBtn": "ファイルを選択",
   "import.source": "ソース",
-  "import.default": "既定",
-};
+  "import.default": "既定"
+}

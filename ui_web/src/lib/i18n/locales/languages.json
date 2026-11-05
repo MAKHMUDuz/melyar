@@ -1,0 +1,17 @@
+[
+  { "code": "en", "title": "English" },
+  { "code": "tr", "title": "Türkçe" },
+  { "code": "es", "title": "Español" },
+  { "code": "de", "title": "Deutsch" },
+  { "code": "fr", "title": "Français" },
+  { "code": "it", "title": "Italiano" },
+  { "code": "pt", "title": "Português" },
+  { "code": "ru", "title": "Русский" },
+  { "code": "uk", "title": "Українська" },
+  { "code": "ja", "title": "日本語" },
+  { "code": "zh", "title": "简体中文" },
+  { "code": "ko", "title": "한국어" },
+  { "code": "sq", "title": "Shqip" },
+  { "code": "uz", "title": "Oʻzbekcha (Lotin)" },
+  { "code": "uz-Cyrl", "title": "Ўзбекча (Кирилл)" }
+]

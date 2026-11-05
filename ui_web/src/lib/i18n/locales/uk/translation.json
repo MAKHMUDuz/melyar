@@ -1,10 +1,4 @@
-/**
- * Українська metinleri.
- *
- * Anahtar adları `en.ts` ile aynı olmalıdır. Yeni bir metin eklerken
- * her iki dosyaya da aynı anahtarla ekleyin.
- */
-export const uk: Record<string, string> = {
+{
   "nav.section.listen": "ПРОСЛУХУВАННЯ",
   "nav.section.library": "БІБЛІОТЕКА",
   "nav.home": "Головна",
@@ -21,11 +15,8 @@ export const uk: Record<string, string> = {
   "nav.section.sources": "ДЖЕРЕЛА",
   "nav.plugins": "Плагіни",
   "nav.aria.sources": "Навігація джерелами",
-
-  // Джерела музики
   "plugins.title": "Плагіни",
-  "plugins.intro":
-    "Оберіть, звідки береться музика. YouTube вбудовано й завжди увімкнено; решта — на вибір і коштує чогось лише тоді, коли ви її вмикаєте.",
+  "plugins.intro": "Оберіть, звідки береться музика. YouTube вбудовано й завжди увімкнено; решта — на вибір і коштує чогось лише тоді, коли ви її вмикаєте.",
   "plugins.default": "Типово",
   "plugins.on": "Увімкнено",
   "plugins.off": "Вимкнено",
@@ -54,7 +45,6 @@ export const uk: Record<string, string> = {
   "queue.count.one": "{n} трек",
   "queue.count.few": "{n} треки",
   "queue.count.many": "{n} треків",
-
   "queue.clear": "Очистити чергу",
   "queue.clearButton": "Очистити",
   "queue.close": "Закрити чергу",
@@ -134,12 +124,10 @@ export const uk: Record<string, string> = {
   "library.count.one": "{n} трек",
   "library.count.few": "{n} треки",
   "library.count.many": "{n} треків",
-
   "library.countDuration": "{n} треків · {time}",
   "library.countDuration.one": "{n} трек · {time}",
   "library.countDuration.few": "{n} треки · {time}",
   "library.countDuration.many": "{n} треків · {time}",
-
   "library.albums.notFound": "Альбом не знайдено.",
   "library.albums.label": "Альбом",
   "library.albums.back": "← До альбомів",
@@ -149,7 +137,6 @@ export const uk: Record<string, string> = {
   "library.artists.knownTracks.one": "{n} відомий трек",
   "library.artists.knownTracks.few": "{n} відомі треки",
   "library.artists.knownTracks.many": "{n} відомих треків",
-
   "library.detail.tracks": "Треки",
   "search.placeholder": "Шукайте треки, виконавців або альбоми",
   "search.hint": "Введіть виконавця, трек або альбом. Результати надходять наживо з YouTube Music.",
@@ -198,7 +185,6 @@ export const uk: Record<string, string> = {
   "settings.quality.high": "Висока",
   "settings.quality.lossless": "Без втрат",
   "settings.showLyricsAutomatically": "Показувати текст автоматично",
-  "settings.showNotifications": "Сповіщення",
   "settings.showAlbumArt": "Обкладинка альбому",
   "settings.equalizer": "Еквалайзер",
   "settings.equalizer.description": "Десять смуг, від 31 Гц до 16 кГц.",
@@ -216,23 +202,19 @@ export const uk: Record<string, string> = {
   "import.progress": "{current} з {total} треків",
   "import.progress.one": "{current} з {total} треків",
   "import.progress.many": "{current} з {total} треків",
-
   "import.progress.few": "{current} з {total} треків",
   "import.matched": "{n} знайдено",
   "import.matched.one": "{n} збіг",
   "import.matched.few": "{n} збігли",
   "import.matched.many": "{n} збігли",
-
   "import.notFound": "{n} не знайдено",
   "import.notFound.one": "{n} не знайдено",
   "import.notFound.few": "{n} не знайдені",
   "import.notFound.many": "{n} не знайдені",
-
   "import.cancel": "Скасувати імпорт",
   "import.finished": "Імпортовано {matched} треків, {skipped} не знайдено",
   "import.finished.one": "Імпортовано {matched} трек, {skipped} не знайдені",
   "import.finished.many": "Імпортовано {matched} треків, {skipped} не знайдені",
-
   "import.finished.few": "Імпортовано {matched} треків, {skipped} не знайдені",
   "common.close": "Закрити",
   "common.clear": "Очистити",
@@ -286,7 +268,6 @@ export const uk: Record<string, string> = {
   "settings.reducedMotion.description": "Зменшити анімації та рухові ефекти в усьому інтерфейсі",
   "settings.normalizeVolume.description": "Вирівняти гучність відтворення між треками",
   "settings.showLyricsAutomatically.description": "Відкривати текст пісні під час початку відтворення треку",
-  "settings.showNotifications.description": "Показувати сповіщення робочого столу при зміні треку",
   "settings.showAlbumArt.description": "Показувати обкладинку альбому в плеєрі та медіатеці",
   "settings.defaultVolume": "Гучність за замовчуванням",
   "settings.defaultVolume.description": "Рівень гучності під час запуску програми",
@@ -341,5 +322,5 @@ export const uk: Record<string, string> = {
   "import.localMusic": "Імпорт локальної музики",
   "import.localMusicBtn": "Вибрати файл",
   "import.source": "Джерело",
-  "import.default": "За замовчуванням",
-};
+  "import.default": "За замовчуванням"
+}
