@@ -128,6 +128,25 @@ pub mod ffi {
         fn connect_account(provider_id: String) -> bool;
         fn disconnect_account(provider_id: String) -> bool;
         fn import_account(provider_id: String, options_json: String) -> bool;
+        fn import_center_state() -> String;
+        fn import_list_items() -> String;
+        fn import_playlist_items(playlist_id: String) -> String;
+        fn import_list_playlists() -> String;
+        fn import_scan_folder(path: String, options_json: String) -> bool;
+        fn import_preview_file(path: String) -> String;
+        fn import_commit(options_json: String) -> bool;
+        fn import_cancel() -> bool;
+        fn import_rescan_folder(path: String) -> bool;
+        fn import_remove_folder(path: String) -> bool;
+        fn import_set_folder_auto_scan(path: String, enabled: bool) -> bool;
+        fn import_delete_item(item_id: String) -> bool;
+        fn import_review_item(item_id: String, candidate_id: String) -> bool;
+        fn import_pick_candidate(preview_id: String, item_id: String, candidate_id: String) -> bool;
+        fn import_spotify_status() -> String;
+        fn import_spotify_set_client_id(id: String) -> bool;
+        fn import_spotify_connect() -> bool;
+        fn import_spotify_disconnect() -> bool;
+        fn import_spotify_preview(options_json: String) -> bool;
     }
 }
 
@@ -867,6 +886,82 @@ pub fn disconnect_account(provider_id: String) -> bool {
 
 pub fn import_account(provider_id: String, options_json: String) -> bool {
     crate::accounts::import_account(&provider_id, &options_json)
+}
+
+pub fn import_center_state() -> String {
+    crate::importer::state_json()
+}
+
+pub fn import_list_items() -> String {
+    crate::importer::list_items_json()
+}
+
+pub fn import_list_playlists() -> String {
+    crate::importer::list_playlists_json()
+}
+
+pub fn import_playlist_items(playlist_id: String) -> String {
+    crate::importer::playlist_items_json(playlist_id)
+}
+
+pub fn import_scan_folder(path: String, options_json: String) -> bool {
+    crate::importer::scan_folder(path, options_json)
+}
+
+pub fn import_preview_file(path: String) -> String {
+    crate::importer::preview_file(path)
+}
+
+pub fn import_commit(options_json: String) -> bool {
+    crate::importer::commit_preview(options_json)
+}
+
+pub fn import_cancel() -> bool {
+    crate::importer::cancel()
+}
+
+pub fn import_rescan_folder(path: String) -> bool {
+    crate::importer::rescan_folder(path)
+}
+
+pub fn import_remove_folder(path: String) -> bool {
+    crate::importer::remove_folder(path)
+}
+
+pub fn import_set_folder_auto_scan(path: String, enabled: bool) -> bool {
+    crate::importer::set_folder_auto_scan(path, enabled)
+}
+
+pub fn import_delete_item(item_id: String) -> bool {
+    crate::importer::delete_item(item_id)
+}
+
+pub fn import_review_item(item_id: String, candidate_id: String) -> bool {
+    crate::importer::review_item(item_id, candidate_id)
+}
+
+pub fn import_pick_candidate(preview_id: String, item_id: String, candidate_id: String) -> bool {
+    crate::importer::pick_candidate(preview_id, item_id, candidate_id)
+}
+
+pub fn import_spotify_status() -> String {
+    crate::importer::spotify::status_json().to_string()
+}
+
+pub fn import_spotify_set_client_id(id: String) -> bool {
+    crate::importer::spotify::set_client_id(id)
+}
+
+pub fn import_spotify_connect() -> bool {
+    crate::importer::spotify::connect()
+}
+
+pub fn import_spotify_disconnect() -> bool {
+    crate::importer::spotify::disconnect()
+}
+
+pub fn import_spotify_preview(options_json: String) -> bool {
+    crate::importer::spotify::preview(options_json)
 }
 
 /// Small adapter so the JSON shape is written in one place rather than being

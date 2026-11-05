@@ -479,6 +479,91 @@ bool MelyarBridge::importAccount(const QString &providerId, const QString &optio
     return melyar::import_account(rust::String(providerId.toStdString()), rust::String(optionsJson.toStdString()));
 }
 
+QString MelyarBridge::importCenterState() const {
+    return QString::fromStdString(std::string(melyar::import_center_state()));
+}
+
+QString MelyarBridge::importListItems() const {
+    return QString::fromStdString(std::string(melyar::import_list_items()));
+}
+
+QString MelyarBridge::importListPlaylists() const {
+    return QString::fromStdString(std::string(melyar::import_list_playlists()));
+}
+
+QString MelyarBridge::importPlaylistItems(const QString &playlistId) const {
+    return QString::fromStdString(std::string(melyar::import_playlist_items(rust::String(playlistId.toStdString()))));
+}
+
+bool MelyarBridge::importScanFolder(const QString &path, const QString &optionsJson) {
+    return melyar::import_scan_folder(rust::String(path.toStdString()), rust::String(optionsJson.toStdString()));
+}
+
+QString MelyarBridge::importPreviewFile(const QString &path) {
+    return QString::fromStdString(std::string(melyar::import_preview_file(rust::String(path.toStdString()))));
+}
+
+bool MelyarBridge::importCommit(const QString &optionsJson) {
+    return melyar::import_commit(rust::String(optionsJson.toStdString()));
+}
+
+bool MelyarBridge::importCancel() {
+    return melyar::import_cancel();
+}
+
+bool MelyarBridge::importRescanFolder(const QString &path) {
+    return melyar::import_rescan_folder(rust::String(path.toStdString()));
+}
+
+bool MelyarBridge::importRemoveFolder(const QString &path) {
+    return melyar::import_remove_folder(rust::String(path.toStdString()));
+}
+
+bool MelyarBridge::importSetFolderAutoScan(const QString &path, bool enabled) {
+    return melyar::import_set_folder_auto_scan(rust::String(path.toStdString()), enabled);
+}
+
+bool MelyarBridge::importDeleteItem(const QString &itemId) {
+    return melyar::import_delete_item(rust::String(itemId.toStdString()));
+}
+
+bool MelyarBridge::importReviewItem(const QString &itemId, const QString &candidateId) {
+    return melyar::import_review_item(rust::String(itemId.toStdString()), rust::String(candidateId.toStdString()));
+}
+
+bool MelyarBridge::importPickCandidate(const QString &previewId, const QString &itemId, const QString &candidateId) {
+    return melyar::import_pick_candidate(rust::String(previewId.toStdString()), rust::String(itemId.toStdString()), rust::String(candidateId.toStdString()));
+}
+
+QString MelyarBridge::importSpotifyStatus() const {
+    return QString::fromStdString(std::string(melyar::import_spotify_status()));
+}
+
+bool MelyarBridge::importSpotifySetClientId(const QString &id) {
+    return melyar::import_spotify_set_client_id(rust::String(id.toStdString()));
+}
+
+bool MelyarBridge::importSpotifyConnect() {
+    return melyar::import_spotify_connect();
+}
+
+bool MelyarBridge::importSpotifyDisconnect() {
+    return melyar::import_spotify_disconnect();
+}
+
+bool MelyarBridge::importSpotifyPreview(const QString &optionsJson) {
+    return melyar::import_spotify_preview(rust::String(optionsJson.toStdString()));
+}
+
+void MelyarBridge::requestDirectoryPick() {
+    emit filePickRequested();
+}
+
+void MelyarBridge::requestImportFilePick(const QString &kind) {
+    Q_UNUSED(kind);
+    emit filePickRequested();
+}
+
 void MelyarBridge::openUri(const QString &uri) {
     if (uri.trimmed().isEmpty()) return;
     m_pendingUri = uri;
