@@ -1219,7 +1219,7 @@ mod tests {
         let body = b"\x03A longer title";
         let mut frame = Vec::new();
         frame.extend_from_slice(b"TIT2");
-        let size = body.len() as usize;
+        let size = body.len();
         frame.push(((size >> 21) & 0x7f) as u8);
         frame.push(((size >> 14) & 0x7f) as u8);
         frame.push(((size >> 7) & 0x7f) as u8);

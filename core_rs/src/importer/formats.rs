@@ -418,7 +418,6 @@ fn parse_xspf(path: &Path) -> Result<ParsedExport> {
                     }
                 }
             }
-            _ => {}
         }
     }
 

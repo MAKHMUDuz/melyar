@@ -1,3 +1,11 @@
+#![allow(
+    dead_code,
+    unused_imports,
+    unused_variables,
+    unused_mut,
+    unused_assignments
+)]
+#![allow(clippy::all)]
 pub mod accounts;
 pub mod audio;
 pub mod db;
