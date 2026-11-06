@@ -13,7 +13,7 @@
 
 Melyar is a Linux-first, local-first desktop music client for YouTube Music. It combines a fast Rust core, a native Qt/C++ shell, and a polished React + TypeScript interface to deliver a clean, responsive listening experience without the overhead of heavier desktop frameworks.
 
-![Melyar GIF](https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.gif)
+![Melyar](docs/screenshots/melyar.gif)
 
 ## Why Melyar
 
@@ -35,12 +35,20 @@ Melyar is built for people who want a music player that feels native on Linux:
 - Library import from a Spotify export, JSON or CSV — **Import & Transfer 2.0 (demo/active stage)**
 - Ten band graphic equaliser (31 Hz - 16 kHz)
 - Liquid Glass-inspired interface with light/dark theming
-- Thirteen interface languages, switched at runtime
+- Fifteen interface languages, switched at runtime
 - Native Linux media integration via MPRIS and Unix socket IPC
 
 ## Screenshots
 
 ![Melyar home view in Turkish](docs/screenshots/home-tr.png)
+
+![Melyar home view in English](docs/screenshots/home-en.png)
+
+![Melyar player](screnshot/Screenshot_20261104_022059.png)
+
+![Melyar library](screnshot/Screenshot_20261104_022907.png)
+
+![Melyar settings](screnshot/Screenshot_20261104_022939.png)
 
 ## Architecture
 
