@@ -9,6 +9,68 @@
 [![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE-APACHE)
 [![Discussions](https://img.shields.io/github/discussions/MAKHMUDuz/melyar?label=discussions&logo=github)](https://github.com/MAKHMUDuz/melyar/discussions)
 
+</picture>
+<img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.webm" alt="Melyar demo" width="100%" />
+<h1 align="center">Hi 👋, I'm MAKHMUDJON MURODOV</h1>
+
+</div>
+
+<picture>
+  <source media="(prefers-reduced-motion: no-preference)" srcset="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55&animation=fadeIn" />
+  <img alt="MAKHMUDJON MURODOV" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55" />
+</picture>
+
+<h2 align="center">Melyar - YouTube Music Desktop Client</h2>
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022059.png">
+    <img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022059.png" alt="Melyar Screenshot 1" width="100%" />
+  </a>
+</picture>
+
+<picture>
+  <source media="(prefers-reduced-motion: no-preference)" srcset="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55&animation=fadeIn" />
+  <img alt="MAKHMUDJON MURODOV" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55" />
+</picture>
+
+<h2 align="center">Melyar - YouTube Music Desktop Client</h2>
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022907.png">
+    <img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022907.png" alt="Melyar Screenshot 2" width="100%" />
+  </a>
+</picture>
+
+<picture>
+  <source media="(prefers-reduced-motion: no-preference)" srcset="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55&animation=fadeIn" />
+  <img alt="MAKHMUDJON MURODOV" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55" />
+</picture>
+
+<h2 align="center">Melyar - YouTube Music Desktop Client</h2>
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022939.png">
+    <img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022939.png" alt="Melyar Screenshot 3" width="100%" />
+  </a>
+</picture>
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.webm" target="_blank">
+    <img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.webm" alt="Melyar Video Demo" width="100%" />
+  </a>
+</p>
+
+<div align="center">
+
+# Melyar
+
+**Ultra-lightweight native desktop client for YouTube Music**
+
+[![CI](https://github.com/MAKHMUDuz/melyar/actions/workflows/ci.yml/badge.svg)](https://github.com/MAKHMUDuz/melyar/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/MAKHMUDuz/melyar.svg)](https://github.com/MAKHMUDuz/melyar/releases/latest)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE-APACHE)
+[![Discussions](https://img.shields.io/github/discussions/MAKHMUDuz/melyar?label=discussions&logo=github)](https://github.com/MAKHMUDuz/melyar/discussions)
+
 </div>
 
 Melyar is a Linux-first, local-first desktop music client for YouTube Music. It combines a fast Rust core, a native Qt/C++ shell, and a polished React + TypeScript interface to deliver a clean, responsive listening experience without the overhead of heavier desktop frameworks.
@@ -77,141 +139,3 @@ sudo apt install ./melyar_*_amd64.deb
 ```bash
 sudo pacman -U melyar-*.pkg.tar.zst
 ```
-
-The packages use their distribution's Qt 6 and glibc. For other distributions,
-build from source below so the binary links against the Qt and system libraries
-available on that machine.
-
-You can also install from source once it is built:
-
-```bash
-sudo cmake --install build
-```
-
-CMake installs to `/usr/local` by default (`bin/melyar`,
-`share/melyar/web/`, `share/applications/melyar.desktop`,
-`share/icons/.../melyar.svg`). Configure with `-DCMAKE_INSTALL_PREFIX=/usr`
-to install into the system directory instead. A `PKGBUILD` (`makepkg -si`)
-and a `debian/` recipe (`dpkg-buildpackage -us -uc -b`) are included in the
-repository. CI builds and validates both packages on every push; version tags
-publish the validated packages to GitHub Releases.
-
-## Build from source
-
-### Requirements
-
-- Rust ≥ 1.88 (install with rustup; Ubuntu 24.04's packaged Rust is too old)
-- CMake ≥ 3.25
-- Qt 6 (`Core`, `Gui`, `Quick`, `Qml`, `WebEngineQuick`, `WebChannel`)
-- Node.js ≥ 20
-- pnpm ≥ 10
-- mpv ≥ 2.x with development files
-- `pkg-config`
-- `yt-dlp` (optional, used when installed)
-
-<details>
-<summary>Distribution examples (Arch / Manjaro, Debian / Ubuntu)</summary>
-
-**Arch / Manjaro**
-
-```bash
-sudo pacman -S base-devel cmake rust pkgconf \
-    qt6-base qt6-declarative qt6-webengine qt6-webchannel qt6-svg mpv
-```
-
-**Debian / Ubuntu**
-
-```bash
-sudo apt install build-essential cmake pkg-config \
-    qt6-base-dev qt6-declarative-dev qt6-webengine-dev qt6-webchannel-dev \
-    qml6-module-qtquick qml6-module-qtquick-controls \
-    qml6-module-qtquick-dialogs qml6-module-qtquick-layouts \
-    qml6-module-qtquick-templates qml6-module-qtquick-window \
-    qml6-module-qtqml-workerscript qml6-module-qtwebchannel \
-    qml6-module-qtwebengine libqt6svg6 libmpv-dev yt-dlp
-```
-
-</details>
-
-Install Rust 1.88 or newer with [rustup](https://rustup.rs/) before building.
-
-### Build and run
-
-```bash
-git clone https://github.com/MAKHMUDuz/melyar.git
-cd melyar
-
-cd ui_web
-pnpm install
-pnpm build
-cd ..
-
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j"$(nproc)"
-./build/melyar
-```
-
-## Desktop integration
-
-### MPRIS
-
-Melyar registers itself on the session bus as `org.mpris.MediaPlayer2.melyar`, so Linux desktops can discover playback state without any manual configuration.
-
-### Waybar / status bar
-
-Melyar also exposes a zero-latency Unix socket at `$XDG_RUNTIME_DIR/melyar.sock` for tools such as Waybar, Polybar, and i3status.
-
-Full setup, CSS and Hyprland/Sway keybinding examples: [`docs/WAYBAR.md`](docs/WAYBAR.md).
-
-## Local data
-
-| Data | Location |
-|---|---|
-| Database | `~/.local/share/melyar/melyar.db` |
-| IPC socket | `$XDG_RUNTIME_DIR/melyar.sock` |
-
-## Roadmap
-
-Melyar is actively under development. The project aims to improve Linux desktop integration, library workflows, provider breadth, and reliability over time.
-
-See [ROADMAP.md](ROADMAP.md) for the detailed project plan and upcoming work.
-
-## Help wanted: Windows, macOS, Android and iOS
-
-Melyar is Linux-first. Four ports are now open, each with a checklist, a
-verified toolchain matrix, and an entry point that does not require knowing
-the whole codebase:
-
-| Port | Issue |
-|---|---|
-| Windows | [#28](https://github.com/MAKHMUDuz/melyar/issues/28) |
-| macOS (Apple Silicon + Intel) | [#27](https://github.com/MAKHMUDuz/melyar/issues/27) |
-| Android (APK) | [#29](https://github.com/MAKHMUDuz/melyar/issues/29) |
-| iOS / iPadOS | [#30](https://github.com/MAKHMUDuz/melyar/issues/30) |
-
-- Live status board: [#31](https://github.com/MAKHMUDuz/melyar/issues/31)
-- No code needed: [#33](https://github.com/MAKHMUDuz/melyar/issues/33) packaging and store manifests, [#34](https://github.com/MAKHMUDuz/melyar/issues/34) store policy research, [#35](https://github.com/MAKHMUDuz/melyar/issues/35) playback resilience
-- Call for contributors: [Discussion #32](https://github.com/MAKHMUDuz/melyar/discussions/32)
-
-## Contributing
-
-Contributions, bug reports, and focused pull requests are welcome.
-
-- [CONTRIBUTING.md](CONTRIBUTING.md)
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- [ROADMAP.md](ROADMAP.md)
-
-## License
-
-Melyar is dual-licensed under:
-
-- MIT — [LICENSE-MIT](LICENSE-MIT)
-- Apache 2.0 — [LICENSE-APACHE](LICENSE-APACHE)
-
-`SPDX-License-Identifier: MIT OR Apache-2.0`
-
----
-
-<div align="center">
-<sub>Built with Rust, Qt 6, React, and a lot of care for the details.</sub>
-</div>
