@@ -205,7 +205,10 @@ pub fn scan_folder(path: String, options_json: String) -> bool {
     core.runtime().spawn(async move {
         let path_buf = PathBuf::from(&path);
         if !path_buf.exists() {
-            emit_error("folder_missing", "That folder does not exist or is not accessible.");
+            emit_error(
+                "folder_missing",
+                "That folder does not exist or is not accessible.",
+            );
             return;
         }
         if !path_buf.is_dir() {
@@ -219,7 +222,10 @@ pub fn scan_folder(path: String, options_json: String) -> bool {
             }
         });
         if files.is_empty() {
-            emit_error("no_audio", "No supported audio files were found in that folder.");
+            emit_error(
+                "no_audio",
+                "No supported audio files were found in that folder.",
+            );
             return;
         }
 
@@ -821,10 +827,8 @@ pub fn commit_preview(options_json: String) -> bool {
         .get("skipDuplicates")
         .and_then(Value::as_bool)
         .unwrap_or(true);
-    let selected: Option<HashSet<String>> = options
-        .get("itemIds")
-        .and_then(Value::as_array)
-        .map(|ids| {
+    let selected: Option<HashSet<String>> =
+        options.get("itemIds").and_then(Value::as_array).map(|ids| {
             ids.iter()
                 .filter_map(Value::as_str)
                 .map(str::to_string)
@@ -846,7 +850,10 @@ pub fn commit_preview(options_json: String) -> bool {
         index.map(|i| previews.remove(i))
     };
     let Some(preview) = preview else {
-        emit_error("preview_expired", "That preview is no longer available. Choose the source again.");
+        emit_error(
+            "preview_expired",
+            "That preview is no longer available. Choose the source again.",
+        );
         return false;
     };
 
@@ -1286,7 +1293,10 @@ fn file_mtime(path: &str) -> i64 {
 
 /// The playable URL for an imported track, used by the audio path.
 pub fn playable_path(item_id: &str) -> Option<String> {
-    let item = crate::get_core().storage().get_import_item(item_id).ok()??;
+    let item = crate::get_core()
+        .storage()
+        .get_import_item(item_id)
+        .ok()??;
     if item.availability != "local_file" {
         return None;
     }
@@ -1297,7 +1307,10 @@ pub fn playable_path(item_id: &str) -> Option<String> {
 }
 
 pub fn imported_track_metadata(item_id: &str) -> Option<crate::ffi::CxxTrackMetadata> {
-    let item = crate::get_core().storage().get_import_item(item_id).ok()??;
+    let item = crate::get_core()
+        .storage()
+        .get_import_item(item_id)
+        .ok()??;
     Some(crate::ffi::CxxTrackMetadata {
         id: item.item_id,
         title: item.title,

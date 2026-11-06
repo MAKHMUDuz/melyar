@@ -141,7 +141,8 @@ pub mod ffi {
         fn import_set_folder_auto_scan(path: String, enabled: bool) -> bool;
         fn import_delete_item(item_id: String) -> bool;
         fn import_review_item(item_id: String, candidate_id: String) -> bool;
-        fn import_pick_candidate(preview_id: String, item_id: String, candidate_id: String) -> bool;
+        fn import_pick_candidate(preview_id: String, item_id: String, candidate_id: String)
+            -> bool;
         fn import_spotify_status() -> String;
         fn import_spotify_set_client_id(id: String) -> bool;
         fn import_spotify_connect() -> bool;

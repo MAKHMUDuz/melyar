@@ -19,11 +19,16 @@ pub fn status(storage: &DbStorage) -> crate::accounts::AccountStatus {
     }
 }
 
-pub fn connect(storage: std::sync::Arc<DbStorage>, _runtime: &std::sync::Arc<tokio::runtime::Runtime>) -> bool {
+pub fn connect(
+    storage: std::sync::Arc<DbStorage>,
+    _runtime: &std::sync::Arc<tokio::runtime::Runtime>,
+) -> bool {
     // Custom API is configured via settings (baseUrl, username, password/token),
     // not via OAuth. Mark as connected when baseUrl is present.
     if setting(&storage, "custom.baseUrl").is_none() {
-        emit(json!({"type":"error","code":"requires_configuration","message":"Set custom.baseUrl in settings first."}));
+        emit(
+            json!({"type":"error","code":"requires_configuration","message":"Set custom.baseUrl in settings first."}),
+        );
         return false;
     }
     emit(json!({"type":"provider_connected","provider":"custom"}));
@@ -36,7 +41,13 @@ pub fn disconnect(storage: &DbStorage) -> bool {
     true
 }
 
-pub fn import(storage: std::sync::Arc<DbStorage>, _runtime: &std::sync::Arc<tokio::runtime::Runtime>, _options_json: &str) -> bool {
-    emit(json!({"type":"error","code":"not_implemented","message":"Custom API import is not implemented yet."}));
+pub fn import(
+    storage: std::sync::Arc<DbStorage>,
+    _runtime: &std::sync::Arc<tokio::runtime::Runtime>,
+    _options_json: &str,
+) -> bool {
+    emit(
+        json!({"type":"error","code":"not_implemented","message":"Custom API import is not implemented yet."}),
+    );
     false
 }

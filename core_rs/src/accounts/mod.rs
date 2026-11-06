@@ -73,7 +73,9 @@ pub fn connect_account(id: &str) -> bool {
         "apple" => apple::connect(storage.clone(), &runtime),
         "custom" => custom::connect(storage.clone(), &runtime),
         _ => {
-            emit(json!({"type":"error","code":"unknown_provider","message":format!("Unknown provider {id}")}));
+            emit(
+                json!({"type":"error","code":"unknown_provider","message":format!("Unknown provider {id}")}),
+            );
             false
         }
     }
@@ -112,7 +114,12 @@ pub fn import_account(id: &str, options_json: &str) -> bool {
 
 /// Helper to read a setting as a trimmed non-empty string.
 pub fn setting(storage: &DbStorage, key: &str) -> Option<String> {
-    storage.get_setting(key).ok().flatten().map(|v| v.trim().to_string()).filter(|v| !v.is_empty())
+    storage
+        .get_setting(key)
+        .ok()
+        .flatten()
+        .map(|v| v.trim().to_string())
+        .filter(|v| !v.is_empty())
 }
 
 /// Helper to store a setting.

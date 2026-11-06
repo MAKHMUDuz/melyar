@@ -19,8 +19,13 @@ pub fn status(storage: &DbStorage) -> crate::accounts::AccountStatus {
     }
 }
 
-pub fn connect(_storage: std::sync::Arc<DbStorage>, _runtime: &std::sync::Arc<tokio::runtime::Runtime>) -> bool {
-    emit(json!({"type":"error","code":"requires_developer_membership","message":"Apple Music requires an Apple Developer Program membership."}));
+pub fn connect(
+    _storage: std::sync::Arc<DbStorage>,
+    _runtime: &std::sync::Arc<tokio::runtime::Runtime>,
+) -> bool {
+    emit(
+        json!({"type":"error","code":"requires_developer_membership","message":"Apple Music requires an Apple Developer Program membership."}),
+    );
     false
 }
 
@@ -28,7 +33,13 @@ pub fn disconnect(_storage: &DbStorage) -> bool {
     true
 }
 
-pub fn import(_storage: std::sync::Arc<DbStorage>, _runtime: &std::sync::Arc<tokio::runtime::Runtime>, _options_json: &str) -> bool {
-    emit(json!({"type":"error","code":"not_implemented","message":"Apple Music import is not implemented."}));
+pub fn import(
+    _storage: std::sync::Arc<DbStorage>,
+    _runtime: &std::sync::Arc<tokio::runtime::Runtime>,
+    _options_json: &str,
+) -> bool {
+    emit(
+        json!({"type":"error","code":"not_implemented","message":"Apple Music import is not implemented."}),
+    );
     false
 }

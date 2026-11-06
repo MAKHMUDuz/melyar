@@ -89,7 +89,11 @@ pub fn match_track(track: &ParsedTrack, candidates: &[Candidate]) -> MatchResult
         state: state.into(),
         confidence,
         candidate: Some(best),
-        alternatives: if state == "ambiguous" { alternatives } else { alternatives },
+        alternatives: if state == "ambiguous" {
+            alternatives
+        } else {
+            alternatives
+        },
     }
 }
 
@@ -242,7 +246,11 @@ mod tests {
     fn a_different_artist_is_not_matched() {
         let result = match_track(
             &track("Bohemian Rhapsody", "Queen", 354.0),
-            &[candidate("Bohemian Rhapsody", "The Chemical Brothers", 354.0)],
+            &[candidate(
+                "Bohemian Rhapsody",
+                "The Chemical Brothers",
+                354.0,
+            )],
         );
         assert_eq!(result.state, "not_found");
     }

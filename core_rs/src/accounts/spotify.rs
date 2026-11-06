@@ -25,7 +25,10 @@ pub fn status(storage: &DbStorage) -> AccountStatus {
     }
 }
 
-pub fn connect(_storage: std::sync::Arc<DbStorage>, _runtime: &std::sync::Arc<tokio::runtime::Runtime>) -> bool {
+pub fn connect(
+    _storage: std::sync::Arc<DbStorage>,
+    _runtime: &std::sync::Arc<tokio::runtime::Runtime>,
+) -> bool {
     crate::importer::spotify::connect()
 }
 
@@ -34,6 +37,12 @@ pub fn disconnect(storage: &DbStorage) -> bool {
     true
 }
 
-pub fn import(_storage: std::sync::Arc<DbStorage>, _runtime: &std::sync::Arc<tokio::runtime::Runtime>, _options_json: &str) -> bool {
-    crate::importer::spotify::preview(r#"{"autoCommit":true,"tracks":true,"albums":true,"playlists":true}"#.to_string())
+pub fn import(
+    _storage: std::sync::Arc<DbStorage>,
+    _runtime: &std::sync::Arc<tokio::runtime::Runtime>,
+    _options_json: &str,
+) -> bool {
+    crate::importer::spotify::preview(
+        r#"{"autoCommit":true,"tracks":true,"albums":true,"playlists":true}"#.to_string(),
+    )
 }

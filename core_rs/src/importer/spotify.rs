@@ -270,8 +270,14 @@ pub fn disconnect() -> bool {
 /// is written to the library until the user confirms that preview.
 pub fn preview(options_json: String) -> bool {
     let options: Value = serde_json::from_str(&options_json).unwrap_or_else(|_| json!({}));
-    let include_tracks = options.get("tracks").and_then(Value::as_bool).unwrap_or(true);
-    let include_albums = options.get("albums").and_then(Value::as_bool).unwrap_or(true);
+    let include_tracks = options
+        .get("tracks")
+        .and_then(Value::as_bool)
+        .unwrap_or(true);
+    let include_albums = options
+        .get("albums")
+        .and_then(Value::as_bool)
+        .unwrap_or(true);
     let include_playlists = options
         .get("playlists")
         .and_then(Value::as_bool)
@@ -279,7 +285,12 @@ pub fn preview(options_json: String) -> bool {
     let playlist_filter: Vec<String> = options
         .get("playlistIds")
         .and_then(Value::as_array)
-        .map(|ids| ids.iter().filter_map(Value::as_str).map(str::to_string).collect())
+        .map(|ids| {
+            ids.iter()
+                .filter_map(Value::as_str)
+                .map(str::to_string)
+                .collect()
+        })
         .unwrap_or_default();
 
     let Some(client_id) = client_id() else {
@@ -500,7 +511,10 @@ async fn token_from_response(response: reqwest::Response) -> Result<Token> {
         .get("access_token")
         .and_then(Value::as_str)
         .ok_or_else(|| anyhow!("Spotify returned no access token"))?;
-    let expires_in = body.get("expires_in").and_then(Value::as_i64).unwrap_or(3600);
+    let expires_in = body
+        .get("expires_in")
+        .and_then(Value::as_i64)
+        .unwrap_or(3600);
     Ok(Token {
         access_token: access.to_string(),
         refresh_token: body
@@ -524,7 +538,9 @@ async fn ensure_fresh_token(
         return Ok(());
     }
     if token.refresh_token.is_empty() {
-        return Err(anyhow!("the access token expired and no refresh token is stored"));
+        return Err(anyhow!(
+            "the access token expired and no refresh token is stored"
+        ));
     }
     *token = refresh_token(client, client_id, token).await?;
     save_token(token)?;
@@ -553,7 +569,9 @@ async fn api_get(
             200 => return Ok(response.json().await.unwrap_or_else(|_| json!({}))),
             401 if attempt == 0 => {
                 if token.refresh_token.is_empty() {
-                    return Err(anyhow!("Spotify says the access token is invalid; reconnect the account"));
+                    return Err(anyhow!(
+                        "Spotify says the access token is invalid; reconnect the account"
+                    ));
                 }
                 *token = refresh_token(client, client_id, token).await?;
                 save_token(token)?;
@@ -567,12 +585,7 @@ async fn api_get(
                     .and_then(|v| v.parse::<u64>().ok())
                     .unwrap_or(2)
                     .min(30);
-                super::emit_progress(
-                    "spotify_rate_limit",
-                    0,
-                    0,
-                    json!({"retryAfter": wait}),
-                );
+                super::emit_progress("spotify_rate_limit", 0, 0, json!({"retryAfter": wait}));
                 tokio::time::sleep(Duration::from_secs(wait)).await;
                 continue;
             }
@@ -795,7 +808,12 @@ fn spotify_track(value: &Value) -> Option<ParsedTrack> {
 // ---------------------------------------------------------------------------
 
 fn credentials_path() -> Option<PathBuf> {
-    Some(dirs::data_dir()?.join("melyar").join("credentials").join("spotify.json"))
+    Some(
+        dirs::data_dir()?
+            .join("melyar")
+            .join("credentials")
+            .join("spotify.json"),
+    )
 }
 
 fn secret_tool_available() -> bool {
@@ -809,7 +827,13 @@ fn secret_tool_available() -> bool {
 fn load_token() -> Option<Token> {
     if secret_tool_available() {
         if let Ok(output) = std::process::Command::new("secret-tool")
-            .args(["lookup", "service", SECRET_SERVICE, "provider", SECRET_ACCOUNT])
+            .args([
+                "lookup",
+                "service",
+                SECRET_SERVICE,
+                "provider",
+                SECRET_ACCOUNT,
+            ])
             .output()
         {
             if output.status.success() && !output.stdout.is_empty() {
@@ -878,7 +902,13 @@ fn save_token(token: &Token) -> Result<()> {
 fn clear_secret() -> Result<()> {
     if secret_tool_available() {
         let _ = std::process::Command::new("secret-tool")
-            .args(["clear", "service", SECRET_SERVICE, "provider", SECRET_ACCOUNT])
+            .args([
+                "clear",
+                "service",
+                SECRET_SERVICE,
+                "provider",
+                SECRET_ACCOUNT,
+            ])
             .output();
     }
     if let Some(path) = credentials_path() {

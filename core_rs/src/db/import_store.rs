@@ -41,8 +41,7 @@ pub struct ImportItemRow {
 
 impl ImportItemRow {
     pub fn is_playable(&self) -> bool {
-        !self.track_id.is_empty()
-            && matches!(self.availability.as_str(), "local_file" | "provider")
+        !self.track_id.is_empty() && matches!(self.availability.as_str(), "local_file" | "provider")
     }
 }
 
@@ -182,7 +181,10 @@ impl DbStorage {
 
     pub fn delete_import_item(&self, item_id: &str) -> Result<bool> {
         self.with_conn(|conn| {
-            let removed = conn.execute("DELETE FROM imported_items WHERE item_id = ?1", params![item_id])?;
+            let removed = conn.execute(
+                "DELETE FROM imported_items WHERE item_id = ?1",
+                params![item_id],
+            )?;
             conn.execute(
                 "DELETE FROM imported_playlist_tracks WHERE item_id = ?1",
                 params![item_id],
@@ -219,7 +221,11 @@ impl DbStorage {
         })
     }
 
-    pub fn find_import_item_by_source(&self, source: &str, source_id: &str) -> Result<Option<ImportItemRow>> {
+    pub fn find_import_item_by_source(
+        &self,
+        source: &str,
+        source_id: &str,
+    ) -> Result<Option<ImportItemRow>> {
         self.with_conn(|conn| {
             let row = conn
                 .query_row(
@@ -265,7 +271,11 @@ impl DbStorage {
                     row.artist_count,
                     row.accessible as i32,
                     row.status,
-                    if row.added_at > 0 { row.added_at } else { now() },
+                    if row.added_at > 0 {
+                        row.added_at
+                    } else {
+                        now()
+                    },
                 ],
             )?;
             Ok(())
@@ -301,12 +311,16 @@ impl DbStorage {
     }
 
     pub fn get_import_folder(&self, path: &str) -> Result<Option<ImportFolderRow>> {
-        Ok(self.list_import_folders()?.into_iter().find(|f| f.path == path))
+        Ok(self
+            .list_import_folders()?
+            .into_iter()
+            .find(|f| f.path == path))
     }
 
     pub fn remove_import_folder(&self, path: &str) -> Result<bool> {
         self.with_conn(|conn| {
-            let removed = conn.execute("DELETE FROM import_folders WHERE path = ?1", params![path])?;
+            let removed =
+                conn.execute("DELETE FROM import_folders WHERE path = ?1", params![path])?;
             Ok(removed > 0)
         })
     }
@@ -321,7 +335,12 @@ impl DbStorage {
         })
     }
 
-    pub fn update_import_folder_status(&self, path: &str, status: &str, accessible: bool) -> Result<()> {
+    pub fn update_import_folder_status(
+        &self,
+        path: &str,
+        status: &str,
+        accessible: bool,
+    ) -> Result<()> {
         self.with_conn(|conn| {
             conn.execute(
                 "UPDATE import_folders SET status = ?1, accessible = ?2 WHERE path = ?3",
@@ -350,14 +369,22 @@ impl DbStorage {
                     row.name,
                     row.thumbnail,
                     row.track_count,
-                    if row.imported_at > 0 { row.imported_at } else { now() },
+                    if row.imported_at > 0 {
+                        row.imported_at
+                    } else {
+                        now()
+                    },
                 ],
             )?;
             Ok(())
         })
     }
 
-    pub fn replace_import_playlist_tracks(&self, playlist_id: &str, item_ids: &[String]) -> Result<()> {
+    pub fn replace_import_playlist_tracks(
+        &self,
+        playlist_id: &str,
+        item_ids: &[String],
+    ) -> Result<()> {
         self.with_conn(|conn| {
             let tx = conn.unchecked_transaction()?;
             tx.execute(

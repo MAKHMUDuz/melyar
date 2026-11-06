@@ -109,8 +109,9 @@ fn parse_m3u(path: &Path) -> Result<ParsedExport> {
         }
 
         let resolved = resolve_local_path(base, line);
-        let (mut artist, mut title, mut duration) =
-            pending.take().unwrap_or_else(|| (String::new(), String::new(), 0.0));
+        let (mut artist, mut title, mut duration) = pending
+            .take()
+            .unwrap_or_else(|| (String::new(), String::new(), 0.0));
         let mut album = String::new();
         let mut track_no = 0;
         let mut file_path = String::new();
@@ -609,7 +610,9 @@ fn track_from_json(value: &Value) -> Option<ParsedTrack> {
         title: title.to_string(),
         artist,
         album: album_name,
-        album_artist: first_string(inner, &["album_artist"]).unwrap_or("").to_string(),
+        album_artist: first_string(inner, &["album_artist"])
+            .unwrap_or("")
+            .to_string(),
         duration_secs,
         track_no: first_number(inner, &["track_number"]).unwrap_or(0.0) as i32,
         disc_no: first_number(inner, &["disc_number"]).unwrap_or(0.0) as i32,
@@ -658,9 +661,7 @@ fn parse_csv_file(path: &Path) -> Result<ParsedExport> {
         .map(|h| h.trim().trim_matches('"').to_lowercase())
         .collect();
     let find = |names: &[&str]| -> Option<usize> {
-        header
-            .iter()
-            .position(|h| names.iter().any(|n| h == n))
+        header.iter().position(|h| names.iter().any(|n| h == n))
     };
     let title_idx = find(&["title", "track", "track name", "song", "song title", "name"])
         .ok_or_else(|| anyhow!("the CSV file needs a title column (title, track, song, name)"))?;
@@ -784,8 +785,13 @@ fn parse_csv_records(text: &str) -> Vec<Vec<String>> {
 
 #[derive(Clone, Debug, PartialEq)]
 enum XmlEvent {
-    Start { name: String, attrs: Vec<(String, String)> },
-    End { name: String },
+    Start {
+        name: String,
+        attrs: Vec<(String, String)>,
+    },
+    End {
+        name: String,
+    },
     Text(String),
 }
 
@@ -807,11 +813,15 @@ fn parse_xml(input: &str) -> Vec<XmlEvent> {
             continue;
         }
         if starts_with_at(&bytes, i, "<?") {
-            i = find_from(&bytes, i, "?>").map(|p| p + 2).unwrap_or(bytes.len());
+            i = find_from(&bytes, i, "?>")
+                .map(|p| p + 2)
+                .unwrap_or(bytes.len());
             continue;
         }
         if starts_with_at(&bytes, i, "<!--") {
-            i = find_from(&bytes, i, "-->").map(|p| p + 3).unwrap_or(bytes.len());
+            i = find_from(&bytes, i, "-->")
+                .map(|p| p + 3)
+                .unwrap_or(bytes.len());
             continue;
         }
         if starts_with_at(&bytes, i, "<![CDATA[") {
@@ -822,7 +832,9 @@ fn parse_xml(input: &str) -> Vec<XmlEvent> {
             continue;
         }
         if starts_with_at(&bytes, i, "<!") {
-            i = find_from(&bytes, i, ">").map(|p| p + 1).unwrap_or(bytes.len());
+            i = find_from(&bytes, i, ">")
+                .map(|p| p + 1)
+                .unwrap_or(bytes.len());
             continue;
         }
         let end = find_from(&bytes, i, ">").unwrap_or(bytes.len());
@@ -840,10 +852,7 @@ fn parse_xml(input: &str) -> Vec<XmlEvent> {
             .last()
             .unwrap_or("")
             .to_lowercase();
-        let attrs = parts
-            .next()
-            .map(parse_attrs)
-            .unwrap_or_default();
+        let attrs = parts.next().map(parse_attrs).unwrap_or_default();
         if name.is_empty() {
             continue;
         }
@@ -920,7 +929,10 @@ fn decode_entities(input: &str) -> String {
             "quot" => Some('"'),
             "apos" => Some('\''),
             _ => {
-                if let Some(hex) = entity.strip_prefix("#x").or_else(|| entity.strip_prefix("#X")) {
+                if let Some(hex) = entity
+                    .strip_prefix("#x")
+                    .or_else(|| entity.strip_prefix("#X"))
+                {
                     u32::from_str_radix(hex, 16).ok().and_then(char::from_u32)
                 } else if let Some(dec) = entity.strip_prefix('#') {
                     dec.parse::<u32>().ok().and_then(char::from_u32)
@@ -990,17 +1002,23 @@ fn parse_xml_file(path: &Path) -> Result<ParsedExport> {
             continue;
         };
         let get = |key: &str| -> Option<&str> {
-            fields.iter().find(|(k, _)| k == key).and_then(|(_, v)| match v {
-                PlistValue::String(s) => Some(s.as_str()),
-                _ => None,
-            })
+            fields
+                .iter()
+                .find(|(k, _)| k == key)
+                .and_then(|(_, v)| match v {
+                    PlistValue::String(s) => Some(s.as_str()),
+                    _ => None,
+                })
         };
         let get_int = |key: &str| -> Option<i64> {
-            fields.iter().find(|(k, _)| k == key).and_then(|(_, v)| match v {
-                PlistValue::Integer(i) => Some(*i),
-                PlistValue::String(s) => s.parse().ok(),
-                _ => None,
-            })
+            fields
+                .iter()
+                .find(|(k, _)| k == key)
+                .and_then(|(_, v)| match v {
+                    PlistValue::Integer(i) => Some(*i),
+                    PlistValue::String(s) => s.parse().ok(),
+                    _ => None,
+                })
         };
         let Some(title) = get("Name") else {
             continue;
@@ -1061,7 +1079,8 @@ fn parse_xml_file(path: &Path) -> Result<ParsedExport> {
                     _ => None,
                 })
                 .unwrap_or_else(|| "Imported playlist".into());
-            let Some((_, PlistValue::Array(entries))) = fields.iter().find(|(k, _)| k == "Playlist Items")
+            let Some((_, PlistValue::Array(entries))) =
+                fields.iter().find(|(k, _)| k == "Playlist Items")
             else {
                 continue;
             };
@@ -1085,13 +1104,18 @@ fn parse_xml_file(path: &Path) -> Result<ParsedExport> {
                 }
             }
             if !ids.is_empty() {
-                playlists.push(ParsedPlaylist { name, track_ids: ids });
+                playlists.push(ParsedPlaylist {
+                    name,
+                    track_ids: ids,
+                });
             }
         }
     }
 
     if tracks.is_empty() {
-        return Err(anyhow!("the iTunes library file does not contain any songs"));
+        return Err(anyhow!(
+            "the iTunes library file does not contain any songs"
+        ));
     }
     Ok(ParsedExport {
         provider: "apple".into(),
@@ -1128,7 +1152,8 @@ fn parse_plist_value(events: &[XmlEvent], pos: &mut usize) -> Option<PlistValue>
                                         _ => String::new(),
                                     };
                                     *pos += 1;
-                                    if matches!(events.get(*pos), Some(XmlEvent::End { name }) if name == "key") {
+                                    if matches!(events.get(*pos), Some(XmlEvent::End { name }) if name == "key")
+                                    {
                                         *pos += 1;
                                     }
                                     let value = parse_plist_value(events, pos)
@@ -1170,7 +1195,8 @@ fn parse_plist_value(events: &[XmlEvent], pos: &mut usize) -> Option<PlistValue>
                             Some(XmlEvent::Text(t)) => t.trim().to_string(),
                             _ => String::new(),
                         };
-                        if matches!(events.get(*pos + 1), Some(XmlEvent::End { name }) if name == "string" || name == "date") {
+                        if matches!(events.get(*pos + 1), Some(XmlEvent::End { name }) if name == "string" || name == "date")
+                        {
                             *pos += 2;
                         } else {
                             *pos += 1;
@@ -1182,7 +1208,8 @@ fn parse_plist_value(events: &[XmlEvent], pos: &mut usize) -> Option<PlistValue>
                             Some(XmlEvent::Text(t)) => t.trim().to_string(),
                             _ => String::new(),
                         };
-                        if matches!(events.get(*pos + 1), Some(XmlEvent::End { name }) if name == "integer") {
+                        if matches!(events.get(*pos + 1), Some(XmlEvent::End { name }) if name == "integer")
+                        {
                             *pos += 2;
                         } else {
                             *pos += 1;
@@ -1190,20 +1217,23 @@ fn parse_plist_value(events: &[XmlEvent], pos: &mut usize) -> Option<PlistValue>
                         PlistValue::Integer(text.parse().unwrap_or(0))
                     }
                     "true" | "false" => {
-                        if matches!(events.get(*pos), Some(XmlEvent::End { name: n }) if n == &name) {
+                        if matches!(events.get(*pos), Some(XmlEvent::End { name: n }) if n == &name)
+                        {
                             *pos += 1;
                         }
                         PlistValue::Bool(name == "true")
                     }
                     "data" => {
-                        if matches!(events.get(*pos), Some(XmlEvent::End { name }) if name == "data") {
+                        if matches!(events.get(*pos), Some(XmlEvent::End { name }) if name == "data")
+                        {
                             *pos += 1;
                         }
                         PlistValue::Data
                     }
                     _ => {
                         // Unknown leaf; consume its end tag if present.
-                        if matches!(events.get(*pos), Some(XmlEvent::End { name: n }) if n == &name) {
+                        if matches!(events.get(*pos), Some(XmlEvent::End { name: n }) if n == &name)
+                        {
                             *pos += 1;
                         }
                         PlistValue::String(String::new())
@@ -1302,7 +1332,11 @@ mod tests {
         assert_eq!(parsed.tracks.len(), 2);
         assert_eq!(parsed.playlists.len(), 1);
         let first_id = parsed.playlists[0].track_ids[0].clone();
-        let track = parsed.tracks.iter().find(|t| t.source_id == first_id).unwrap();
+        let track = parsed
+            .tracks
+            .iter()
+            .find(|t| t.source_id == first_id)
+            .unwrap();
         assert_eq!(track.title, "Second");
         let _ = std::fs::remove_dir_all(path.parent().unwrap());
     }

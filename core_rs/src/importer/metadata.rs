@@ -248,7 +248,10 @@ fn apply_id3(tag: &[u8], meta: &mut AudioMetadata) {
         }
         let id = String::from_utf8_lossy(id_bytes).to_string();
         let (size, header) = if version <= 2 {
-            (be32(&[0, body[pos + 3], body[pos + 4], body[pos + 5]]) as usize, 6)
+            (
+                be32(&[0, body[pos + 3], body[pos + 4], body[pos + 5]]) as usize,
+                6,
+            )
         } else if version >= 4 {
             (syncsafe(&body[pos + 4..pos + 8]), 10)
         } else {
@@ -361,10 +364,7 @@ fn decode_encoded_string(bytes: &[u8], encoding: u8) -> (String, usize) {
         }
         _ => {
             let end = body.iter().position(|b| *b == 0).unwrap_or(body.len());
-            (
-                String::from_utf8_lossy(&body[..end]).to_string(),
-                1 + end,
-            )
+            (String::from_utf8_lossy(&body[..end]).to_string(), 1 + end)
         }
     }
 }
@@ -453,15 +453,25 @@ fn mp3_duration(file: &mut File, start: u64, len: u64) -> Option<f64> {
 
     let bitrates = match (version, layer) {
         // MPEG1 layer III
-        (3, 1) => [0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0],
+        (3, 1) => [
+            0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0,
+        ],
         // MPEG1 layer II
-        (3, 2) => [0, 32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 0],
+        (3, 2) => [
+            0, 32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 0,
+        ],
         // MPEG1 layer I
-        (3, 3) => [0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 0],
+        (3, 3) => [
+            0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 0,
+        ],
         // MPEG2/2.5 layer III
-        (2, 1) | (0, 1) => [0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 0],
+        (2, 1) | (0, 1) => [
+            0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 0,
+        ],
         // MPEG2/2.5 layer II
-        (2, 2) | (0, 2) => [0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 0],
+        (2, 2) | (0, 2) => [
+            0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 0,
+        ],
         _ => return None,
     };
     let bitrate = *bitrates.get(bitrate_index as usize)? as f64 * 1000.0;
@@ -470,7 +480,13 @@ fn mp3_duration(file: &mut File, start: u64, len: u64) -> Option<f64> {
         1 => 48000.0,
         2 => 32000.0,
         _ => return None,
-    } / if version == 3 { 1.0 } else if version == 2 { 2.0 } else { 4.0 };
+    } / if version == 3 {
+        1.0
+    } else if version == 2 {
+        2.0
+    } else {
+        4.0
+    };
     if bitrate <= 0.0 || sample_rate <= 0.0 {
         return None;
     }
@@ -478,7 +494,11 @@ fn mp3_duration(file: &mut File, start: u64, len: u64) -> Option<f64> {
     // A Xing/Info header carries the exact frame count, which makes VBR files
     // accurate instead of merely plausible.
     let side_info = if version == 3 {
-        if b3 & 0x01 == 0 { 17 } else { 32 }
+        if b3 & 0x01 == 0 {
+            17
+        } else {
+            32
+        }
     } else if b3 & 0x01 == 0 {
         9
     } else {
@@ -543,7 +563,8 @@ fn read_flac(path: &Path) -> Result<AudioMetadata> {
         }
         let last = header[0] & 0x80 != 0;
         let block_type = header[0] & 0x7f;
-        let block_len = ((header[1] as usize) << 16) | ((header[2] as usize) << 8) | header[3] as usize;
+        let block_len =
+            ((header[1] as usize) << 16) | ((header[2] as usize) << 8) | header[3] as usize;
         pos += 4;
         if pos + block_len as u64 > len {
             break;
@@ -623,13 +644,15 @@ fn parse_vorbis_comment(block: &[u8], meta: &mut AudioMetadata) {
     if pos + 4 > block.len() {
         return;
     }
-    let count = u32::from_le_bytes([block[pos], block[pos + 1], block[pos + 2], block[pos + 3]]) as usize;
+    let count =
+        u32::from_le_bytes([block[pos], block[pos + 1], block[pos + 2], block[pos + 3]]) as usize;
     pos += 4;
     for _ in 0..count {
         if pos + 4 > block.len() {
             break;
         }
-        let len = u32::from_le_bytes([block[pos], block[pos + 1], block[pos + 2], block[pos + 3]]) as usize;
+        let len = u32::from_le_bytes([block[pos], block[pos + 1], block[pos + 2], block[pos + 3]])
+            as usize;
         pos += 4;
         if pos + len > block.len() {
             break;
@@ -824,7 +847,11 @@ fn read_mp4(path: &Path) -> Result<AudioMetadata> {
     for child in mp4_children(&mut file, moov.payload, moov.end) {
         match &child.name {
             b"mvhd" => {
-                let data = read_at(&mut file, child.payload, (child.end - child.payload).min(120) as usize)?;
+                let data = read_at(
+                    &mut file,
+                    child.payload,
+                    (child.end - child.payload).min(120) as usize,
+                )?;
                 if data.len() >= 20 {
                     let version = data[0];
                     if version == 1 && data.len() >= 32 {
@@ -848,9 +875,16 @@ fn read_mp4(path: &Path) -> Result<AudioMetadata> {
             b"udta" => {
                 for udta_child in mp4_children(&mut file, child.payload, child.end) {
                     if &udta_child.name == b"meta" {
-                        for meta_child in mp4_children(&mut file, udta_child.payload, udta_child.end) {
+                        for meta_child in
+                            mp4_children(&mut file, udta_child.payload, udta_child.end)
+                        {
                             if &meta_child.name == b"ilst" {
-                                read_ilst(&mut file, meta_child.payload, meta_child.end, &mut meta)?;
+                                read_ilst(
+                                    &mut file,
+                                    meta_child.payload,
+                                    meta_child.end,
+                                    &mut meta,
+                                )?;
                             }
                         }
                     }
@@ -916,7 +950,11 @@ fn read_ilst(file: &mut File, start: u64, end: u64, meta: &mut AudioMetadata) ->
             "covr" => {
                 if meta.picture.is_none() {
                     if let Some((kind, data)) = values.first() {
-                        let mime = if *kind == 14 { "image/png" } else { "image/jpeg" };
+                        let mime = if *kind == 14 {
+                            "image/png"
+                        } else {
+                            "image/jpeg"
+                        };
                         meta.picture = Some(Picture {
                             mime: mime.to_string(),
                             data: data.clone(),
@@ -931,7 +969,9 @@ fn read_ilst(file: &mut File, start: u64, end: u64, meta: &mut AudioMetadata) ->
                     if &sub.name == b"name" {
                         let data = read_at(file, sub.payload, (sub.end - sub.payload) as usize)?;
                         if data.len() > 4 {
-                            key = String::from_utf8_lossy(&data[4..]).trim_matches('\0').to_string();
+                            key = String::from_utf8_lossy(&data[4..])
+                                .trim_matches('\0')
+                                .to_string();
                         }
                     }
                 }
@@ -1056,12 +1096,8 @@ fn parse_riff_info(data: &[u8], meta: &mut AudioMetadata) {
     let mut pos = 0usize;
     while pos + 8 <= data.len() {
         let id = &data[pos..pos + 4];
-        let size = u32::from_le_bytes([
-            data[pos + 4],
-            data[pos + 5],
-            data[pos + 6],
-            data[pos + 7],
-        ]) as usize;
+        let size = u32::from_le_bytes([data[pos + 4], data[pos + 5], data[pos + 6], data[pos + 7]])
+            as usize;
         pos += 8;
         if pos + size > data.len() {
             break;
