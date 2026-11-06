@@ -9,133 +9,37 @@
 [![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE-APACHE)
 [![Discussions](https://img.shields.io/github/discussions/MAKHMUDuz/melyar?label=discussions&logo=github)](https://github.com/MAKHMUDuz/melyar/discussions)
 
-</picture>
-<img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.webm" alt="Melyar demo" width="100%" />
-<h1 align="center">Hi 👋, I'm MAKHMUDJON MURODOV</h1>
-
 </div>
 
-<picture>
-  <source media="(prefers-reduced-motion: no-preference)" srcset="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55&animation=fadeIn" />
-  <img alt="MAKHMUDJON MURODOV" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55" />
-</picture>
+<h1 align="center">Hi 👋, I'm MAKHMUDJON MURODOV</h1>
+<h3 align="center">Desktop & Web • GPU tooling • C++20 & Rust developer</h3>
+<img src="https://raw.githubusercontent.com/devSouvik/devSouvik/master/gif3.gif" alt="Coding" width="400" align="right">
 
-<h2 align="center">Melyar - YouTube Music Desktop Client</h2>
+<p align="left"> <img src="https://komarev.com/ghpvc/?username=MAKHMUDuz&label=Profile%20views&color=0e75b6&style=flat" alt="MAKHMUDuz" /> </p>
 
-<p align="center">
-  <a href="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022059.png">
-    <img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022059.png" alt="Melyar Screenshot 1" width="100%" />
-  </a>
-</picture>
+<p align="left"> <a href="https://twitter.com/makhmudjon_murodov" target="blank"><img src="https://img.shields.io/twitter/follow/makhmudjon_murodov?logo=twitter&style=for-the-badge" alt="makhmudjon_murodov" /></a> </p>
 
-<picture>
-  <source media="(prefers-reduced-motion: no-preference)" srcset="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55&animation=fadeIn" />
-  <img alt="MAKHMUDJON MURODOV" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55" />
-</picture>
+- 🌱 I'm currently working on **melyar** (C++20 core + Rust YouTube Music client) and **kdeconnect-scrcpy** (KDE Connect tray + scrcpi mirroring)
+- 👨‍💻 All of my projects are available at **MAKHMUDuz**
 
-<h2 align="center">Melyar - YouTube Music Desktop Client</h2>
+- 📫 How to reach me **mahmudjonmurodov@mail.ru**
 
-<p align="center">
-  <a href="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022907.png">
-    <img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022907.png" alt="Melyar Screenshot 2" width="100%" />
-  </a>
-</picture>
-
-<picture>
-  <source media="(prefers-reduced-motion: no-preference)" srcset="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55&animation=fadeIn" />
-  <img alt="MAKHMUDJON MURODOV" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=210&section=header&text=MAKHMUDJON%20MURODOV&fontSize=44&fontAlignY=32&desc=Desktop%20%E2%80%A2%20Web%20%E2%80%A2%20GPU%20tooling&descSize=18&descAlignY=55" />
-</picture>
-
-<h2 align="center">Melyar - YouTube Music Desktop Client</h2>
-
-<p align="center">
-  <a href="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022939.png">
-    <img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/Screenshot_20261104_022939.png" alt="Melyar Screenshot 3" width="100%" />
-  </a>
-</picture>
-
-<p align="center">
-  <a href="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.webm" target="_blank">
-    <img src="https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.webm" alt="Melyar Video Demo" width="100%" />
-  </a>
+<h3 align="left">Connect with me:</h3>
+<p align="left">
+<a href="https://twitter.com/makhmudjon_murodov" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="makhmudjon_murodov" height="30" width="40" /></a>
+<a href="https://www.linkedin.com/in/makhmudjonmurodov" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="https://www.linkedin.com/in/makhmudjonmurodov/" height="30" width="40" /></a>
+<a href="https://stackoverflow.com/users/2827383/makhmudjonmurodov" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/stack-overflow.svg" alt="makhmudjonmurodov" height="30" width="40" /></a>
+<a href="https://web.facebook.com/makhmudjonmurodov" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="makhmudjonmurodov" height="30" width="40" /></a>
+<a href="https://www.instagram.com/makhmudjon_murodov" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="makhmudjon_murodov" height="30" width="40" /></a>
 </p>
 
-<div align="center">
+<h3 align="left">Languages and Tools:</h3>
+<p align="left"> <a href="https://www.arduino.cc/" target="_blank" rel="noreferrer"> <img src="https://cdn.worldvectorlogo.com/logos/arduino-1.svg" alt="arduino" width="40" height="40"/> </a> <a href="https://babeljs.io/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/babeljs/babeljs-icon.svg" alt="babel" width="40" height="40"/> </a> <a href="https://getbootstrap.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg" alt="bootstrap" width="40" height="40"/> </a> <a href="https://www.chartjs.org" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/chartjs/media/logo-title.svg" alt="chartjs" width="40" height="40"/> </a> <a href="https://www.w3schools.com/cs/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/csharp/csharp-original.svg" alt="csharp" width="40" height="40"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> <a href="https://expressjs.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="express" width="40" height="40"/> </a> <a href="https://www.figma.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/figma/figma-icon.svg" alt="figma" width="40" height="40"/> </a> <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> </a> <a href="https://heroku.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/heroku/heroku-icon.svg" alt="heroku" width="40" height="40"/> </a> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://www.invisionapp.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/invisionapp/invisionapp-icon.svg" alt="invision" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://www.linux.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg" alt="linux" width="40" height="40"/> </a> <a href="https://mariadb.org/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/mariadb/mariadb-icon.svg" alt="mariadb" width="40" height="40"/> </a> <a href="https://materializecss.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/prplx/svg-logos/5585531d45d294869c4eaab4d7cf2e9c167710a9/svg/materialize.svg" alt="materialize" width="40" height="40"/> </a> <a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="mongodb" width="40" height="40"/> </a> <a href="https://www.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="mysql" width="40" height="40"/> </a> <a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a> <a href="https://www.php.net" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/php/php-original.svg" alt="php" width="40" height="40"/> </a> <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="40" height="40"/> </a> <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a> <a href="https://sass-lang.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/sass/sass-original.svg" alt="sass" width="40" height="40"/> </a> </p>
 
-# Melyar
+<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=MAKHMUDuz&show_icons=true&locale=en&layout=compact&theme=tokyonight" alt="MAKHMUDuz" /></p>
 
-**Ultra-lightweight native desktop client for YouTube Music**
+<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=MAKHMUDuz&show_icons=true&locale=en&theme=tokyonight" alt="MAKHMUDuz" /></p>
 
-[![CI](https://github.com/MAKHMUDuz/melyar/actions/workflows/ci.yml/badge.svg)](https://github.com/MAKHMUDuz/melyar/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/MAKHMUDuz/melyar.svg)](https://github.com/MAKHMUDuz/melyar/releases/latest)
-[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE-APACHE)
-[![Discussions](https://img.shields.io/github/discussions/MAKHMUDuz/melyar?label=discussions&logo=github)](https://github.com/MAKHMUDuz/melyar/discussions)
+<p><img align="center" src="https/github-readme-streak-stats.herokuapp.com/?user=MAKHMUDuz&theme=tokyonight" alt="MAKHMUDuz" /></p>
 
-</div>
-
-Melyar is a Linux-first, local-first desktop music client for YouTube Music. It combines a fast Rust core, a native Qt/C++ shell, and a polished React + TypeScript interface to deliver a clean, responsive listening experience without the overhead of heavier desktop frameworks.
-
-![Melyar GIF](https://raw.githubusercontent.com/MAKHMUDuz/melyar/main/screnshot/melyar.gif)
-
-## Why Melyar
-
-Melyar is built for people who want a music player that feels native on Linux:
-
-- Small runtime footprint
-- Fast startup and responsive controls
-- Deep desktop integration with MPRIS and Waybar
-- No account requirement to launch the app
-- Local-first behavior with personal library data stored on disk
-
-## Highlights
-
-- Search, browse, and play YouTube Music content
-- Playback with `libmpv` and gapless streaming behavior
-- Queue management, shuffle, repeat, volume, and seek controls
-- Synced LRC lyrics with plain-text fallback
-- Favorites, history, albums, artists, and library views
-- Library import from a Spotify export, JSON or CSV — **Import & Transfer 2.0 (demo/active stage)**
-- Ten band graphic equaliser (31 Hz - 16 kHz)
-- Liquid Glass-inspired interface with light/dark theming
-- Thirteen interface languages, switched at runtime
-- Native Linux media integration via MPRIS and Unix socket IPC
-
-## Screenshots
-
-![Melyar home view in Turkish](docs/screenshots/home-tr.png)
-
-## Architecture
-
-```text
-React + TypeScript UI
-        │
-        │ QWebChannel
-        ▼
-Qt / C++ bridge
-        │
-        ▼
-Rust core ── playback, library, provider logic, IPC
-        │
-        ▼
-mpv audio playback
-```
-
-The C++ ↔ Rust boundary is connected via the `cxx` bridge, while the UI communicates with the core through Qt/WebChannel.
-
-## Install
-
-Arch and Debian/Ubuntu packages are attached to the
-[latest release](https://github.com/MAKHMUDuz/melyar/releases/latest). No
-build toolchain is needed:
-
-**Debian / Ubuntu** (Ubuntu 24.04 or newer):
-
-```bash
-sudo apt install ./melyar_*_amd64.deb
-```
-
-**Arch** (dependencies come from the official repos):
-
-```bash
-sudo pacman -U melyar-*.pkg.tar.zst
-```
+_Generated automatically by a scheduled GitHub Action in this repository._
