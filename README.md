@@ -13,7 +13,9 @@
 
 Melyar is a Linux-first, local-first desktop music client for YouTube Music. It combines a fast Rust core, a native Qt/C++ shell, and a polished React + TypeScript interface to deliver a clean, responsive listening experience without the overhead of heavier desktop frameworks.
 
- ![Melyar](docs/screenshots/melyar.gif)
+<div align="center">
+  <img src="docs/screenshots/melyar.gif" alt="Melyar desktop music player" width="100%" />
+</div>
 
 ## Why Melyar
 
