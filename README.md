@@ -42,7 +42,7 @@ Melyar is built for people who want a music player that feels native on Linux:
 
 ![Melyar home view in Turkish](docs/screenshots/home-tr.png)
 
-![Melyar home view in English](docs/screenshots/home-en.png)
+
 
 ![Melyar player](screnshot/Screenshot_20261104_022059.png)
 
