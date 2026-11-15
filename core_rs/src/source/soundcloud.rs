@@ -28,8 +28,6 @@ use super::{Source, SourceKind};
 static YTDLP: Lazy<Option<PathBuf>> =
     Lazy::new(|| crate::source::find_yt_dlp(&["yt-dlp", "yt-dlp.exe", "yt-dlp_linux"]));
 
-
-
 pub struct SoundCloudSource;
 
 impl Default for SoundCloudSource {
