@@ -47,7 +47,13 @@ impl ResolvedVideo {
 }
 
 static YTDLP_PATH: Lazy<Option<PathBuf>> = Lazy::new(|| {
-    crate::source::find_yt_dlp(&["yt-dlp", "yt-dlp.exe", "yt-dlp_linux", "youtube-dl", "youtube-dl.exe"])
+    crate::source::find_yt_dlp(&[
+        "yt-dlp",
+        "yt-dlp.exe",
+        "yt-dlp_linux",
+        "youtube-dl",
+        "youtube-dl.exe",
+    ])
 });
 
 fn yt_dlp_available() -> bool {
