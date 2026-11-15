@@ -82,10 +82,7 @@ mod executable_discovery_tests {
     use std::path::PathBuf;
 
     fn temporary_directory(label: &str) -> PathBuf {
-        std::env::temp_dir().join(format!(
-            "melyar-yt-dlp-{label}-{}",
-            std::process::id()
-        ))
+        std::env::temp_dir().join(format!("melyar-yt-dlp-{label}-{}", std::process::id()))
     }
 
     #[test]
