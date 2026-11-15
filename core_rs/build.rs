@@ -20,7 +20,7 @@ fn copy_all(src: &Path, dst: &Path) -> std::io::Result<()> {
 }
 
 fn main() {
-    cxx_build::bridge("src/lib.rs")
+    cxx_build::bridge("src/ffi_bridge.rs")
         .include("include")
         .compile("melyar_core_cxx");
 
@@ -35,6 +35,6 @@ fn main() {
         let _ = copy_all(&cxx_inc, dest);
     }
 
-    println!("cargo:rerun-if-changed=src/lib.rs");
+    println!("cargo:rerun-if-changed=src/ffi_bridge.rs");
     println!("cargo:rerun-if-changed=include/bridge.hpp");
 }
