@@ -276,7 +276,6 @@ export function initBridge() {
         const ui = useUIStore.getState();
         ui.navigate({ name: view } as never);
       };
-      w.__openExpandedPlayer = () => useUIStore.getState().setExpandedPlayerOpen(true);
       w.__openLyrics = () => useUIStore.getState().setLyricsOpen(true);
       w.__openQueue = () => useUIStore.getState().setQueueOpen(true);
       w.__openPlugins = () => usePlugins.getState().setOpen(true);
@@ -315,8 +314,6 @@ export function initBridge() {
           menuOpen: ui.menu !== null,
           queueOpen: ui.queueOpen,
           lyricsOpen: ui.lyricsOpen,
-          expandedPlayerOpen: ui.expandedPlayerOpen,
-          bridgeError: ui.bridgeError,
         };
       };
     });
@@ -334,6 +331,51 @@ export function runSearch(query: string) {
   if (!b) return;
   useUIStore.setState({ searching: true });
   b.search(query);
+}
+
+/**
+ * Offline downloads.
+ *
+ * The core does the work; it reports the outcome back through the
+ * `downloadFinished` signal, which the bridge turns into a call to
+ * `onDownloadFinished` here.
+ *
+ * The list of downloaded tracks is a property rather than a method: a
+ * QWebChannel method call returns a promise, so a synchronous question
+ * like "is this one downloaded?" could not be answered without waiting.
+ */
+export function downloadTrack(trackId: string) {
+  const b = bridgeInstance;
+  if (!b) return;
+  b.downloadTrack(trackId);
+}
+
+/** Whether a track has a local copy. */
+export function isTrackDownloaded(trackId: string): boolean {
+  const b = bridgeInstance;
+  if (!b) return false;
+  try {
+    return downloadedTracks().some((t) => String(t.id) === trackId);
+  } catch {
+    return false;
+  }
+}
+
+export function downloadedTracks(): { id: string; title: string; artist: string }[] {
+  const b = bridgeInstance;
+  if (!b) return [];
+  try {
+    const list = b.downloadedTracks;
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+export function removeDownload(trackId: string) {
+  const b = bridgeInstance;
+  if (!b) return;
+  b.removeDownload(trackId);
 }
 
 /**

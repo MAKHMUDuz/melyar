@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { X, MoreHorizontal, ChevronUp, ListMusic } from "lucide-react";
+import { X, MoreHorizontal, ListMusic, Shuffle as ShuffleIcon } from "lucide-react";
 import type { TrackMeta } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { formatTime } from "@/lib/lyrics";
@@ -10,28 +10,33 @@ import { usePlayer } from "@/store";
 import { Artwork } from "@/components/Toolbar";
 import { t, tCount, useLocale } from "@/lib/i18n";
 
-export function QueuePanel() {
+export function QueuePanel({ docked = false }: { docked?: boolean }) {
   useLocale();
   const open = useUIStore((s) => s.queueOpen);
   const setOpen = useUIStore((s) => s.setQueueOpen);
   const queue = useLibraryStore((s) => s.queue);
   const current = usePlaybackStore((s) => s.current);
+  const playing = usePlaybackStore((s) => s.playing);
+  const duration = usePlaybackStore((s) => s.duration);
+  const position = usePlaybackStore((s) => s.position);
+  const shuffle = usePlaybackStore((s) => s.shuffle);
   const { playQueueIndex, clearQueue } = usePlayer();
   const openMenu = useUIStore((s) => s.openMenu);
 
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const isNarrow = typeof window !== "undefined" && window.innerWidth < 1200;
+
+  const remainingSecs = queue.reduce((acc, t) => acc + (t.duration || 0), 0) - position;
 
   const handleEscape = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") setOpen(false);
   }, [setOpen]);
 
   useEffect(() => {
-    if (!open || !isNarrow) return;
+    if (!open || docked) return;
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [open, isNarrow, handleEscape]);
+  }, [open, docked, handleEscape]);
 
   useEffect(() => {
     if (open && panelRef.current) {
@@ -62,7 +67,7 @@ export function QueuePanel() {
       ref={panelRef}
       className={cn(
         "queue-panel glass-intense backdrop-blur-lg border-l border-glass-border shadow-2xl",
-        isNarrow && "floating",
+        docked ? "docked" : "floating",
         open && "open",
       )}
       aria-hidden={!open}
@@ -75,27 +80,42 @@ export function QueuePanel() {
             <ListMusic className="size-5 text-accent-text" />
           </div>
           <div>
-            <h2 className="text-[15px] font-bold tracking-tight text-text">{t("queue.title")}</h2>
-            <p className="text-[11px] text-text-tertiary">{tCount("queue.count", queue.length)}</p>
+            <h2 className="text-[15px] font-bold tracking-tight text-text">{t("queue.upNext")}</h2>
+            <p className="text-[11px] text-text-tertiary">
+              {queue.length > 0
+                ? `${tCount("queue.count", queue.length)} · ${formatTime(remainingSecs > 0 ? remainingSecs : 0)}`
+                : t("queue.emptyHint")}
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {queue.length > 0 ? (
-            <button
-              className="btn-glass chip text-xs"
-              onClick={(e) => {
-                e.stopPropagation();
-                clearQueue();
-                // The queue is now empty, so this button is about to unmount
-                // and would drop keyboard focus to the page body. Hand it to
-                // the close button, which is the next thing a keyboard user
-                // needs anyway. The undo affordance lives in the toast.
-                closeRef.current?.focus();
-              }}
-              aria-label={t("queue.clear")}
-            >
-              {t("queue.clearButton")}
-            </button>
+            <>
+              <button
+                className="btn-glass chip text-xs"
+                data-active={shuffle}
+                aria-label={t("toolbar.shuffle")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Toggle shuffle via playback store
+                  const { toggleShuffle } = usePlaybackStore.getState();
+                  toggleShuffle();
+                }}
+              >
+                <ShuffleIcon className={cn("size-3.5", shuffle && "text-accent-text")} />
+              </button>
+              <button
+                className="btn-glass chip text-xs"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearQueue();
+                  closeRef.current?.focus();
+                }}
+                aria-label={t("queue.clear")}
+              >
+                {t("queue.clearButton")}
+              </button>
+            </>
           ) : null}
           <button
             ref={closeRef}
@@ -121,7 +141,7 @@ export function QueuePanel() {
               <div key={`${track.id}-${i}`} className="relative group">
                 <button
                   className={cn(
-                    "track-row flex items-center gap-3 rounded-xl px-4 py-3 text-left transition-all duration-200",
+                    "track-row flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all duration-200",
                     active && "bg-accent/10 border border-accent/30",
                     !active && "hover:bg-white/5",
                   )}
@@ -129,29 +149,29 @@ export function QueuePanel() {
                   title={`${track.title} — ${track.artist}`}
                 >
                   <div className="relative flex-shrink-0">
-                    <Artwork src={track.thumbnail} label={track.title} className="size-12 rounded-lg" />
+                    <Artwork src={track.thumbnail} label={track.title} className="size-10 rounded-md" />
                     {active && (
-                      <div className="absolute inset-0 rounded-lg flex items-center justify-center text-text">
-                        <ListMusic className="size-5" />
+                      <div className="absolute inset-0 rounded-md flex items-center justify-center text-text">
+                        <ListMusic className="size-4" />
                       </div>
                     )}
-                    <span className="absolute -right-1 -top-1 z-10 flex size-5 items-center justify-center rounded-full bg-accent text-black font-bold text-[10px]">
+                    <span className="absolute -right-1 -top-1 z-10 flex size-4 items-center justify-center rounded-full bg-accent text-black font-bold text-[9px]">
                       {i + 1}
                     </span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className={cn("block truncate text-[14px] font-medium", active && "text-accent-text")}>
+                    <span className={cn("block truncate text-[13px] font-medium", active && "text-accent-text")}>
                       {track.title}
                     </span>
-                    <span className="block truncate text-[12px] text-text-secondary">{track.artist}</span>
+                    <span className="block truncate text-[11px] text-text-secondary">{track.artist}</span>
                   </div>
-                  <span className="text-[11px] tabular-nums text-text-tertiary whitespace-nowrap">
+                  <span className="text-[10px] tabular-nums text-text-tertiary whitespace-nowrap">
                     {formatTime(track.duration)}
                   </span>
                 </button>
                 <button
                   data-menu-btn="true"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 icon-btn text-text-tertiary hover:text-text"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 icon-btn text-text-tertiary hover:text-text"
                   aria-label={t("track.options")}
                   onClick={(e) => handleMenuClick(track, (e.currentTarget as HTMLElement).getBoundingClientRect(), e)}
                 >

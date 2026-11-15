@@ -57,7 +57,6 @@ export function usePlayer() {
     lyricsUserScrolling: ui.lyricsUserScrolling,
     lyricsRequestId: ui.lyricsRequestId,
     queueOpen: ui.queueOpen,
-    expandedPlayerOpen: ui.expandedPlayerOpen,
     menu: ui.menu,
     toast: ui.toast,
     toastAction: ui.toastAction,
@@ -86,6 +85,10 @@ export function usePlayer() {
     playQueueIndex: (index: number) => {
       const track = library.queue[index];
       if (track) {
+        // Same rule as playTrack: clicking the same track again closes the player.
+        if (ui.view.name === "nowplaying") {
+          ui.goBack();
+        }
         playback.setCurrent(track);
         playback.setPlaying(true);
         playback.setPosition(0);
@@ -103,13 +106,12 @@ export function usePlayer() {
     setLyricsUserScrolling: ui.setLyricsUserScrolling,
     setLyricsRequestId: ui.setLyricsRequestId,
     setQueueOpen: ui.setQueueOpen,
-    setExpandedPlayerOpen: ui.setExpandedPlayerOpen,
     toastNote: ui.toastNote,
     loadFavorites: library.loadFavorites,
     patch: (partial: any) => {
       // Distribute patch to appropriate stores
       const playbackKeys = ["current", "playing", "position", "duration", "volume", "muted", "shuffle", "repeat"];
-      const uiKeys = ["view", "navStack", "navIndex", "query", "results", "searching", "queueOpen", "expandedPlayerOpen", "lyricsOpen", "lyricsAutoFollow", "lyricsUserScrolling", "lyricsRequestId", "menu", "toast", "toastAction", "booted", "bridgeError"];
+      const uiKeys = ["view", "navStack", "navIndex", "query", "results", "searching", "queueOpen", "lyricsOpen", "lyricsAutoFollow", "lyricsUserScrolling", "lyricsRequestId", "menu", "toast", "toastAction", "booted", "bridgeError"];
       const libraryKeys = ["liked", "history", "queue"];
 
       const playbackPatch: any = {};

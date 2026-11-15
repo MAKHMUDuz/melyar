@@ -46,3 +46,8 @@ ui_web/node_modules/
 # Editor / OS
 .DS_Store
 *.swp
+
+# Built UI assets
+u_web/dist/
+ui_web/dist/
+ui_web/dist/

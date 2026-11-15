@@ -5,6 +5,7 @@ import { useLibraryStore } from "@/store";
 import { libraryTracks } from "@/lib/registry";
 import { Artwork } from "@/components/Toolbar";
 import { TrackTable } from "@/components/TrackTable";
+import { EmptyState } from "@/components/GlassComponents";
 import type { TrackMeta, View } from "@/lib/types";
 import { t, useLocale } from "@/lib/i18n";
 
@@ -131,12 +132,12 @@ export function HomeView() {
       ) : null}
 
       {library.length === 0 ? (
-        <section className="card rounded-xl border border-glass-border p-8 text-center">
-          <h2 className="text-lg font-bold">{t("home.libraryEmpty.title")}</h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-text-tertiary">
-            {t("home.libraryEmpty.body")}
-          </p>
-          <div className="mt-5 flex flex-wrap justify-center gap-2">
+        <EmptyState
+          icon={<Heart className="size-8" />}
+          title={t("home.libraryEmpty.title")}
+          description={t("home.libraryEmpty.body")}
+        >
+          <div className="flex flex-wrap justify-center gap-2">
             {GENRES.slice(0, 6).map((g) => (
               <button
                 key={g.key}
@@ -150,7 +151,7 @@ export function HomeView() {
               </button>
             ))}
           </div>
-        </section>
+        </EmptyState>
       ) : (
         <section>
           <h2 className="mb-4 text-xl font-bold tracking-tight">{t("home.genres")}</h2>

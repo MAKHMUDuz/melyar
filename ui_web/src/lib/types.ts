@@ -34,6 +34,9 @@ export type View =
   | { name: "artists" }
   | { name: "liked" }
   | { name: "history" }
+  | { name: "nowplaying" } // Dedicated central Now Playing workspace
+  | { name: "lyrics" } // Dedicated central Lyrics view
+  | { name: "downloads" } // Downloaded tracks available offline
   // The detail views carry the name they were opened from, so the header can
   // show what you are looking at instead of the word "Albums".
   | { name: "album"; key: string; label?: string }

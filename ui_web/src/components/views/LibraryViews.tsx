@@ -6,6 +6,7 @@ import { useLibraryImport } from "@/lib/import";
 import { allKnown, findAlbum, findArtist, groupAlbums, groupArtists, libraryTracks } from "@/lib/registry";
 import { TrackTable } from "@/components/TrackTable";
 import { Artwork } from "@/components/Toolbar";
+import { EmptyState } from "@/components/GlassComponents";
 import { formatTime } from "@/lib/lyrics";
 import type { View } from "@/lib/types";
 import { t, tCount, useLocale } from "@/lib/i18n";
@@ -57,7 +58,15 @@ export function SongsView() {
         meta={tCount("library.countDuration", library.length, { time: formatTime(totalSecs) })}
         gradient="linear-gradient(135deg,#8e8e93,#48484a)"
       />
-      <TrackTable tracks={library} emptyText={t("library.songs.empty")} />
+      {library.length > 0 ? (
+        <TrackTable tracks={library} />
+      ) : (
+        <EmptyState
+          icon={<Library className="size-8" />}
+          title={t("library.songs.title")}
+          description={t("library.songs.empty")}
+        />
+      )}
     </div>
   );
 }
@@ -99,7 +108,15 @@ export function LikedView() {
         </button>
         <span className="text-[11.5px] text-text-tertiary">{t("import.hint")}</span>
       </div>
-      <TrackTable tracks={liked} emptyText={t("library.liked.empty")} />
+      {liked.length > 0 ? (
+        <TrackTable tracks={liked} />
+      ) : (
+        <EmptyState
+          icon={<Heart className="size-8" />}
+          title={t("library.liked.title")}
+          description={t("library.liked.empty")}
+        />
+      )}
     </div>
   );
 }
@@ -129,7 +146,15 @@ export function HistoryView() {
           <svg viewBox="0 0 24 24" className="ml-0.5 size-5 fill-current"><path d="M8 5v14l11-7z" /></svg>
         </button>
       ) : null}
-      <TrackTable tracks={history} emptyText={t("library.history.empty")} />
+      {history.length > 0 ? (
+        <TrackTable tracks={history} />
+      ) : (
+        <EmptyState
+          icon={<Clock3 className="size-8" />}
+          title={t("library.history.title")}
+          description={t("library.history.empty")}
+        />
+      )}
     </div>
   );
 }
@@ -149,7 +174,11 @@ export function AlbumsView() {
     return (
       <div className="px-6 pb-10 pt-6 lg:px-9">
         <h1 className="mb-8 text-4xl font-bold tracking-tight">{t("library.albums.title")}</h1>
-        <TrackTable tracks={[]} emptyText={t("library.albums.empty")} />
+        <EmptyState
+          icon={<Library className="size-8" />}
+          title={t("library.albums.title")}
+          description={t("library.albums.empty")}
+        />
       </div>
     );
   }
@@ -206,7 +235,11 @@ export function ArtistsView() {
     <div className="px-6 pb-10 pt-6 lg:px-9">
       <h1 className="mb-6 text-4xl font-bold tracking-tight">{t("library.artists.title")}</h1>
       {artists.length === 0 ? (
-        <TrackTable tracks={[]} emptyText={t("library.artists.empty")} />
+        <EmptyState
+          icon={<Music2 className="size-8" />}
+          title={t("library.artists.title")}
+          description={t("library.artists.empty")}
+        />
       ) : (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           {artists.map((a) => (
@@ -235,7 +268,10 @@ export function AlbumDetailView({ albumKey }: { albumKey: string }) {
   if (!album) {
     return (
       <div className="px-6 pb-10 pt-6 lg:px-9">
-        <p className="py-16 text-center text-sm text-text-tertiary">{t("library.albums.notFound")}</p>
+        <EmptyState
+          icon={<Library className="size-8" />}
+          title={t("library.albums.notFound")}
+        />
       </div>
     );
   }
@@ -272,7 +308,10 @@ export function ArtistDetailView({ artistKey }: { artistKey: string }) {
   if (!artist) {
     return (
       <div className="px-6 pb-10 pt-6 lg:px-9">
-        <p className="py-16 text-center text-sm text-text-tertiary">{t("library.artists.notFound")}</p>
+        <EmptyState
+          icon={<Music2 className="size-8" />}
+          title={t("library.artists.notFound")}
+        />
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { register } from "@/lib/registry";
 import { useSettings } from "@/lib/settings";
+import { useUIStore } from "./uiStore";
 import type { TrackMeta, RepeatMode } from "@/lib/types";
 
 type PlaybackState = {
@@ -137,6 +138,16 @@ export const usePlaybackStore = create<PlaybackState & PlaybackActions>()((set, 
     if (!b) return;
     const metas = context && context.length > 0 ? context : [track];
     const index = Math.max(0, metas.findIndex((t) => t.id === track.id));
+
+    // Starting a different track from the Now Playing page sends the user
+    // back to the view they came from. That page is a place to look at one
+    // track; a new track belongs in the list it was picked from.
+    // Clicking the same track again closes the player and returns.
+    const ui = useUIStore.getState();
+    if (ui.view.name === "nowplaying") {
+      ui.goBack();
+    }
+
     try {
       b.replaceQueue(
         metas.map((t) => ({

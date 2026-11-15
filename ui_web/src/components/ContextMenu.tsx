@@ -1,8 +1,9 @@
-import { Heart, ListPlus, Mic2, Share2, X, Trash2, Play } from "lucide-react";
+import { Download, Heart, ListPlus, Mic2, Share2, X, Trash2, Play } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { usePlaybackStore } from "@/store";
 import { useUIStore } from "@/store";
 import { useLibraryStore } from "@/store";
+import { useDownloadStore } from "@/stores/downloadStore";
 import { Artwork } from "@/components/Toolbar";
 import { t, useLocale } from "@/lib/i18n";
 
@@ -18,7 +19,11 @@ export function ContextMenu() {
   const queue = useLibraryStore((s) => s.queue);
   const navigate = useUIStore((s) => s.navigate);
   const setLyricsOpen = useUIStore((s) => s.setLyricsOpen);
+  const setShareTrack = useUIStore((s) => s.setShareTrack);
   const toastNote = useUIStore((s) => s.toastNote);
+  const startDownload = useDownloadStore((s) => s.download);
+  const removeDownload = useDownloadStore((s) => s.remove);
+  const isDownloaded = useDownloadStore((s) => s.isDownloaded);
 
   if (!menu) return null;
   const { track, x, y } = menu;
@@ -112,11 +117,40 @@ export function ContextMenu() {
           </button>
           <button
             className="compact-tile flex items-center justify-between gap-3 px-5 py-2.5 rounded-lg hover:bg-white/5 transition-colors border-t border-glass-border/50"
-            onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(`${track.title} - ${track.artist}`).then(() => toastNote(t("toast.linkCopied"))); closeMenu(); }}
+            onClick={(e) => { e.stopPropagation(); setShareTrack(track); closeMenu(); }}
           >
             <div className="flex items-center gap-3">
               <Share2 className="size-4 text-text-secondary" />
               <span className="text-sm font-medium text-text">{t("menu.copyLink")}</span>
+            </div>
+            <div className="size-6 rounded-full bg-white/5 flex items-center justify-center text-text-tertiary">
+              <ChevronIcon className="size-3" />
+            </div>
+          </button>
+          {/* Offline download. The core writes the audio to disk and the
+              player prefers that copy over the stream, so the track keeps
+              playing without a connection. */}
+          <button
+            className="compact-tile flex items-center justify-between gap-3 px-5 py-2.5 rounded-lg hover:bg-white/5 transition-colors border-t border-glass-border/50"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isDownloaded(track.id)) {
+                removeDownload(track);
+              } else {
+                startDownload(track);
+              }
+              closeMenu();
+            }}
+          >
+            <div className="flex items-center gap-3">
+              {isDownloaded(track.id) ? (
+                <Trash2 className="size-4 text-text-secondary" />
+              ) : (
+                <Download className="size-4 text-text-secondary" />
+              )}
+              <span className="text-sm font-medium text-text">
+                {isDownloaded(track.id) ? t("download.removeDownload") : t("menu.download")}
+              </span>
             </div>
             <div className="size-6 rounded-full bg-white/5 flex items-center justify-center text-text-tertiary">
               <ChevronIcon className="size-3" />

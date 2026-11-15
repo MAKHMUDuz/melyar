@@ -12,19 +12,22 @@ type UIState = {
   query: string;
   results: TrackMeta[];
   searching: boolean;
-  queueOpen: boolean;
-  expandedPlayerOpen: boolean;
-  lyricsOpen: boolean;
+  queueOpen: boolean; // Right-side Up Next queue visibility
+  lyricsOpen: boolean; // Central Lyrics view visibility
   lyricsAutoFollow: boolean;
   lyricsUserScrolling: boolean;
   lyricsRequestId: number | null;
   lyricsRaw: string | null;
   menu: Menu;
+  /** The track the share sheet is open for, if any. */
+  shareTrack: TrackMeta | null;
   toast: string | null;
   toastAction: { label: string; run: () => void } | null;
   booted: boolean;
   bridgeError: string | null;
   patch: (partial: Partial<UIState>) => void;
+  downloads: TrackMeta[];
+  setDownloads: (tracks: TrackMeta[]) => void;
 };
 
 type UIActions = {
@@ -35,7 +38,6 @@ type UIActions = {
   setResults: (results: TrackMeta[]) => void;
   setSearching: (searching: boolean) => void;
   setQueueOpen: (open: boolean) => void;
-  setExpandedPlayerOpen: (open: boolean) => void;
   setLyricsOpen: (open: boolean) => void;
   setLyricsAutoFollow: (v: boolean) => void;
   setLyricsUserScrolling: (v: boolean) => void;
@@ -43,11 +45,15 @@ type UIActions = {
   setLyricsRaw: (raw: string | null) => void;
   openMenu: (menu: Menu) => void;
   closeMenu: () => void;
+  setShareTrack: (track: TrackMeta | null) => void;
   toastNote: (text: string) => void;
   /** A note that carries an Undo-style button and stays up long enough to use it. */
   toastWithAction: (text: string, action: { label: string; run: () => void }, ms?: number) => void;
   setBooted: (booted: boolean) => void;
   setBridgeError: (error: string | null) => void;
+  setDownloads: (tracks: TrackMeta[]) => void;
+  addDownload: (track: TrackMeta) => void;
+  removeDownload: (trackId: string) => void;
 };
 
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
@@ -64,17 +70,18 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   results: [],
   searching: false,
   queueOpen: false,
-  expandedPlayerOpen: false,
   lyricsOpen: false,
   lyricsAutoFollow: true,
   lyricsUserScrolling: false,
   lyricsRequestId: null,
   lyricsRaw: null,
   menu: null,
+  shareTrack: null,
   toast: null,
   toastAction: null,
   booted: false,
   bridgeError: null,
+  downloads: [],
 
   navigate: (view) => {
     const { navStack, navIndex } = get();
@@ -104,7 +111,6 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   setSearching: (searching) => set({ searching }),
 
   setQueueOpen: (queueOpen) => set({ queueOpen }),
-  setExpandedPlayerOpen: (expandedPlayerOpen) => set({ expandedPlayerOpen }),
   setLyricsOpen: (lyricsOpen) => set({ lyricsOpen, menu: null }),
   setLyricsAutoFollow: (v) => set({ lyricsAutoFollow: Boolean(v), lyricsUserScrolling: false }),
   setLyricsUserScrolling: (v) => set({ lyricsUserScrolling: Boolean(v) }),
@@ -113,6 +119,7 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
 
   openMenu: (menu) => set({ menu }),
   closeMenu: () => set({ menu: null }),
+  setShareTrack: (shareTrack) => set({ shareTrack }),
 
   toastNote: (text) => {
     set({ toast: text, toastAction: null });
@@ -123,12 +130,20 @@ export const useUIStore = create<UIState & UIActions>()((set, get) => ({
   toastWithAction: (text, action, ms = 5000) => {
     set({ toast: text, toastAction: action });
     if (toastTimer) clearTimeout(toastTimer);
-    // An undo affordance needs more than the 1.7s a plain note gets: the
-    // window has to be long enough to notice and aim at the button.
     toastTimer = setTimeout(() => set({ toast: null, toastAction: null }), ms);
   },
 
   setBooted: (booted) => set({ booted }),
   setBridgeError: (bridgeError) => set({ bridgeError }),
+  setDownloads: (tracks: TrackMeta[]) => set({ downloads: tracks }),
+  addDownload: (track: TrackMeta) => set((state) => {
+    const already = state.downloads.some((t) => t.id === track.id);
+    if (already) return state;
+    set({ downloads: [...state.downloads, track] });
+  }),
+  removeDownload: (trackId: string) => set((state) => ({
+    downloads: state.downloads.filter((t) => t.id !== trackId),
+    shareTrack: state.shareTrack?.id === trackId ? null : state.shareTrack,
+  })),
   patch: (partial) => set((state) => ({ ...state, ...partial })),
 }));

@@ -1,21 +1,9 @@
 @import "tailwindcss";
 
-/* Variable font - single file replaces 8 font files */
-@font-face {
-  font-family: 'InterVariable';
-  src: url('../fonts/InterVariable.woff2') format('woff2-variations');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'InterVariable';
-  src: url('../fonts/InterVariable-Italic.woff2') format('woff2-variations');
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
-}
+/* Custom font removed: InterVariable.woff2 source files are corrupt (HTML
+   error pages instead of binary WOFF2). The Tailwind theme falls back to the
+   system-ui stack (-apple-system, SF Pro Text, Segoe UI, sans-serif) which
+   renders correctly on every platform. */
 
 /* ============================================================
    MELYAR — ULTRA PREMIUM LIQUID GLASS DESIGN SYSTEM
@@ -330,7 +318,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    user-select: none;
   }
   input, textarea, [contenteditable] { user-select: text; }
   button:not(:disabled) { cursor: pointer; touch-action: manipulation; }
@@ -795,31 +782,134 @@
     inset 0 1px 0 var(--glass-highlight);
 }
 
-.search-bar {
-  position: relative;
-  display: flex;
+/* ============================================================
+   UNIFIED SEARCH CAPSULE — Liquid Glass
+   One capsule. One focus state. No double borders.
+   ============================================================ */
+
+.glass-search-capsule {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: width var(--duration-slow) var(--ease-out);
-}
-.search-bar:focus-within { width: 100%; max-width: 420px; }
-.search-bar:focus-within .search-orb {
-  transform: scale(1); opacity: 1;
-}
-.search-orb {
-  width: 36px; height: 36px;
+  gap: var(--space-2);
+  height: 40px;
+  min-height: 40px;
   border-radius: var(--radius-pill);
   background: var(--glass-bg);
-  backdrop-filter: var(--blur-md) var(--sat-normal);
-  -webkit-backdrop-filter: var(--blur-md) var(--sat-normal);
+  backdrop-filter: var(--blur-lg) var(--sat-normal);
+  -webkit-backdrop-filter: var(--blur-lg) var(--sat-normal);
   border: 1px solid var(--glass-border);
-  display: grid; place-items: center;
+  box-shadow:
+    0 1px 2px var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.glass-search-capsule:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-strong);
+  box-shadow:
+    0 2px 6px var(--glass-shadow),
+    0 6px 18px var(--glass-shadow-strong),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+/* Single unified focus state — owned by the capsule, never the input. */
+.glass-search-capsule:focus-within {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 2px var(--accent-soft),
+    0 4px 16px var(--glass-shadow-strong),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+.glass-search-capsule input {
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  min-width: 0;
+  flex: 1;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  caret-color: var(--accent-text);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Remove browser-default search UI (cancel button, decorations). */
+.glass-search-capsule input::-webkit-search-cancel-button,
+.glass-search-capsule input::-webkit-search-decoration,
+.glass-search-capsule input::-webkit-search-results-button,
+.glass-search-capsule input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  display: none;
+}
+
+.glass-search-capsule input::placeholder {
   color: var(--text-tertiary);
-  transform: scale(0.85); opacity: 0.6;
-  transition: all var(--duration-normal) var(--ease-spring);
+  opacity: 0.7;
+}
+
+.glass-search-capsule svg {
   flex-shrink: 0;
 }
-.search-orb:hover { background: var(--glass-bg-hover); color: var(--text); }
+
+/* Clear button inside the capsule — only visible on focus + query. */
+.glass-search-capsule button {
+  flex-shrink: 0;
+}
+
+/* Responsive width constraints — no arbitrary fixed dimensions. */
+@media (min-width: 640px) {
+  .glass-search-capsule.compact { max-width: 260px; }
+  .glass-search-capsule.expanded { max-width: 480px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-search-capsule,
+  .glass-search-capsule:hover,
+  .glass-search-capsule:focus-within {
+    transition: none !important;
+  }
+}
+
+/* Remove the old sidebar search-bar / search-orb duplication.
+   Sidebar now uses GlassSearch(variant="compact") instead. */
+.search-bar,
+.search-orb {
+  display: none !important;
+}
+
+/* .glass-input kept for other text inputs, but its focus ring is removed
+   to avoid conflict with the unified capsule treatment. */
+.glass-input {
+  border-radius: var(--radius-pill);
+  padding: 0.5rem 1rem 0.5rem 2.75rem;
+  width: 100%;
+  font-size: var(--text-base);
+  outline: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+}
+.glass-input::placeholder { color: var(--text-tertiary); }
+.glass-input:focus,
+.glass-input:focus-within {
+  border-color: var(--accent);
+  background: var(--glass-bg-elevated);
+  box-shadow:
+    0 0 0 2px var(--accent-soft),
+    0 2px 8px var(--glass-shadow);
+}
 
 .fader {
   -webkit-appearance: none; appearance: none;
@@ -1431,10 +1521,19 @@
   z-index: var(--z-toolbar);
   height: var(--player-h);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  /* The middle column carries the transport controls and the seek bar. It
+     needs a definite width: with `auto` it would collapse to the width of
+     the capsule, and the seek bar would end up shorter than the buttons
+     it sits under. */
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(280px, 560px)
+    minmax(0, 1fr);
   align-items: center;
   gap: var(--space-4);
-  padding: 0 var(--space-4);
+  /* The utility zone needs room of its own so the volume slider never ends
+     up hard against the window edge. */
+  padding: 0 var(--space-5);
   border-top: 1px solid var(--glass-border);
   background: var(--bg-elevated-92);
   backdrop-filter: var(--blur-xl) var(--sat-strong);
@@ -1444,7 +1543,7 @@
 .pb-zone { display: flex; align-items: center; min-width: 0; }
 .pb-left { gap: var(--space-2); }
 .pb-center { flex-direction: column; gap: 6px; }
-.pb-right { justify-content: flex-end; gap: var(--space-1); }
+.pb-right { justify-content: flex-end; gap: var(--space-2); padding-right: var(--space-1); }
 
 /* What is playing. */
 .pb-track {
@@ -1680,24 +1779,20 @@
    nested inside .main-col, which left a full-height phantom band under the
    title bar; height now follows html/body (#root) instead of 100dvh.
    ============================================================ */
-.app-root {
+.app-layout {
   display: grid;
   grid-template-columns: var(--side-w) minmax(0, 1fr);
   /* Row 1 is the working area. Row 2 is the player, which spans every
      column and sizes to its content, so it is always reachable and never
      takes room the lists need. */
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr) var(--player-h);
   height: 100%;
   min-height: 0;
   overflow: hidden;
 }
 
-/* Queue docks as its own constrained column from --queue-dock-min up. Below
-   that width the panel floats over the content (see .queue-panel). */
-@media (min-width: 1200px) {
-  .app-root.queue-open {
-    grid-template-columns: var(--side-w) minmax(0, 1fr) var(--queue-w);
-  }
+.app-layout.queue-open {
+  grid-template-columns: var(--side-w) minmax(0, 1fr) var(--queue-w);
 }
 
 /* Narrow desktops (>= --min-w): the sidebar gives up width first so the three
@@ -1706,7 +1801,7 @@
   :root { --side-w: 200px; }
 }
 
-.main-col {
+.app-layout .main-col {
   grid-column: 2;
   grid-row: 1;
   display: flex; flex-direction: column;
@@ -2148,62 +2243,9 @@
   to { opacity: 0; }
 }
 
-/* ---- Expanded Player Panel ---- */
-.expanded-player-panel {
-  animation: panel-in var(--motion-duration-expanded) var(--motion-easing-panel) both;
-}
-
-.expanded-player-panel.closing {
-  animation: panel-out var(--motion-duration-normal) var(--motion-easing-panel) both forwards;
-}
-
-@keyframes panel-in {
-  from { opacity: 0; transform: translateY(24px) scale(0.975); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes panel-out {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to { opacity: 0; transform: translateY(16px) scale(0.98); }
-}
-
 /* ---- Context Menu / Popover ---- */
 .pop-in {
   animation: pop-in var(--motion-duration-fast) var(--motion-easing-spring) both;
-}
-
-@keyframes pop-in {
-  from { opacity: 0; transform: scale(0.93); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* ---- Lyric Line Active Transition ---- */
-.lyric-line {
-  transition:
-    color var(--motion-duration-normal) var(--motion-easing-standard),
-    transform var(--motion-duration-normal) var(--motion-easing-standard);
-}
-
-.lyric-line[data-active="true"] {
-  transform: scale(1.06);
-}
-
-/* ---- Focus Ring ---- */
-.focus-ring:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--bg);
-}
-
-/* ---- Tooltip ---- */
-.tooltip::after {
-  transition:
-    opacity var(--motion-duration-fast) var(--ease-out),
-    transform var(--motion-duration-fast) var(--ease-out);
-}
-
-.tooltip:hover::after {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-2px);
 }
 
 /* ---- Reduced Motion Override ---- */
@@ -2526,7 +2568,7 @@
   background: var(--accent-glow);
   color: var(--accent);
   border: 1px solid var(--accent);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 500;
@@ -2551,13 +2593,13 @@
 
 .import-count-grid {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .import-count-item {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   padding: 6px 10px;
   text-align: center;
 }
@@ -2606,7 +2648,7 @@
 
 .import-item-row {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
   padding: 6px 10px;
   border-bottom: 1px solid var(--glass-border);
   transition: background 150ms ease;
@@ -2623,7 +2665,7 @@
 .import-item-icon {
   width: 24px;
   height: 24px;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -2657,7 +2699,7 @@
   height: 16px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
   margin: 6px 0;
 }
@@ -2721,7 +2763,7 @@
   padding: 4px 10px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   font-size: 11px;
   color: var(--text);
   white-space: nowrap;
@@ -2761,7 +2803,7 @@
 .import-format-chip {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   padding: 4px 8px;
   font-size: 10px;
   color: var(--text);
@@ -2779,7 +2821,7 @@
 .import-toggle-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   margin-top: 6px;
 }
 
@@ -2793,7 +2835,7 @@
   height: 20px;
   flex-shrink: 0;
   border: 1px solid var(--text-tertiary);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
   background: var(--bg-content);
   cursor: pointer;
   display: flex;
@@ -2814,14 +2856,14 @@
   width: 10px;
   height: 10px;
   background: var(--on-accent);
-  border-radius: 9999px;
+  border-radius: var(--radius-pill);
 }
 
 .import-filter {
   padding: 6px 10px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   font-size: 12px;
   color: var(--text);
   width: 100%;
@@ -2831,7 +2873,7 @@
 .import-section-head {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   padding: 6px 0 4px;
   border-bottom: 1px solid var(--glass-border);
 }
@@ -2874,7 +2916,7 @@
 
 .import-track-row {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
   padding: 6px 10px;
   border-bottom: 1px solid var(--glass-border);
   transition: background 150ms ease;
@@ -2891,7 +2933,7 @@
 .import-track-icon {
   width: 24px;
   height: 24px;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -2926,7 +2968,7 @@
 .import-accordion-summary {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   padding: 6px 10px;
   width: 100%;
   background: none;
@@ -2964,4 +3006,392 @@
   border-radius: 0 0 6px 6px;
   max-height: 200px;
   overflow: hidden;
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  min-height: 300px;
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--space-4);
+  color: var(--text-tertiary);
+}
+
+.empty-state-title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 var(--space-2) 0;
+  letter-spacing: -0.02em;
+}
+
+.empty-state-description {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-6) 0;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.empty-state-children {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.empty-state-action {
+  min-height: 36px;
+  padding: 0 var(--space-4);
+}
+
+/* Reduced motion for empty state entrance */
+@media (prefers-reduced-motion: reduce) {
+  .empty-state-icon {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   APP LAYOUT — three-region desktop shell
+   Sidebar | Central Content | Up Next Queue (optional)
+   Bottom player spans full width
+   ============================================================ */
+
+.app-layout {
+  display: grid;
+  grid-template-columns: var(--side-w) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) var(--player-h);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-layout.queue-open {
+  grid-template-columns: var(--side-w) minmax(0, 1fr) var(--queue-w);
+}
+
+/* Sidebar and the central column sit in the working row only. The bottom
+   player owns the second row and spans every column, so nothing may be
+   placed in that row or it would end up underneath (or on top of) the
+   player bar. */
+.app-layout .sidebar {
+  grid-row: 1;
+}
+
+.app-layout .main-col {
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Up Next Queue — right-side docked panel, real layout space */
+.queue-panel.docked {
+  grid-row: 1;
+  grid-column: 3;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: var(--z-docked-panel);
+  animation: panel-in var(--duration-slow) var(--ease-out) both;
+  overflow: hidden;
+}
+
+/* Responsive queue width */
+@media (min-width: 1200px) {
+  :root {
+    --queue-w: 350px;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .app-layout.queue-open {
+    grid-template-columns: var(--side-w) minmax(0, 1fr) 300px;
+  }
+}
+
+@media (max-width: 900px) {
+  .app-layout.queue-open {
+    grid-template-columns: var(--side-w-collapsed) minmax(0, 1fr) 280px;
+  }
+}
+
+/* Now Playing Page — central workspace */
+.now-playing-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+.now-playing-header {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: var(--blur-xl) var(--sat-strong);
+  -webkit-backdrop-filter: var(--blur-xl) var(--sat-strong);
+  flex-shrink: 0;
+}
+
+.now-playing-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.now-playing-artwork-side {
+  flex-shrink: 0;
+}
+
+.now-playing-artwork {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 12px 40px var(--glass-shadow-xl);
+}
+
+.now-playing-info-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.now-playing-meta {
+  flex-shrink: 0;
+}
+
+.now-playing-title {
+  margin: 0 0 var(--space-2) 0;
+  letter-spacing: -0.02em;
+}
+
+.now-playing-artist {
+  margin: 0;
+  font-weight: 500;
+}
+
+.now-playing-timeline-wrap {
+  margin-top: var(--space-6);
+  flex-shrink: 0;
+}
+
+.now-playing-controls {
+  margin-top: var(--space-8);
+  flex-shrink: 0;
+}
+
+.now-playing-lyrics {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Lyrics Page */
+.lyrics-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+.lyrics-header {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: var(--blur-xl) var(--sat-strong);
+  -webkit-backdrop-filter: var(--blur-xl) var(--sat-strong);
+  flex-shrink: 0;
+}
+
+.lyrics-body {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* Empty states */
+.now-playing-empty,
+.lyrics-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: var(--space-6);
+}
+
+/* Now Playing Grid — artwork + lyrics layout */
+.now-playing-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+  gap: 36px;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+/* The canvas holds the heading and the grid together and keeps both inside
+   a sensible maximum width, so the content does not stretch to the far
+   edges of a wide window. */
+.now-playing-canvas {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding: var(--space-5) var(--space-6);
+  box-sizing: border-box;
+}
+
+.now-playing-heading {
+  flex-shrink: 0;
+  margin-bottom: var(--space-4);
+}
+
+/* Left: Artwork + Metadata */
+.now-playing-artwork-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.now-playing-artwork-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 1 / 1;
+}
+
+.now-playing-meta {
+  margin-top: var(--space-5);
+  text-align: center;
+  /* A definite width, so `truncate` has something to work against. Without
+     it the title measured wider than the column and pushed the action row
+     past the window edge on a narrow desktop. */
+  width: 100%;
+  max-width: 100%;
+}
+
+.now-playing-title,
+.now-playing-artist {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.now-playing-title {
+  margin: 0 0 var(--space-2) 0;
+  letter-spacing: -0.02em;
+}
+
+.now-playing-artist {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Right: Lyrics */
+.now-playing-lyrics-section {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The Now Playing lyrics reuse the shared .lyric-line hooks, but they are
+   the compact variant: the panel is narrow, so the lines are smaller and
+   the spacing tighter than on the full lyrics page. The shared rule sits
+   outside any layer, so it has to be overridden here — otherwise it would
+   win over the utility classes and flatten the contrast hierarchy. */
+.now-playing-lyrics-section .lyric-line {
+  padding: var(--space-1) var(--space-3);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  transition:
+    color var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out),
+    opacity var(--duration-normal) var(--ease-out);
+}
+
+.now-playing-lyrics-section .lyric-line[data-active="true"] {
+  color: var(--text);
+  font-weight: 700;
+  text-shadow: none;
+}
+
+.now-playing-lyrics-section .lyric-line[data-active="false"] {
+  opacity: 0.85;
+}
+
+/* Narrow desktop — the two columns no longer fit side by side, so the
+   lyrics move under the artwork and metadata instead of being squeezed
+   into an unreadable strip. */
+@media (max-width: 1100px) {
+  .now-playing-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    overflow-y: auto;
+  }
+
+  .now-playing-artwork-wrap {
+    max-width: 260px;
+  }
+
+  .now-playing-lyrics-section {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 820px) {
+  .now-playing-canvas {
+    padding: var(--space-4);
+  }
+
+  .now-playing-artwork-wrap {
+    max-width: 220px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .queue-panel.docked,
+  .now-playing-page {
+    transition: none !important;
+    animation: none !important;
+  }
 }

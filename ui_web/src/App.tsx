@@ -6,8 +6,10 @@ import { SettingsPanel } from "@/components/SettingsPanel";
 import { PluginsView } from "@/components/views/PluginsView";
 import { ImportOverlay } from "@/components/ImportOverlay";
 import { QueuePanel } from "@/components/QueuePanel";
+import { ShareDialog } from "@/components/ShareDialog";
+import { NowPlayingView } from "@/components/NowPlayingView";
+import { LyricsView } from "@/components/LyricsView";
 import { LyricsOverlay } from "@/components/LyricsOverlay";
-import { ExpandedPlayer } from "@/components/ExpandedPlayer";
 import { HomeView } from "@/components/views/HomeView";
 import { SearchView } from "@/components/views/SearchView";
 import {
@@ -41,12 +43,20 @@ function Stage() {
       return <LikedView />;
     case "history":
       return <HistoryView />;
+    case "nowplaying":
+      return <NowPlayingView />;
+    case "lyrics":
+      return <LyricsView />;
     case "plugins":
       return <PluginsView />;
     case "album":
       return <AlbumDetailView albumKey={view.key} />;
     case "artist":
       return <ArtistDetailView artistKey={view.key} />;
+    case "playlists":
+      return <SongsView />;
+    case "import":
+      return <SongsView />;
     default:
       return <HomeView />;
   }
@@ -104,7 +114,6 @@ export default function App() {
   const view = useUIStore((s) => s.view);
   const queueOpen = useUIStore((s) => s.queueOpen);
   const lyricsOpen = useUIStore((s) => s.lyricsOpen);
-  const expandedPlayerOpen = useUIStore((s) => s.expandedPlayerOpen);
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -114,12 +123,6 @@ export default function App() {
         if (e.key === "Escape") (target as HTMLInputElement).blur();
         return;
       }
-      // A focused control keeps its own keys. Space on a focused button has to
-      // press that button: the preventDefault below used to eat the key-up that
-      // fires it, so Space toggled playback while a button sat there ready to be
-      // used. Arrow keys inside a slider, a menu or a dialog step and scroll
-      // there, instead of seeking the song and changing the volume underneath.
-      // Escape is still let through, so a dialog closes from within.
       if (target?.closest?.(OWNED_KEYS) && e.key !== "Escape") return;
       const ui = useUIStore.getState();
       const playback = usePlaybackStore.getState();
@@ -159,9 +162,14 @@ export default function App() {
         case "Escape":
           ui.closeMenu();
           if (useSettings.getState().open) useSettings.getState().setOpen(false);
-          else if (ui.expandedPlayerOpen) ui.setExpandedPlayerOpen(false);
           else if (ui.lyricsOpen) ui.setLyricsOpen(false);
           else if (ui.queueOpen) ui.setQueueOpen(false);
+          else {
+            // Navigate back from Now Playing or detail views
+            if (view.name === "nowplaying" || view.name === "lyrics") {
+              ui.goBack();
+            }
+          }
           break;
       }
     };
@@ -177,10 +185,14 @@ export default function App() {
   }, []);
 
   const viewKey = view.name === "album" || view.name === "artist" ? `${view.name}:${view.key}` : view.name;
-  const isNarrow = typeof window !== "undefined" && window.innerWidth < 1200;
 
   return (
-    <div className={cn("app-root", queueOpen && "queue-open")}>
+    <div
+      className={cn(
+        "app-layout",
+        queueOpen && "queue-open",
+      )}
+    >
       <Sidebar />
       <div className="main-col">
         <Header />
@@ -189,22 +201,20 @@ export default function App() {
         </main>
       </div>
 
-      {/* The player sits along the bottom edge, full width, where every
-          desktop music client puts it: the hand is already there, and it
-          leaves the top of the window for position and history. */}
-      <PlayerBar />
+      {/* Right-side Up Next Queue — optional third column */}
+      {queueOpen && <QueuePanel docked={true} />}
 
-      {/* Docked Queue Panel - part of layout */}
-      <QueuePanel />
+      {/* The player sits along the bottom edge, full width */}
+      <PlayerBar />
 
       {/* Overlay Portals - managed centrally */}
       <OverlayPortal>
-        {expandedPlayerOpen && <ExpandedPlayer />}
-        {lyricsOpen && <LyricsOverlay />}
         <ContextMenu />
         <SettingsPanel />
         <ImportOverlay />
+        <ShareDialog />
         <Toast />
+        {lyricsOpen && <LyricsOverlay />}
       </OverlayPortal>
     </div>
   );

@@ -218,15 +218,30 @@ const VIEW_TITLE: Record<string, string> = {
   history: "nav.history",
   albums: "nav.albums",
   artists: "nav.artists",
+  playlists: "nav.playlists",
+  nowplaying: "expanded.nowPlaying",
+  lyrics: "lyrics.title",
   album: "nav.albums",
-  artist: "nav.albums",
+  artist: "nav.artists",
 };
 
 function LanguageMenu() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (open && menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
   return (
-    <div className="hb-menu">
+    <div ref={menuRef} className="hb-menu">
       <button
         type="button"
         className="pb-icon"
@@ -324,7 +339,7 @@ export function PlayerBar() {
   const playing = usePlaybackStore((s) => s.playing);
   const liked = useLibraryStore((s) => s.liked);
   const toggleLike = useLibraryStore((s) => s.toggleLike);
-  const setExpandedPlayerOpen = useUIStore((s) => s.setExpandedPlayerOpen);
+  const navigate = useUIStore((s) => s.navigate);
   const queueOpen = useUIStore((s) => s.queueOpen);
   const setQueueOpen = useUIStore((s) => s.setQueueOpen);
   const lyricsOpen = useUIStore((s) => s.lyricsOpen);
@@ -338,7 +353,7 @@ export function PlayerBar() {
       <div className="pb-zone pb-left">
         <button
           className="pb-track"
-          onClick={() => setExpandedPlayerOpen(true)}
+          onClick={() => navigate({ name: "nowplaying" })}
           aria-label={t("toolbar.expand")}
           disabled={!track}
         >
@@ -377,7 +392,7 @@ export function PlayerBar() {
           className="pb-icon"
           data-active={lyricsOpen}
           aria-label={lyricsOpen ? t("toolbar.lyrics.close") : t("toolbar.lyrics.open")}
-          onClick={() => setLyricsOpen(!lyricsOpen)}
+          onClick={() => useUIStore.getState().setLyricsOpen(!lyricsOpen)}
         >
           <Mic2 className="size-[18px]" />
         </button>

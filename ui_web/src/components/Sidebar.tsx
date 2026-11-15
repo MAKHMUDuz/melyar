@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Heart, Home, Library, ListMusic, SearchIcon, Clock3, Plug } from "lucide-react";
 import { useUIStore } from "@/store";
-import { GlassMorphIndicator } from "@/components/GlassComponents";
+import { GlassMorphIndicator, GlassSearch } from "@/components/GlassComponents";
 import { cn } from "@/lib/cn";
 import { t, useLocale } from "@/lib/i18n";
 import type { View } from "@/lib/types";
@@ -86,20 +86,19 @@ export function Sidebar() {
       </div>
 
       <div className="px-3 pb-1">
-        <label className="search-bar glass-input px-4 py-2">
-          <SearchIcon className="size-4 text-text-tertiary" />
-          <input
-            id="melyar-search"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              navigate({ name: "search" });
-            }}
-            placeholder={t("nav.search.placeholder")}
-            className="w-full bg-transparent text-[13.5px] outline-none placeholder:text-text-tertiary"
-            spellCheck={false}
-          />
-        </label>
+        <GlassSearch
+          variant="compact"
+          placeholder={t("nav.search.placeholder")}
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            navigate({ name: "search" });
+          }}
+          onSearch={(q) => {
+            setQuery(q);
+            navigate({ name: "search" });
+          }}
+        />
       </div>
 
       <div className="scroll-thin min-h-0 flex-1 overflow-y-auto px-3 pb-4">
@@ -130,6 +129,7 @@ export function Sidebar() {
           <SideItem ref={createRef("songs")} icon={Library} label={t("nav.songs")} view={{ name: "songs" }} />
           <SideItem ref={createRef("liked")} icon={Heart} label={t("nav.liked")} view={{ name: "liked" }} />
           <SideItem ref={createRef("history")} icon={Clock3} label={t("nav.history")} view={{ name: "history" }} />
+          <SideItem ref={createRef("downloads")} icon={ListMusic} label={t("nav.downloads")} view={{ name: "downloads" }} />
           <SideItem ref={createRef("albums")} icon={ListMusic} label={t("nav.albums")} view={{ name: "albums" }} />
           <button
             ref={createRef("queue")}

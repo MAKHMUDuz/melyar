@@ -7,6 +7,7 @@ import { register } from "@/lib/registry";
 import { Artwork } from "@/components/Toolbar";
 import { TrackTable } from "@/components/TrackTable";
 import { formatTime } from "@/lib/lyrics";
+import { EmptyState } from "@/components/GlassComponents";
 import type { TrackMeta } from "@/lib/types";
 import { t, tCount, useLocale } from "@/lib/i18n";
 
@@ -84,16 +85,16 @@ export function PlaylistsView() {
       </header>
 
       {playlists.length === 0 ? (
-        <div className="import-empty glass-panel">
-          <div className="import-empty-icon">
-            <Music4 className="size-7" />
-          </div>
-          <h2 className="text-lg font-semibold">{t("import.playlists.empty")}</h2>
-          <p className="mt-1 text-sm text-text-tertiary">{t("import.playlists.emptyHint")}</p>
-          <button className="btn-glass chip mt-5 text-xs" onClick={() => navigate({ name: "import" })}>
-            {t("import.openCenter")}
-          </button>
-        </div>
+        <EmptyState
+          icon={<Music4 className="size-8" />}
+          title={t("import.playlists.empty")}
+          description={t("import.playlists.emptyHint")}
+          action={{
+            label: t("import.openCenter"),
+            onClick: () => navigate({ name: "import" }),
+            variant: "primary",
+          }}
+        />
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {playlists.map((playlist) => (

@@ -668,7 +668,7 @@ export const GlassSlider = forwardRef<HTMLDivElement, GlassSliderProps>(
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background: `color-mix(in oklab, var(--mute) 25%, transparent)`,
+            background: `var(--mute-25)`,
             borderRadius: "999px",
           }}
         />
@@ -836,7 +836,7 @@ export const GlassSegmented = forwardRef<HTMLDivElement, GlassSegmentedProps>(
 GlassSegmented.displayName = "GlassSegmented";
 
 /* ============================================================
-   GLASS SEARCH
+   GLASS SEARCH — unified capsule, one focus state
    ============================================================ */
 
 interface GlassSearchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
@@ -845,6 +845,10 @@ interface GlassSearchProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
   debounceMs?: number;
   className?: string;
   autoFocus?: boolean;
+  variant?: "compact" | "expanded";
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClear?: () => void;
 }
 
 export const GlassSearch = forwardRef<HTMLInputElement, GlassSearchProps>(
@@ -855,18 +859,28 @@ export const GlassSearch = forwardRef<HTMLInputElement, GlassSearchProps>(
       debounceMs = 300,
       className,
       autoFocus,
+      variant = "expanded",
+      value: valueProp,
       onChange,
       onFocus,
       onBlur,
+      onClear,
       ...rest
     } = props;
 
     const [isFocused, setIsFocused] = useState(false);
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState(valueProp ?? "");
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const tokens = getMotionTokens();
+
+    // Keep internal query in sync with an externally controlled value.
+    useEffect(() => {
+      if (valueProp !== undefined && valueProp !== query) {
+        setQuery(valueProp);
+      }
+    }, [valueProp, query]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
@@ -890,6 +904,17 @@ export const GlassSearch = forwardRef<HTMLInputElement, GlassSearchProps>(
       if (e.key === "Escape") {
         inputRef.current?.blur();
       }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        onSearch?.(query);
+      }
+    };
+
+    const handleClear = () => {
+      setQuery("");
+      onChange?.({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
+      onClear?.();
+      inputRef.current?.focus();
     };
 
     return (
@@ -897,23 +922,20 @@ export const GlassSearch = forwardRef<HTMLInputElement, GlassSearchProps>(
         ref={containerRef}
         className={cn(
           "relative flex items-center gap-2 group",
-          "transition-all",
           className
         )}
-        style={{
-          transition: `width ${tokens.duration.search}ms ${tokens.easing.standard}`,
-        }}
       >
         <label
           className={cn(
-            "flex items-center gap-2 w-full glass-strong rounded-full px-4",
-            "transition-all",
-            isFocused && "border-glass-border-focus ring-2 ring-accent/20"
+            "glass-search-capsule flex items-center gap-2 px-3 py-1.5",
+            "transition-all duration-200 ease-out",
+            "min-w-0",
+            variant
           )}
         >
           <svg
             className={cn(
-              "size-5 flex-shrink-0 transition-colors",
+              "size-5 flex-shrink-0 transition-colors duration-200 ease-out",
               isFocused ? "text-accent-text" : "text-text-tertiary"
             )}
             viewBox="0 0 24 24"
@@ -935,37 +957,35 @@ export const GlassSearch = forwardRef<HTMLInputElement, GlassSearchProps>(
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             className={cn(
-              "w-full bg-transparent text-base outline-none placeholder:text-text-tertiary",
-              "transition-colors"
+              "flex-1 min-w-0 bg-transparent border-none outline-none box-shadow-none",
+              "text-base placeholder:text-text-tertiary",
+              "transition-colors duration-200 ease-out",
+              "px-2"
             )}
             autoFocus={autoFocus}
             autoComplete="off"
             spellCheck={false}
             {...rest}
           />
+          {query && isFocused && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className={cn(
+                "grid size-7 place-items-center rounded-full glass-interactive",
+                "opacity-0 pointer-events-none",
+                "group-focus-within:opacity-100 group-focus-within:pointer-events-auto",
+                "transition-opacity duration-200 ease-out"
+              )}
+              aria-label={t("common.clear")}
+            >
+              <svg className="size-3.5 text-text-tertiary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
         </label>
-
-        {isFocused && query && (
-          <button
-            type="button"
-            onClick={() => {
-              setQuery("");
-              handleChange({ target: { value: "" } } as any);
-              inputRef.current?.focus();
-            }}
-            className={cn(
-              "grid size-9 place-items-center rounded-full glass-interactive",
-              "opacity-0 pointer-events-none group-focus-within:opacity-100 group-focus-within:pointer-events-auto",
-              "transition-opacity"
-            )}
-            aria-label={t("common.clear")}
-          >
-            <svg className="size-4 text-text-tertiary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        )}
       </div>
     );
   }
@@ -1111,6 +1131,103 @@ export const GlassPanel = forwardRef<HTMLDivElement, GlassPanelProps>(
 GlassPanel.displayName = "GlassPanel";
 
 /* ============================================================
+   SKELETON LOADING
+   ============================================================ */
+
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  width?: string | number;
+  height?: string | number;
+}
+
+export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
+  (props, ref) => {
+    const { width, height, className, style, ...rest } = props;
+    return (
+      <div
+        ref={ref}
+        className={cn("skeleton", className)}
+        style={{ width, height, ...style }}
+        {...rest}
+        aria-hidden="true"
+      />
+    );
+  }
+);
+
+Skeleton.displayName = "Skeleton";
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+interface EmptyStateProps {
+  icon?: React.ReactNode;
+  title: string;
+  description?: string;
+  children?: React.ReactNode;
+  action?: {
+    label: string;
+    onClick: () => void;
+    variant?: "glass" | "primary";
+  };
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
+  (props, ref) => {
+    const {
+      icon,
+      title,
+      description,
+      children,
+      action,
+      className,
+      style,
+      ...rest
+    } = props;
+
+    return (
+      <div
+        ref={ref}
+        className={cn("empty-state", className)}
+        style={style}
+        {...rest}
+      >
+        {icon && (
+          <div className="empty-state-icon" aria-hidden="true">
+            {icon}
+          </div>
+        )}
+        <h2 className="empty-state-title">{title}</h2>
+        {description && (
+          <p className="empty-state-description">{description}</p>
+        )}
+        {children && (
+          <div className="empty-state-children mt-6 text-left w-full max-w-xs mx-auto">{children}</div>
+        )}
+        {action && (
+          <button
+            className={cn(
+              "empty-state-action",
+              action.variant === "primary"
+                ? "bg-gradient-to-br from-accent to-[#d61d33] text-on-accent border-none shadow-[0_4px_16px_rgba(250,35,59,0.4)]"
+                : "btn-glass chip text-xs",
+              "mt-5"
+            )}
+            onClick={action.onClick}
+          >
+            {action.label}
+          </button>
+        )}
+      </div>
+    );
+  }
+);
+
+EmptyState.displayName = "EmptyState";
+
+/* ============================================================
    PLAY/PAUSE MORPH BUTTON
    ============================================================ */
 
@@ -1227,4 +1344,6 @@ export {
   type GlassSearchProps,
   type GlassPanelProps,
   type PlayPauseMorphProps,
+  type SkeletonProps,
+  type EmptyStateProps,
 };
