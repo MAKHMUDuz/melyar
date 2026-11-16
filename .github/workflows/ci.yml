@@ -61,6 +61,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache-downloads: false
           cache: pnpm
           cache-dependency-path: ui_web/pnpm-lock.yaml
 
@@ -185,6 +186,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache-downloads: false
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
@@ -221,6 +223,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache-downloads: false
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
@@ -346,6 +349,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache-downloads: false
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
