@@ -101,7 +101,15 @@ jobs:
           fi
 
       - name: Check every locale has the same keys
-        run: pnpm i18n:check
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && git diff --quiet "$BASE_SHA" "$HEAD_SHA" -- ui_web/src/lib/i18n/locales ui_web/scripts/i18n-check.mjs; then
+            echo "No locale files changed; skipping the existing translation-drift check."
+            exit 0
+          fi
+          pnpm i18n:check
 
   arch-package:
     name: Arch package
