@@ -101,33 +101,7 @@ jobs:
           fi
 
       - name: Check every locale has the same keys
-        # A missing key shows the key itself in the interface, so the files
-        # have to stay in step with en.ts.
-        run: |
-          node -e '
-            const fs = require("fs");
-            const path = require("path");
-            const dir = path.join(process.cwd(), "src", "locales");
-            const keysOf = (file) => {
-              const text = fs.readFileSync(file, "utf8");
-              return new Set([...text.matchAll(/"([a-zA-Z.]+)":/g)].map((m) => m[1]));
-            };
-            const reference = keysOf(path.join(dir, "en.ts"));
-            let failed = false;
-            for (const file of fs.readdirSync(dir).filter((f) => f.endsWith(".ts"))) {
-              const keys = keysOf(path.join(dir, file));
-              const missing = [...reference].filter((k) => !keys.has(k));
-              const extra = [...keys].filter((k) => !reference.has(k));
-              if (missing.length || extra.length) {
-                failed = true;
-                console.log(`::error::${file} is out of step with en.ts`);
-                if (missing.length) console.log(`  missing: ${missing.join(", ")}`);
-                if (extra.length) console.log(`  extra: ${extra.join(", ")}`);
-              }
-            }
-            if (failed) process.exit(1);
-            console.log("every locale matches en.ts");
-          '
+        run: pnpm i18n:check
 
   arch-package:
     name: Arch package
