@@ -25,28 +25,8 @@ use super::{Source, SourceKind};
 
 /// Where the yt-dlp binary might be. Mirrors the search the InnerTube client
 /// already does, so a user who set up melyar once does not have to twice.
-static YTDLP: Lazy<Option<PathBuf>> = Lazy::new(find_yt_dlp);
-
-fn find_yt_dlp() -> Option<PathBuf> {
-    for name in ["yt-dlp", "yt-dlp_linux"] {
-        if let Ok(out) = Command::new("which").arg(name).output() {
-            if out.status.success() {
-                let p = String::from_utf8_lossy(&out.stdout).trim().to_string();
-                if !p.is_empty() {
-                    return Some(PathBuf::from(p));
-                }
-            }
-        }
-    }
-    let home = std::env::var("HOME").ok()?;
-    [
-        PathBuf::from(&home).join(".local/bin/yt-dlp"),
-        PathBuf::from("/usr/bin/yt-dlp"),
-        PathBuf::from("/usr/local/bin/yt-dlp"),
-    ]
-    .into_iter()
-    .find(|candidate| candidate.exists())
-}
+static YTDLP: Lazy<Option<PathBuf>> =
+    Lazy::new(|| crate::source::find_yt_dlp(&["yt-dlp", "yt-dlp.exe", "yt-dlp_linux"]));
 
 pub struct SoundCloudSource;
 

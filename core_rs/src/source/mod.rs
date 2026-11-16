@@ -15,6 +15,111 @@ pub mod audius;
 pub mod soundcloud;
 pub mod youtube;
 
+/// Locate yt-dlp without depending on an external `which` executable.
+///
+/// PATH is authoritative; the additional candidates cover common package
+/// manager locations on Linux, macOS, and Windows.
+pub fn find_yt_dlp(names: &[&str]) -> Option<std::path::PathBuf> {
+    let path_dirs = std::env::var_os("PATH")
+        .map(|path| std::env::split_paths(&path).collect::<Vec<_>>())
+        .unwrap_or_default();
+
+    let mut candidates = Vec::new();
+    if let Some(home) = dirs::home_dir() {
+        candidates.extend([
+            home.join(".local/bin/yt-dlp"),
+            home.join("bin/yt-dlp"),
+            home.join(".local/bin/yt-dlp.exe"),
+            home.join("scoop/shims/yt-dlp.exe"),
+            home.join("AppData/Local/Programs/yt-dlp/yt-dlp.exe"),
+        ]);
+        for version in ["3.14", "3.13", "3.12", "3.11", "3.10"] {
+            candidates.push(home.join(format!(
+                ".local/lib/python{version}/site-packages/bin/yt-dlp"
+            )));
+        }
+    }
+
+    for variable in ["LOCALAPPDATA", "APPDATA"] {
+        if let Some(root) = std::env::var_os(variable).map(std::path::PathBuf::from) {
+            candidates.push(root.join("Programs/yt-dlp/yt-dlp.exe"));
+            candidates.push(root.join("Python/Scripts/yt-dlp.exe"));
+        }
+    }
+
+    candidates.extend([
+        std::path::PathBuf::from("/opt/homebrew/bin/yt-dlp"),
+        std::path::PathBuf::from("/usr/local/bin/yt-dlp"),
+        std::path::PathBuf::from("/usr/bin/yt-dlp"),
+        std::path::PathBuf::from("/opt/yt-dlp/yt-dlp"),
+    ]);
+
+    find_executable(names, path_dirs, candidates)
+}
+
+fn find_executable(
+    names: &[&str],
+    path_dirs: impl IntoIterator<Item = std::path::PathBuf>,
+    fallbacks: impl IntoIterator<Item = std::path::PathBuf>,
+) -> Option<std::path::PathBuf> {
+    let path_dirs: Vec<_> = path_dirs.into_iter().collect();
+    for name in names {
+        for directory in &path_dirs {
+            let candidate = directory.join(name);
+            if candidate.is_file() {
+                return Some(candidate);
+            }
+        }
+    }
+
+    fallbacks.into_iter().find(|candidate| candidate.is_file())
+}
+
+#[cfg(test)]
+mod executable_discovery_tests {
+    use super::find_executable;
+    use std::fs;
+    use std::path::PathBuf;
+
+    fn temporary_directory(label: &str) -> PathBuf {
+        std::env::temp_dir().join(format!("melyar-yt-dlp-{label}-{}", std::process::id()))
+    }
+
+    #[test]
+    fn finds_an_executable_on_path_without_calling_which() {
+        let directory = temporary_directory("path");
+        let _ = fs::remove_dir_all(&directory);
+        fs::create_dir_all(&directory).unwrap();
+        let executable = directory.join("yt-dlp");
+        fs::write(&executable, "").unwrap();
+
+        let found = find_executable(&["yt-dlp"], [directory.clone()], []);
+        assert_eq!(found, Some(executable));
+
+        fs::remove_dir_all(directory).unwrap();
+    }
+
+    #[test]
+    fn falls_back_to_platform_specific_candidates() {
+        let directory = temporary_directory("fallback");
+        let _ = fs::remove_dir_all(&directory);
+        fs::create_dir_all(&directory).unwrap();
+        let executable = directory.join("yt-dlp.exe");
+        fs::write(&executable, "").unwrap();
+
+        let found = find_executable(&["yt-dlp.exe"], [], [executable.clone()]);
+        assert_eq!(found, Some(executable));
+
+        fs::remove_dir_all(directory).unwrap();
+    }
+
+    #[test]
+    fn ignores_missing_candidates() {
+        let missing = PathBuf::from("this-path-should-not-exist/yt-dlp");
+        assert_eq!(find_executable(&["yt-dlp"], [], [missing]), None);
+    }
+}
+
 use std::sync::Arc;
 
 use anyhow::Result;
