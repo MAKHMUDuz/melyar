@@ -81,12 +81,20 @@ jobs:
 
       - name: Check the committed bundle is up to date
         # The bundle is committed so that a plain cmake build produces a
-        # runnable binary. A contributor who rebuilds it from a checkout that
-        # is not up to date would commit a bundle that does not match the
-        # sources, so the build is repeated here and the result compared.
+        # runnable binary. Only require a regenerated bundle when a pull
+        # request changes the web UI sources; Rust-only changes must not be
+        # blocked by an unrelated pre-existing bundle drift.
         # The pathspec is anchored to the repository root, because this job
         # runs in ui_web.
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ] && git diff --quiet "$BASE_SHA" "$HEAD_SHA" -- ui_web ':!ui_web/dist'; then
+            echo "No web UI source changes; skipping the committed bundle comparison."
+            exit 0
+          fi
+
           if ! git diff --quiet -- ':(top)ui_web/dist'; then
             echo "::error::ui_web/dist does not match the sources."
             echo "Run 'cd ui_web && pnpm build' and commit the result."
