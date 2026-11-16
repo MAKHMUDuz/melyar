@@ -47,36 +47,13 @@ impl ResolvedVideo {
 }
 
 static YTDLP_PATH: Lazy<Option<PathBuf>> = Lazy::new(|| {
-    let names = ["yt-dlp", "yt-dlp_linux", "youtube-dl"];
-    // 1. PATH
-    for name in names {
-        if let Ok(out) = Command::new("which").arg(name).output() {
-            if out.status.success() {
-                let p = String::from_utf8_lossy(&out.stdout).trim().to_string();
-                if !p.is_empty() {
-                    return Some(PathBuf::from(p));
-                }
-            }
-        }
-    }
-    // 2. Common locations
-    let home = std::env::var("HOME").unwrap_or_default();
-    let mut candidates = vec![
-        PathBuf::from("/usr/bin/yt-dlp"),
-        PathBuf::from("/usr/local/bin/yt-dlp"),
-        PathBuf::from("/opt/yt-dlp/yt-dlp"),
-        PathBuf::from(home.clone()).join(".local/bin/yt-dlp"),
-        PathBuf::from(home).join("bin/yt-dlp"),
-    ];
-    if let Ok(home) = std::env::var("HOME") {
-        for py in ["3.14", "3.13", "3.12", "3.11", "3.10"] {
-            candidates.push(
-                PathBuf::from(&home)
-                    .join(format!(".local/lib/python{}/site-packages/bin/yt-dlp", py)),
-            );
-        }
-    }
-    candidates.into_iter().find(|p| p.exists() && p.is_file())
+    crate::source::find_yt_dlp(&[
+        "yt-dlp",
+        "yt-dlp.exe",
+        "yt-dlp_linux",
+        "youtube-dl",
+        "youtube-dl.exe",
+    ])
 });
 
 fn yt_dlp_available() -> bool {
