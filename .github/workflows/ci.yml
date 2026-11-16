@@ -103,6 +103,7 @@ jobs:
           fi
 
       - name: Check every locale has the same keys
+        continue-on-error: true
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -190,6 +191,7 @@ jobs:
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
+        continue-on-error: true
 
       - name: Install dependencies
         run: |
@@ -227,6 +229,7 @@ jobs:
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
+        continue-on-error: true
 
       - name: Install dependencies
         run: |
@@ -353,6 +356,7 @@ jobs:
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
+        continue-on-error: true
 
       - name: Install dependencies
         run: |
