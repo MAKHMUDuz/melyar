@@ -20,7 +20,6 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-        continue-on-error: true
 
       - name: Install dependencies
         # Bounded: a mirror that stalls must fail the job rather than hold
@@ -43,37 +42,29 @@ jobs:
       - name: Build
         run: cargo build --manifest-path core_rs/Cargo.toml --release
 
-# Node.js 24 upgrade: migrating from deprecated Node.js 20 (ubuntu-latest migrated Oct 2026)
   web-ui:
     name: Web UI
     runs-on: ubuntu-latest
-      continue-on-error: true
-      continue-on-error: true
     defaults:
       run:
         working-directory: ui_web
     steps:
       - uses: actions/checkout@v4
-        continue-on-error: true
 
       - uses: pnpm/action-setup@v4
-        continue-on-error: true
         with:
           # pnpm 10+ is required: the project uses the `allowBuilds` setting
           # in pnpm-workspace.yaml to permit esbuild's postinstall script.
           version: 12
 
       - uses: actions/setup-node@v4
-        continue-on-error: true
         with:
-          node-version: 24
-          cache-downloads: false
+          node-version: 20
           cache: pnpm
           cache-dependency-path: ui_web/pnpm-lock.yaml
 
       - name: Install
         run: pnpm install --frozen-lockfile
-        continue-on-error: true
 
       - name: Typecheck
         run: pnpm exec tsc --noEmit
@@ -110,9 +101,6 @@ jobs:
           fi
 
       - name: Check every locale has the same keys
-        continue-on-error: true
-        continue-on-error: true
-        continue-on-error: true
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -126,8 +114,6 @@ jobs:
   arch-package:
     name: Arch package
     runs-on: ubuntu-latest
-      continue-on-error: true
-      continue-on-error: true
     container:
       image: archlinux:base-devel
     env:
@@ -146,7 +132,6 @@ jobs:
           exit 1
 
       - uses: actions/checkout@v4
-        continue-on-error: true
 
       - name: Install build and runtime dependencies
         run: |
@@ -191,25 +176,17 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-        continue-on-error: true
 
       - uses: pnpm/action-setup@v4
-        continue-on-error: true
         with:
           version: 12
 
       - uses: actions/setup-node@v4
-        continue-on-error: true
         with:
-          node-version: 24
-          cache-downloads: false
+          node-version: 20
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
-        continue-on-error: true
-        continue-on-error: true
-        continue-on-error: true
-        continue-on-error: true
 
       - name: Install dependencies
         run: |
@@ -235,25 +212,17 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-        continue-on-error: true
 
       - uses: pnpm/action-setup@v4
-        continue-on-error: true
         with:
           version: 12
 
       - uses: actions/setup-node@v4
-        continue-on-error: true
         with:
-          node-version: 24
-          cache-downloads: false
+          node-version: 20
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
-        continue-on-error: true
-        continue-on-error: true
-        continue-on-error: true
-        continue-on-error: true
 
       - name: Install dependencies
         run: |
@@ -368,25 +337,17 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-        continue-on-error: true
 
       - uses: pnpm/action-setup@v4
-        continue-on-error: true
         with:
           version: 12
 
       - uses: actions/setup-node@v4
-        continue-on-error: true
         with:
-          node-version: 24
-          cache-downloads: false
+          node-version: 20
 
       - name: Build web UI
         run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
-        continue-on-error: true
-        continue-on-error: true
-        continue-on-error: true
-        continue-on-error: true
 
       - name: Install dependencies
         run: |
@@ -459,8 +420,6 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [rust-core, web-ui, desktop-app, ui-audit, debian-package, arch-package]
     runs-on: ubuntu-latest
-      continue-on-error: true
-      continue-on-error: true
     permissions:
       contents: write
     steps:
