@@ -7,7 +7,7 @@ url="https://github.com/MAKHMUDuz/melyar"
 license=('MIT' 'Apache')
 # Initial value: pkgver() below replaces it once the checkout exists, but the
 # PKGBUILD lint runs before any VCS function and rejects an unset variable.
-pkgver=0.0.2
+pkgver=0.1f
 depends=('qt6-base' 'qt6-declarative' 'qt6-webengine' 'qt6-webchannel' 'qt6-svg' 'mpv')
 makedepends=('cmake' 'rust' 'cargo' 'pkgconf' 'nodejs' 'pnpm')
 optdepends=('yt-dlp: resolves metadata for tracks missing from InnerTube results')

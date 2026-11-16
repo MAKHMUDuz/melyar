@@ -89,7 +89,11 @@ sudo apt install ./melyar_*_amd64.deb
 sudo pacman -U melyar-*.pkg.tar.zst
 ```
 
-The packages use their distribution's Qt 6 and glibc. For other distributions,
+Arch: `pacman -S rust` veya `rustup default stable` ile araç zinciri eksik oluşabilir.
+Sorun yaorsa `rustup` shim'i (`pacman -S rustup`) tam Rust toolchain'i içermez.
+Tam Rust için `sudo pacman -S rust` kullanın.
+
+For other distributions,
 build from source below so the binary links against the Qt and system libraries
 available on that machine.
 

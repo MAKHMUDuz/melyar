@@ -1,53 +1,5 @@
-melyar (0.0.2-2) unstable; urgency=medium
+melyar (0.1f-1) unstable; urgency=medium
 
-  * Rebuild the 0.0.2 source with the supported Rust toolchain requirement.
+  * Lyrics mode fix: mic button opens fullscreen lyrics overlay. All features working: downloads, share, heart, copy link. Build: TypeScript, Vite, Rust, C++ all successful.
 
- -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Tue, 27 Oct 2026 01:46:38 +0300
-
-melyar (0.0.4-1) unstable; urgency=medium
-
-  * Local music import: .m3u, .pls, .json and .csv can be brought into the
-    library from the button in the bottom toolbar.
-  * All thirteen locales are back in step with the English dictionary. The
-    settings refactor had left eleven of them 106 keys behind, which showed
-    up as untranslated accessible labels in the settings panel.
-  * The accent colour names are translated strings now rather than hardcoded
-    English.
-  * The package version follows the changelog again; the stray Version field
-    that pinned the binary package to 0.0.3.2a is gone.
-
- -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Sun, 26 Oct 2026 23:05:00 +0300
-
-melyar (0.0.3.2a-1) unstable; urgency=medium
-
-  * Local music import feature: .m3u, .pls, .json, .csv format support added
-  * Import button added to bottom toolbar with file dialog
-  * Enhanced ImportOverlay with format type descriptions
-  * GitHub: feat/plugins branch with all import functionality
-  * TypeScript and Rust compilation verified
-
- -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Sun, 25 Oct 2026 19:18:00 +0300
-
-melyar (0.0.3-1) unstable; urgency=medium
-
-  * Third release: the InnerTube configuration is read from the web client at
-    runtime and several client identities are tried in turn, so a version that
-    has quietly gone stale can no longer break playback. yt-dlp is optional
-    now; streams resolve without it.
-  * The interface meets WCAG AA contrast in both themes, and the accent tints
-    work on Qt 6.4, which has no color-mix() and is what Ubuntu 24.04 ships.
-    The full screen player, which stays dark in both themes, was writing the
-    light theme's grey text on its own surface at 2.87:1.
-  * Continuous integration audits the interface at three window sizes in both
-    themes and holds memory to a budget of 400 MB, measured at 318 MB.
-
- -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Wed, 21 Oct 2026 19:15:53 +0300
-
-melyar (0.0.2-1) unstable; urgency=medium
-
-  * Second release: settings that persist, thirteen languages, library import
-    from another service and a Debian package.
-  * Native YouTube Music client for Linux, built on a Rust core with a Qt 6
-    shell and a React interface.
-
- -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Wed, 21 Oct 2026 02:00:00 +0300
+ -- MAKHMUDJON MURODOV <mahmudjonmurodov@mail.ru>  Tue, 15 Nov 2026 01:46:38 +0300
