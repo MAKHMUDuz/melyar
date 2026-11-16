@@ -6,7 +6,7 @@
 #include <iostream>
 #include <QTimer>
 
-#include "melyar_core/src/lib.rs.h"
+#include "melyar_core/src/ffi_bridge.rs.h"
 
 MelyarBridge* MelyarBridge::s_instance = nullptr;
 

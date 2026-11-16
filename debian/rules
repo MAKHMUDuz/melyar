@@ -7,19 +7,15 @@ export RUST_BACKTRACE = 1
 	dh $@
 
 override_dh_auto_configure:
+	# CMake requires the generated web bundle at configure time.
+	if command -v pnpm >/dev/null 2>&1; then \
+		cd ui_web && pnpm install --frozen-lockfile && pnpm build && cd ..; \
+	fi
 	cmake -B build -S . \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr
 
 override_dh_auto_build:
-	# The web interface is committed to the repository, so pnpm is only needed
-	# when it is available. When it is, the bundle is rebuilt so that the
-	# package always ships the current interface.
-	if command -v pnpm >/dev/null 2>&1; then \
-		cd ui_web && pnpm install --frozen-lockfile && pnpm build && cd ..; \
-	else \
-		echo "pnpm not found, using the committed web interface bundle"; \
-	fi
 	cmake --build build -j$(nproc)
 
 # The install is done here rather than through dh_auto_install, because the
