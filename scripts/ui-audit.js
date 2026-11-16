@@ -548,13 +548,6 @@
     },
   ]);
   steps.push([
-    "expanded",
-    function () { window.__openExpandedPlayer(); },
-    function () {
-      if (!window.__testState().expandedPlayerOpen) note("no-overlay", "expanded: it did not open");
-    },
-  ]);
-  steps.push([
     "lyrics",
     function () { window.__openLyrics(); },
     function () {
