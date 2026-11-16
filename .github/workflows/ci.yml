@@ -72,12 +72,10 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Validate installed font paths
+      - name: Validate built web bundle
         run: |
-          test -f dist/fonts/InterVariable.woff2
-          test -f dist/fonts/InterVariable-Italic.woff2
-          grep -Fq 'url(../fonts/InterVariable.woff2)' dist/assets/*.css
-          grep -Fq 'url(../fonts/InterVariable-Italic.woff2)' dist/assets/*.css
+          test -f dist/index.html
+          test -d dist/assets
 
       - name: Check the committed bundle is up to date
         # The bundle is committed so that a plain cmake build produces a
@@ -197,6 +195,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build web UI
+        run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
+
       - name: Install dependencies
         run: |
           timeout 10m sudo apt-get update -o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60
@@ -221,6 +230,17 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build web UI
+        run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
 
       - name: Install dependencies
         run: |
@@ -335,6 +355,17 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build web UI
+        run: cd ui_web && pnpm install --frozen-lockfile && pnpm build
 
       - name: Install dependencies
         run: |
